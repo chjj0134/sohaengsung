@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    package="com.example.sohaengsung">
 
     <!--네이버지도 API-->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -16,10 +16,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Sohaengsung">
 
-        <!--지도 CLIClient ID-->
+        <!--naver 지도 CLIClient ID-->
         <meta-data
-            android:name="com.naver.maps.map.NCP_KEY_ID"
-            android:value="aio6y96b7u7" />
+            android:name="com.naver.maps.map.CLIENT_ID"
+            android:value="aio6y968u7"/>
 
         <activity
             android:name=".MainActivity"

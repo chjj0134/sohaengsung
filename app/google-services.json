@@ -1,0 +1,38 @@
+{
+  "project_info": {
+    "project_number": "428534777831",
+    "project_id": "sohaengsung-a7b4f",
+    "storage_bucket": "sohaengsung-a7b4f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:428534777831:android:952371c28cc540d0771f42",
+        "android_client_info": {
+          "package_name": "com.example.sohaengsung"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "428534777831-uke3j28ta5eba810toth3k1h0l3r2op3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.sohaengsung",
+            "certificate_hash": "dc112de4ecf7713d873c55970abc7559c9487324"
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDFXvAs4wk5uERDLUTTkoX2yWp0eNAvedk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

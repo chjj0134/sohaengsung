@@ -6,6 +6,7 @@ plugins {
     // 추가 플러그인
     id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -82,11 +83,16 @@ dependencies {
     // Naver Map (SDK + Compose)
     implementation("com.naver.maps:map-sdk:3.23.0")
     implementation("io.github.fornewid:naver-map-compose:1.7.0")
+
+    //Firebase (BoM으로 버전 자동 관리)
+    implementation(platform("com.google.firebase:firebase-bom:33.7.0"))
+
+
+    //Firebase Authentication (로그인용)
+    implementation("com.google.firebase:firebase-auth-ktx")
+
+    //Google 로그인 (구글 계정 인증)
+    implementation("com.google.android.gms:play-services-auth:21.2.0")
+
 }
 
-// 네이버 맵 SDK 버전 고정
-configurations.all {
-    resolutionStrategy {
-        force("com.naver.maps:map-sdk:3.17.0")
-    }
-}

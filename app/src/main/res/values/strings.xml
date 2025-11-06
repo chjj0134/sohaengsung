@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">sohaengsung</string>
+
+    <!--Firebase에서 자동 생성된 Web Client ID-->
+    <string name="default_web_client_id">
+        428534777831-h8rmn215d87nheit858m56d7fli0357n.apps.googleusercontent.com
+    </string>
 </resources>

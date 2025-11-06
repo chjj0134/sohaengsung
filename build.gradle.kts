@@ -6,12 +6,7 @@ plugins {
     // Hilt + KSP 플러그인
     id("com.google.dagger.hilt.android") version "2.51" apply false
     id("com.google.devtools.ksp") version "2.0.21-1.0.25" apply false
-}
 
-buildscript {
-    repositories {
-        google()
-        mavenCentral()
-        maven("https://plugins.gradle.org/m2/")
-    }
+    // Firebase용 Google Services 플러그인
+    id("com.google.gms.google-services") version "4.4.4" apply false
 }
