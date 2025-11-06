@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
 
-    // 추가
+    // 추가 플러그인
     id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
 }
@@ -79,12 +79,12 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.6")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.6")
 
-    // Naver Map (기본 SDK + Compose)
+    // Naver Map (SDK + Compose)
     implementation("com.naver.maps:map-sdk:3.23.0")
     implementation("io.github.fornewid:naver-map-compose:1.7.0")
 }
 
-//navermap sdk 버전 고정
+// 네이버 맵 SDK 버전 고정
 configurations.all {
     resolutionStrategy {
         force("com.naver.maps:map-sdk:3.17.0")
