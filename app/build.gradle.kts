@@ -64,6 +64,9 @@ dependencies {
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
 
+    // Icon
+    implementation("androidx.compose.material:material-icons-extended")
+
     // Navigation
     implementation("androidx.navigation:navigation-compose:2.8.3")
 
@@ -86,7 +89,6 @@ dependencies {
 
     //Firebase (BoM으로 버전 자동 관리)
     implementation(platform("com.google.firebase:firebase-bom:33.7.0"))
-
 
     //Firebase Authentication (로그인용)
     implementation("com.google.firebase:firebase-auth-ktx")
