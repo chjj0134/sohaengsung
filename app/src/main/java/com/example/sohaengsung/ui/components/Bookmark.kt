@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.BookmarkBorder
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -28,7 +30,7 @@ fun Bookmark(
     onBookmarkToggle: (Boolean) -> Unit
 ) {
     var checked by remember { mutableStateOf(initialChecked) }
-    val icon = if (checked) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder // 채워진 아이콘 or 빈 아이콘
+    val icon = if (checked) Icons.Filled.Bookmark else Icons.Filled.BookmarkBorder // 채워진 아이콘 or 빈 아이콘
 
     Box(
         modifier = Modifier
