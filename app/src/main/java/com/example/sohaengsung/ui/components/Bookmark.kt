@@ -48,20 +48,20 @@ fun Bookmark(
     }
 }
 
-@Preview
-@Composable
-fun PreviewBookmarkButton() {
-    Column {
-        Text("초기 상태: 북마크됨 (true)")
-        Bookmark(
-            initialChecked = true,
-            onBookmarkToggle = { /* 작업 내용(예시: viewModel.updateBookmark(storeId, isChecked)) */ }
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        Text("초기 상태: 북마크 안됨 (false)")
-        Bookmark(
-            initialChecked = false, // false로 시작
-            onBookmarkToggle = { /* 작업 내용 */ }
-        )
-    }
-}
+//@Preview
+//@Composable
+//fun PreviewBookmarkButton() {
+//    Column {
+//        Text("초기 상태: 북마크됨 (true)")
+//        Bookmark(
+//            initialChecked = true,
+//            onBookmarkToggle = { /* 작업 내용(예시: viewModel.updateBookmark(storeId, isChecked)) */ }
+//        )
+//        Spacer(modifier = Modifier.height(16.dp))
+//        Text("초기 상태: 북마크 안됨 (false)")
+//        Bookmark(
+//            initialChecked = false, // false로 시작
+//            onBookmarkToggle = { /* 작업 내용 */ }
+//        )
+//    }
+//}
