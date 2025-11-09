@@ -73,7 +73,7 @@ fun DropdownButton(
 }
 
 @Composable
-fun SelectableDropdown(
+fun Dropdown(
     label: String, // 초기 내용 (유형별, 리뷰순)
     items: List<String>, // 선택 가능 리스트 (카페, 서점, 소품샵...)
     initialSelection: String? = null, // 초기 선택 값
@@ -118,17 +118,17 @@ fun SelectableDropdown(
     }
 }
 
-// 테스트 코드
-//@Preview(showBackground = true)
-//@Composable
-//fun SelectableDropdownPreview() {
-//    SohaengsungTheme {
-//        val typeList = listOf("카페", "스터디", "도서관", "야외")
-//        SelectableDropdown(
-//            label = "유형별",
-//            items = typeList,
-//            containerColor = MaterialTheme.colorScheme.primary,
-//            contentColor = MaterialTheme.colorScheme.onPrimary
-//        )
-//    }
-//}
+
+@Preview(showBackground = true)
+@Composable
+fun DropdownPreview() {
+    SohaengsungTheme {
+        val typeList = listOf("카페", "스터디", "도서관", "야외")
+        Dropdown(
+            label = "유형별",
+            items = typeList,
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.onPrimary
+        )
+    }
+}
