@@ -119,16 +119,16 @@ fun Dropdown(
 }
 
 
-//@Preview(showBackground = false)
-//@Composable
-//fun DropdownPreview() {
-//    SohaengsungTheme {
-//        val typeList = listOf("카페", "스터디", "도서관", "야외")
-//        Dropdown(
-//            label = "유형별",
-//            items = typeList,
-//            containerColor = MaterialTheme.colorScheme.primary,
-//            contentColor = MaterialTheme.colorScheme.onPrimary
-//        )
-//    }
-//}
+@Preview(showBackground = true)
+@Composable
+fun DropdownPreview() {
+    SohaengsungTheme {
+        val typeList = listOf("카페", "스터디", "도서관", "야외")
+        Dropdown(
+            label = "유형별",
+            items = typeList,
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.onPrimary
+        )
+    }
+}
