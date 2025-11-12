@@ -29,7 +29,8 @@ fun Hashtag(content: String,
             text = content,
             style = MaterialTheme.typography.labelLarge,
             color = contentColor, // 글자 색
-            modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp)
+            modifier = Modifier
+                .padding(horizontal = 12.dp, vertical = 4.dp)
         )
     }
 }
