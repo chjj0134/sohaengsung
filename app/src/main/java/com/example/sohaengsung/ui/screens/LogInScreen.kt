@@ -43,7 +43,8 @@ fun LogInScreen() {
                 // 로고 컨테이너
                 Column (
                     modifier = Modifier
-                        .padding(32.dp)
+                        .padding(32.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
 
                     Text(
