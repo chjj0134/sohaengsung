@@ -1,4 +1,4 @@
-package com.example.sohaengsung.ui.components
+package com.example.sohaengsung.ui.components.Common
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -13,15 +13,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.sohaengsung.ui.theme.SohaengsungTheme
 
 @Composable
 fun SearchBar(
@@ -62,24 +56,3 @@ fun SearchBar(
         singleLine = true
     )
 }
-
-
-//@Preview(showBackground = true)
-//@Composable
-//fun PreviewSearchBar() {
-//    var searchText by remember { mutableStateOf("") }
-//
-//    SohaengsungTheme {
-//        SearchBar(
-//            query = searchText,
-//            onQueryChange = { newText ->
-//                searchText = newText // 텍스트 변경 시 상태 업데이트
-//                println("검색어 입력: $newText")
-//            },
-//            onCalendarClick = {
-//                // 캘린더 아이콘 클릭 시의 임시 로직
-//                println("캘린더 아이콘이 클릭되었습니다! 행사 기간을 선택하세요.")
-//            }
-//        )
-//    }
-//}

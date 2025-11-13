@@ -1,13 +1,11 @@
-package com.example.sohaengsung.ui.components
+package com.example.sohaengsung.ui.components.Common
 
-import android.R.attr.textColor
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -27,9 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.sohaengsung.ui.theme.SohaengsungTheme
 
 
 // 드롭다운 버튼 컴포저블
@@ -117,18 +113,3 @@ fun Dropdown(
         }
     }
 }
-
-
-//@Preview(showBackground = false)
-//@Composable
-//fun DropdownPreview() {
-//    SohaengsungTheme {
-//        val typeList = listOf("카페", "스터디", "도서관", "야외")
-//        Dropdown(
-//            label = "유형별",
-//            items = typeList,
-//            containerColor = MaterialTheme.colorScheme.primary,
-//            contentColor = MaterialTheme.colorScheme.onPrimary
-//        )
-//    }
-//}

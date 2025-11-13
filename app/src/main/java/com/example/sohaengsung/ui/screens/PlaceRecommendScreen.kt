@@ -23,17 +23,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.sohaengsung.data.model.Place
-import com.example.sohaengsung.ui.components.CustomContainer
-import com.example.sohaengsung.ui.components.CustomDivider
-import com.example.sohaengsung.ui.components.Dropdown
-import com.example.sohaengsung.ui.components.HashtagListContainer
-import com.example.sohaengsung.ui.components.PlaceDetailSheet
-import com.example.sohaengsung.ui.components.PlaceInfoContainer
+import com.example.sohaengsung.ui.components.PlaceRecommend.CustomContainer
+import com.example.sohaengsung.ui.components.Common.CustomDivider
+import com.example.sohaengsung.ui.components.Common.Dropdown
+import com.example.sohaengsung.ui.components.PlaceRecommend.HashtagListContainer
+import com.example.sohaengsung.ui.components.PlaceRecommend.PlaceDetailSheet
+import com.example.sohaengsung.ui.components.PlaceRecommend.PlaceInfoContainer
 import com.example.sohaengsung.ui.dummy.HashtagListExample01
 import com.example.sohaengsung.ui.dummy.HashtagListExample02
 import com.example.sohaengsung.ui.dummy.placeList
 import com.example.sohaengsung.ui.theme.SohaengsungTheme
-
 
 @Preview(showBackground = false)
 @Composable

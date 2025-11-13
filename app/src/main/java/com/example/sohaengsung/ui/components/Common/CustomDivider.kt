@@ -1,8 +1,7 @@
-package com.example.sohaengsung.ui.components
+package com.example.sohaengsung.ui.components.Common
 
 
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -15,7 +14,7 @@ fun CustomDivider(
 ) {
     HorizontalDivider(
         Modifier
-            .fillMaxWidth(), // 가로 전체를 채웁니다.
+            .fillMaxWidth(),
         1.dp,
         color = color
     )
