@@ -22,15 +22,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.sohaengsung.data.model.Hashtag
 import com.example.sohaengsung.data.model.Place
-import com.example.sohaengsung.data.model.PlaceDetail
 import com.example.sohaengsung.ui.components.CustomContainer
 import com.example.sohaengsung.ui.components.CustomDivider
 import com.example.sohaengsung.ui.components.Dropdown
 import com.example.sohaengsung.ui.components.HashtagListContainer
 import com.example.sohaengsung.ui.components.PlaceDetailSheet
 import com.example.sohaengsung.ui.components.PlaceInfoContainer
+import com.example.sohaengsung.ui.dummy.HashtagListExample01
+import com.example.sohaengsung.ui.dummy.HashtagListExample02
+import com.example.sohaengsung.ui.dummy.placeList
 import com.example.sohaengsung.ui.theme.SohaengsungTheme
 
 
@@ -40,35 +41,6 @@ fun PlaceRecommendScreen() {
 
     var isSheetOpen by remember { mutableStateOf(false) }
     var selectedPlace by remember { mutableStateOf<Place?>(null) }
-
-    // 예시용 임시 데이터
-    val HashtagListExample = listOf(
-        Hashtag(
-            tagId = "h001",
-            name = "공부하기좋은",
-            useCount = 125
-        ),
-        Hashtag(
-            tagId = "h002",
-            name = "따뜻한분위기",
-            useCount = 98
-        ),
-        Hashtag(
-            tagId = "h003",
-            name = "노트북콘센트",
-            useCount = 75
-        ),
-        Hashtag(
-            tagId = "h004",
-            name = "주차가능",
-            useCount = 52
-        )
-    )
-
-    val placeList = listOf(
-        Place("01", "카페 A", "주소 A", hashtags = listOf("조용함","따뜻한"), details = PlaceDetail(true, false, true, "아메리카노")),
-        Place("02", "식당 B", "주소 B", hashtags = listOf("따뜻한"), details = PlaceDetail(true, true, false, "크림 라떼"))
-    )
 
     SohaengsungTheme {
         Scaffold(
@@ -98,8 +70,8 @@ fun PlaceRecommendScreen() {
 
                         // 해시태그 영역
                         HashtagListContainer(
-                            HashtagListExample,
-                            HashtagListExample
+                            HashtagListExample01,
+                            HashtagListExample02
                         )
 
                         // 드롭다운 영역
