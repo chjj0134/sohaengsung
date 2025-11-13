@@ -4,12 +4,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.sohaengsung.data.model.Place
@@ -20,15 +22,26 @@ fun Boolean.toOXString(): String = if (this) "O" else "X"
 @Composable
 fun PlaceDetailContainer(place: Place) {
     Column (
-        modifier = Modifier
-            .padding(horizontal = 16.dp, vertical = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(3.dp)
+//        modifier = Modifier
+//            .padding(horizontal = 16.dp, vertical = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
-        // 장소 이름
-        Text(
-            text = place.name,
-            style = MaterialTheme.typography.bodyLarge,
-        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = place.name,
+                style = MaterialTheme.typography.bodyLarge
+            )
+
+            Bookmark(
+                initialChecked = true,
+                onBookmarkToggle = { /* 작업 내용(예시: viewModel.updateBookmark(storeId, isChecked)) */ }
+            )
+        }
 
         // 장소 해시태그
         Text(
@@ -48,7 +61,6 @@ fun PlaceDetailContainer(place: Place) {
 
         // 디테일 영역
         Column(
-            modifier = Modifier.padding(top = 16.dp), // 상단 여백 추가
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             // 1. 와이파이 정보

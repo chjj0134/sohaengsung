@@ -15,8 +15,7 @@ fun CustomDivider(
 ) {
     HorizontalDivider(
         Modifier
-            .fillMaxWidth() // 가로 전체를 채웁니다.
-            .padding(horizontal = 16.dp, vertical = 8.dp), // 좌우 패딩은 없애고 상하 패딩으로 간격 조절
+            .fillMaxWidth(), // 가로 전체를 채웁니다.
         1.dp,
         color = color
     )

@@ -1,12 +1,17 @@
 package com.example.sohaengsung.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -21,10 +26,17 @@ fun CustomContainer(
 ) {
     // 기존 바텀 시트 -> 일반 컨테이너
     Surface(
-        shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp), // 상단 모서리만 둥글게
         color = MaterialTheme.colorScheme.background,
-        shadowElevation = 8.dp // 그림자 효과
+        shadowElevation = 8.dp, // 그림자 효과
     ) {
-        content()
+        Column (
+            modifier = Modifier
+                .padding(horizontal = 16.dp, vertical = 32.dp)
+                .height(500.dp)
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            content()
+        }
     }
 }
