@@ -37,7 +37,7 @@ fun CustomBottomSheet(
             Column(modifier = Modifier
                 .fillMaxWidth()
                 .height(700.dp)
-                .padding(horizontal = 16.dp, vertical = 32.dp)
+                .padding(horizontal = 20.dp, vertical = 32.dp)
                 .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {

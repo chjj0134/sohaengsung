@@ -31,7 +31,7 @@ import com.example.sohaengsung.ui.components.PlaceRecommend.PlaceDetailSheet
 import com.example.sohaengsung.ui.components.PlaceRecommend.PlaceInfoContainer
 import com.example.sohaengsung.ui.dummy.HashtagListExample01
 import com.example.sohaengsung.ui.dummy.HashtagListExample02
-import com.example.sohaengsung.ui.dummy.placeList
+import com.example.sohaengsung.ui.dummy.placeExample
 import com.example.sohaengsung.ui.theme.SohaengsungTheme
 
 @Preview(showBackground = false)
@@ -87,8 +87,8 @@ fun PlaceRecommendScreen() {
                             )
 
                             Dropdown(
-                                label = "유형별",
-                                items = listOf("카페", "스터디", "도서관", "야외"),
+                                label = "거리순",
+                                items = listOf("별점높은순", "리뷰많은순"),
                                 containerColor = MaterialTheme.colorScheme.primary,
                                 contentColor = MaterialTheme.colorScheme.onPrimary
                             )
@@ -97,7 +97,7 @@ fun PlaceRecommendScreen() {
                 }
 
                 CustomContainer() {
-                    placeList.forEach { place ->
+                    placeExample.forEach { place ->
                         PlaceInfoContainer(
                             place = place,
                             onClick = {

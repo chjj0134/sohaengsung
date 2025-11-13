@@ -1,5 +1,7 @@
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MediumTopAppBar
@@ -10,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -26,12 +29,13 @@ fun CustomTopBar(contentText: String) {
     MediumTopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.background,
-            titleContentColor = Color.Unspecified
+            titleContentColor = Color.Unspecified,
         ),
         title = {
             Box(
+                modifier = Modifier
+                    .fillMaxSize(),
                 contentAlignment = Alignment.Center,
-                modifier = Modifier.fillMaxSize()
             ) {
                 Text(
                     text = contentText,
