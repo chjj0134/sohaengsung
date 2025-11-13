@@ -41,10 +41,12 @@ fun DropdownButton(
         color = containerColor,
         tonalElevation = 1.dp,
         border = BorderStroke(0.5.dp, MaterialTheme.colorScheme.primary),
-        modifier = Modifier.clickable(onClick = onClick)
+        modifier = Modifier
+            .clickable(onClick = onClick)
     ) {
         Row(
-            modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
+            modifier = Modifier
+                .padding(horizontal = 12.dp, vertical = 4.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             // 드롭다운 텍스트
