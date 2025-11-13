@@ -1,31 +1,52 @@
 package com.example.sohaengsung.ui.components
 
+import android.R.attr.text
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.sohaengsung.data.model.Place
 
 @Composable
-fun PlaceInfoContainer(place: Place) {
+fun PlaceInfoContainer(
+    place: Place,
+    onClick: () -> Unit
+) {
         Column (
             modifier = Modifier
-                .padding(horizontal = 16.dp, vertical = 32.dp),
+                .fillMaxWidth()
+                .clickable(onClick = onClick),
             verticalArrangement = Arrangement.spacedBy(3.dp)
         ) {
-            // 장소 이름
-            Text(
-                text = place.name,
-                style = MaterialTheme.typography.bodyLarge
-            )
+            // 장소 이름 및 북마크
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = place.name,
+                    style = MaterialTheme.typography.bodyLarge
+                )
+
+                Bookmark(
+                    initialChecked = true,
+                    onBookmarkToggle = { /* 작업 내용(예시: viewModel.updateBookmark(storeId, isChecked)) */ }
+                )
+            }
 
             // 장소 해시태그
             Text(
@@ -50,7 +71,5 @@ fun PlaceInfoContainer(place: Place) {
                     .height(150.dp)
                     .background(MaterialTheme.colorScheme.secondary),
             )
-
-            CustomDivider(MaterialTheme.colorScheme.secondary)
         }
     }

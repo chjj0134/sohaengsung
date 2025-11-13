@@ -15,6 +15,10 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -22,8 +26,10 @@ import com.example.sohaengsung.data.model.Hashtag
 import com.example.sohaengsung.data.model.Place
 import com.example.sohaengsung.data.model.PlaceDetail
 import com.example.sohaengsung.ui.components.CustomContainer
+import com.example.sohaengsung.ui.components.CustomDivider
 import com.example.sohaengsung.ui.components.Dropdown
 import com.example.sohaengsung.ui.components.HashtagListContainer
+import com.example.sohaengsung.ui.components.PlaceDetailSheet
 import com.example.sohaengsung.ui.components.PlaceInfoContainer
 import com.example.sohaengsung.ui.theme.SohaengsungTheme
 
@@ -31,6 +37,9 @@ import com.example.sohaengsung.ui.theme.SohaengsungTheme
 @Preview(showBackground = false)
 @Composable
 fun PlaceRecommendScreen() {
+
+    var isSheetOpen by remember { mutableStateOf(false) }
+    var selectedPlace by remember { mutableStateOf<Place?>(null) }
 
     // 예시용 임시 데이터
     val HashtagListExample = listOf(
@@ -56,17 +65,9 @@ fun PlaceRecommendScreen() {
         )
     )
 
-    val PlaceExample = Place(
-        "00",
-        "올웨이즈어거스트제작소",
-        "망원동 00길 00번지",
-        hashtags = listOf("공부하기좋은", "따뜻한"),
-        details = PlaceDetail(
-            true,
-            true,
-            true,
-            "크림 라떼"
-        )
+    val placeList = listOf(
+        Place("01", "카페 A", "주소 A", hashtags = listOf("조용함","따뜻한"), details = PlaceDetail(true, false, true, "아메리카노")),
+        Place("02", "식당 B", "주소 B", hashtags = listOf("따뜻한"), details = PlaceDetail(true, true, false, "크림 라떼"))
     )
 
     SohaengsungTheme {
@@ -124,9 +125,30 @@ fun PlaceRecommendScreen() {
                     }
                 }
 
-                // 커스텀 컨테이너 안에 map 사용해서 장소 정보 PlaceInfoContainer 형태로 하나씩 배치 예정
                 CustomContainer() {
-                    PlaceInfoContainer(PlaceExample)
+                    placeList.forEach { place ->
+                        PlaceInfoContainer(
+                            place = place,
+                            onClick = {
+                                selectedPlace = place // 클릭된 장소 정보를 상태에 저장
+                                isSheetOpen = true // 바텀 시트 열기
+                            }
+                        )
+                        CustomDivider(MaterialTheme.colorScheme.secondary)
+                    }
+                }
+
+                /// 바텀 시트 호출 및 데이터 전달
+                // selectedPlace가 null이 아닐 때만 시트를 표시
+                if (selectedPlace != null) {
+                    PlaceDetailSheet(
+                        isSheetOpen = isSheetOpen,
+                        onSheetDismiss = {
+                            isSheetOpen = false
+                            selectedPlace = null // 닫을 때 선택된 장소 상태 초기화
+                        },
+                        place = selectedPlace!! // 널 검사 후 저장된 place 객체를 전달
+                    )
                 }
             }
         }

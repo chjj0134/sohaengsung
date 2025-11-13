@@ -34,7 +34,7 @@ fun Bookmark(
 
     Box(
         modifier = Modifier
-            .size(48.dp)
+            .size(24.dp)
             .clickable {
                 checked = !checked
                 onBookmarkToggle(checked)
