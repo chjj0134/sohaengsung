@@ -64,7 +64,11 @@ fun PlaceForPathContainer(
             }
 
             // 임시 거리
-            Text("거리")
+            Text(
+                "160m",
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.primary
+            )
         }
     }
 }
