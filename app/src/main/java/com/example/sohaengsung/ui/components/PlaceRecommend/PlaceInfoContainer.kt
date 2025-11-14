@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,7 +38,7 @@ fun PlaceInfoContainer(
             ) {
                 Text(
                     text = place.name,
-                    style = MaterialTheme.typography.bodyLarge
+                    style = MaterialTheme.typography.titleSmall
                 )
 
                 Bookmark(
@@ -66,6 +67,7 @@ fun PlaceInfoContainer(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .padding(4.dp)
                     .height(150.dp)
                     .background(MaterialTheme.colorScheme.secondary),
             )
