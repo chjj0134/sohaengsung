@@ -32,25 +32,28 @@ fun PlaceForPathContainer(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 32.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
+                .padding(vertical = 32.dp, horizontal = 8.dp),
+            horizontalArrangement = Arrangement.spacedBy(20.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
 
             // 체크박스
             CheckBox(
                 initialChecked = false,
-                onBookmarkToggle = { /* 작업 내용(예시: viewModel.updateBookmark(storeId, isChecked)) */ }
+                onBookmarkToggle = {
+                    /* 작업 내용(예시: viewModel.updateBookmark(storeId, isChecked)) */
+                }
             )
 
             // 장소 이름, 해시태그
             Column(
                 modifier = Modifier
-                    .weight(1f)
+                    .weight(1f),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 Text(
                     text = place.name,
-                    style = MaterialTheme.typography.bodyLarge
+                    style = MaterialTheme.typography.bodyMedium
                 )
 
                 Text(

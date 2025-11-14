@@ -68,6 +68,9 @@ dependencies {
     // Icon
     implementation("androidx.compose.material:material-icons-extended")
 
+    // Coil
+    implementation("io.coil-kt:coil-compose:2.4.0")
+
     // Compose Material 3
     implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.material3:material3-window-size-class")
