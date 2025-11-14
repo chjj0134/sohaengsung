@@ -81,7 +81,7 @@ val placeExample = listOf(
 
 val reviewExample = listOf(
     Review(reviewId = "R101", userId = "카공탐험가", placeId = "C001", rating = 3.0, content = "조용한 분위기의 카페예요. 노트북 사용도 가능하고 눈치 보지 않고 타이핑할 수 있어 과제 할 때 종종 들르고 있어요.", tags = listOf("조용한 분위기", "노트북", "카공")),
-    Review(reviewId = "R102", userId = "아이러브커피", placeId = "C001", rating = 3.0, content = "테이크아웃 하면 1500원 할인받을 수 있어요. 카페의 시그니처 음료인 크림라떼 맛집입니다. 사람이 많아 주말엔 웨이팅이 길게 늘어서기도 하니 방문 시 참고하세요!", tags = listOf("시그니처음료", "커피맛집", "트렌디한")),
+    Review(reviewId = "R102", userId = "아이러브커피", placeId = "C001", rating = 3.5, content = "테이크아웃 하면 1500원 할인받을 수 있어요. 카페의 시그니처 음료인 크림라떼 맛집입니다. 사람이 많아 주말엔 웨이팅이 길게 늘어서기도 하니 방문 시 참고하세요!", tags = listOf("시그니처음료", "커피맛집", "트렌디한")),
     Review(reviewId = "R103", userId = "청파동원주민", placeId = "A023", rating = 5.0, content = "조용하게 책 읽고 싶거나 책 선물할 때 들리는 저의 최애 책방이에요. 사장님도 친절하시고, 선물 포장도 예쁘게 해주세요. 방문할때마다 항상 기분이 좋아지는 곳이에요.", tags = listOf("선물포장", "아늑한분위기", "북카페"))
 )
 

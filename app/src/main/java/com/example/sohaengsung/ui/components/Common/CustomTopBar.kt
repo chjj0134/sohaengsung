@@ -39,10 +39,8 @@ fun CustomTopBar(contentText: String) {
             ) {
                 Text(
                     text = contentText,
-                    style = androidx.compose.ui.text.TextStyle(
-                        brush = textGradientBrush,
-                        fontSize = MaterialTheme.typography.titleLarge.fontSize,
-                        fontWeight = MaterialTheme.typography.titleLarge.fontWeight
+                    style = MaterialTheme.typography.titleLarge.copy(
+                        brush = textGradientBrush
                     )
                 )
             }

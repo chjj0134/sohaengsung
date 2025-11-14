@@ -16,15 +16,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.sohaengsung.ui.components.Common.Bookmark
-import com.example.sohaengsung.ui.components.Common.CheckBox
 import com.example.sohaengsung.ui.components.Common.CustomDivider
 import com.example.sohaengsung.ui.components.Common.Dropdown
 import com.example.sohaengsung.ui.components.PathRecommend.PlaceForPathContainer
-import com.example.sohaengsung.ui.components.PlaceRecommend.PlaceInfoContainer
 import com.example.sohaengsung.ui.dummy.placeExample
 import com.example.sohaengsung.ui.theme.SohaengsungTheme
-import com.google.android.libraries.places.api.model.kotlin.place
 
 @Preview(showBackground = false)
 @Composable
