@@ -2,8 +2,6 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-
-    // 추가 플러그인
     id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
     id("com.google.gms.google-services")
@@ -47,7 +45,6 @@ android {
 }
 
 dependencies {
-    // 기본 Compose
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -64,46 +61,27 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
-
-    // Icon
     implementation("androidx.compose.material:material-icons-extended")
-
-    // Coil
     implementation("io.coil-kt:coil-compose:2.4.0")
-
-    // Compose Material 3
     implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.material3:material3-window-size-class")
     implementation("androidx.compose.material3:material3-adaptive-navigation-suite")
-
-    // Navigation
     implementation("androidx.navigation:navigation-compose:2.8.3")
-
-    // Hilt
     implementation("com.google.dagger:hilt-android:2.51")
     ksp("com.google.dagger:hilt-compiler:2.51")
-
-    // Room
     implementation("androidx.room:room-runtime:2.6.1")
     implementation("androidx.room:room-ktx:2.6.1")
     ksp("androidx.room:room-compiler:2.6.1")
-
-    // Lifecycle
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.6")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.6")
 
-    // Naver Map (SDK + Compose)
-    implementation("com.naver.maps:map-sdk:3.23.0")
-    implementation("io.github.fornewid:naver-map-compose:1.7.0")
-
-    //Firebase (BoM으로 버전 자동 관리)
+    // Firebase BoM
     implementation(platform("com.google.firebase:firebase-bom:33.7.0"))
-
-    //Firebase Authentication (로그인용)
     implementation("com.google.firebase:firebase-auth-ktx")
-
-    //Google 로그인 (구글 계정 인증)
     implementation("com.google.android.gms:play-services-auth:21.2.0")
 
-}
+    //Google Map
+    implementation("com.google.android.gms:play-services-maps:18.2.0")
+    implementation("com.google.maps.android:maps-compose:4.3.0")
 
+}

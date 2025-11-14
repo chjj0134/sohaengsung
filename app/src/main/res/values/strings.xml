@@ -5,4 +5,6 @@
     <string name="default_web_client_id">
         428534777831-h8rmn215d87nheit858m56d7fli0357n.apps.googleusercontent.com
     </string>
+
+    <string name="google_maps_key">AIzaSyB3NBd6N6ayqmN59WLkNsWeRdKB66hI8Ng</string>
 </resources>

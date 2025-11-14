@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.dp
 import com.example.sohaengsung.ui.components.Common.LoginButton
 import com.example.sohaengsung.ui.theme.SohaengsungTheme
 
-@Preview(showBackground = true)
 @Composable
 fun LogInScreen() {
     SohaengsungTheme {
@@ -72,7 +71,7 @@ fun LogInScreen() {
                         MaterialTheme.colorScheme.primary,
                         MaterialTheme.colorScheme.onPrimary,
                         onClick = {
-                            // 로그인 페이지로 이동
+                              // 로그인 페이지로 이동
                         }
                     )
                     LoginButton(
