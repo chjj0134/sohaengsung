@@ -38,7 +38,7 @@ fun LoginButton(
     ) {
         Text(
             text = contentText,
-            style = MaterialTheme.typography.bodyLarge
+            style = MaterialTheme.typography.bodyMedium
         )
     }
 }
