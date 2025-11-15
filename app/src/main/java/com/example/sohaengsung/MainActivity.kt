@@ -8,7 +8,11 @@ import androidx.compose.runtime.*
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.sohaengsung.ui.screens.LogInScreen
 import com.example.sohaengsung.ui.screens.MapScreen
+import com.example.sohaengsung.ui.screens.PathRecommendScreen
+import com.example.sohaengsung.ui.screens.PlaceRecommendScreen
+import com.example.sohaengsung.ui.screens.SettingScreen
 import com.example.sohaengsung.ui.theme.SohaengsungTheme
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -80,8 +84,11 @@ fun AppNavigation(
         }
     }
 
-    NavHost(navController = navController, startDestination = "login") {
-        composable("login") { }
+    NavHost(navController = navController, startDestination = "setting") {
+        composable("login") { LogInScreen() }
+        composable ("place-recommend" ) { PlaceRecommendScreen() }
+        composable ( "path-recommend" ) { PathRecommendScreen() }
+        composable ( "setting" ) { SettingScreen() }
         composable("map") { MapScreen() }
     }
 }

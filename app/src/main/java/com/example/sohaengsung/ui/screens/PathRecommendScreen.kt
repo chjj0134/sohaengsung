@@ -22,7 +22,6 @@ import com.example.sohaengsung.ui.components.PathRecommend.PlaceForPathContainer
 import com.example.sohaengsung.ui.dummy.placeExample
 import com.example.sohaengsung.ui.theme.SohaengsungTheme
 
-@Preview(showBackground = false)
 @Composable
 fun PathRecommendScreen() {
     SohaengsungTheme {
