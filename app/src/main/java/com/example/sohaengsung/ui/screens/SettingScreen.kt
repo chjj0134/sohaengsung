@@ -32,7 +32,6 @@ import com.example.sohaengsung.ui.dummy.userExample
 import com.example.sohaengsung.ui.theme.SohaengsungTheme
 import com.google.common.math.LinearTransformation.horizontal
 
-@Preview(showBackground = false)
 @Composable
 fun SettingScreen() {
     SohaengsungTheme {

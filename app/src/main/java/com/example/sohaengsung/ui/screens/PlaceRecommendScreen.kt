@@ -34,7 +34,6 @@ import com.example.sohaengsung.ui.dummy.HashtagListExample02
 import com.example.sohaengsung.ui.dummy.placeExample
 import com.example.sohaengsung.ui.theme.SohaengsungTheme
 
-@Preview(showBackground = false)
 @Composable
 fun PlaceRecommendScreen() {
 

@@ -3,11 +3,13 @@ package com.example.sohaengsung.ui.screens
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 
+@Preview
 @Composable
 fun MapScreen() {
     val startLocation = LatLng(37.5665, 126.9780) // 서울 기본 좌표
@@ -16,7 +18,8 @@ fun MapScreen() {
     }
 
     GoogleMap(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize(),
         cameraPositionState = cameraPositionState
     )
 }
