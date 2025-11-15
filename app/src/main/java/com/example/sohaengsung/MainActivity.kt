@@ -84,7 +84,7 @@ fun AppNavigation(
         }
     }
 
-    NavHost(navController = navController, startDestination = "setting") {
+    NavHost(navController = navController, startDestination = "place-recommend") {
         composable("login") { LogInScreen() }
         composable ("place-recommend" ) { PlaceRecommendScreen() }
         composable ( "path-recommend" ) { PathRecommendScreen() }
