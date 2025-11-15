@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -17,6 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sohaengsung.ui.components.Common.CustomDivider
+import com.example.sohaengsung.ui.components.common.CustomTopBar
 import com.example.sohaengsung.ui.components.Setting.ProfileSettingContainer
 import com.example.sohaengsung.ui.components.Setting.SettingMenuItem
 import com.example.sohaengsung.ui.theme.SohaengsungTheme
@@ -67,23 +67,16 @@ fun SettingScreen(
 
     SohaengsungTheme {
         Scaffold(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
+            topBar = {
+                CustomTopBar(contentText = "태그헌터")
+            }
         ) { innerPadding ->
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding)
             ) {
-                // 상단 타이틀 "태그헌터"
-                Text(
-                    text = "태그헌터",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 20.dp, vertical = 24.dp),
-                    style = MaterialTheme.typography.titleLarge.copy(
-                        color = Color.Gray
-                    )
-                )
 
                 // 프로필 섹션
                 ProfileSettingContainer(

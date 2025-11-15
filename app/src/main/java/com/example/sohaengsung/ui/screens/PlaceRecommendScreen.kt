@@ -1,6 +1,5 @@
 package com.example.sohaengsung.ui.screens
 
-import CustomTopBar
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -25,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import com.example.sohaengsung.data.model.Place
 import com.example.sohaengsung.ui.components.PlaceRecommend.CustomContainer
 import com.example.sohaengsung.ui.components.Common.CustomDivider
+import com.example.sohaengsung.ui.components.common.CustomTopBar
 import com.example.sohaengsung.ui.components.Common.Dropdown
 import com.example.sohaengsung.ui.components.PlaceRecommend.HashtagListContainer
 import com.example.sohaengsung.ui.components.PlaceRecommend.PlaceDetailSheet

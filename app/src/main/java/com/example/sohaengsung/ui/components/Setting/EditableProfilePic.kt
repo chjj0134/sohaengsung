@@ -5,7 +5,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
@@ -31,7 +30,6 @@ fun EditableProfilePic(
 ) {
     val imageSize = size.dp
     val editIconSize = 24.dp
-    val editIconOffset = imageSize * 0.35f
 
     Box(
         modifier = Modifier.size(imageSize)
@@ -62,11 +60,11 @@ fun EditableProfilePic(
             }
         }
 
-        // 편집 아이콘 (오른쪽 하단)
+        // 편집 아이콘 (오른쪽 하단에 붙이기)
         Box(
             modifier = Modifier
                 .size(editIconSize)
-                .offset(x = editIconOffset, y = editIconOffset)
+                .align(Alignment.BottomEnd)
                 .clip(CircleShape)
                 .background(MaterialTheme.colorScheme.surface)
                 .border(1.dp, Color.Gray, CircleShape)

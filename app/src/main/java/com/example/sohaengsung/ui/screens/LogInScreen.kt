@@ -1,7 +1,5 @@
 package com.example.sohaengsung.ui.screens
 
-import android.R.attr.checked
-import com.example.sohaengsung.R
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -9,7 +7,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -19,9 +16,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.sohaengsung.R
+
 import com.example.sohaengsung.ui.components.Common.LoginButton
+import com.example.sohaengsung.ui.components.common.CustomTopBar
 import com.example.sohaengsung.ui.theme.SohaengsungTheme
 
 @Composable
@@ -29,7 +28,13 @@ fun LogInScreen() {
     SohaengsungTheme {
         Scaffold (
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxSize(),
+// C:/Users/kte04/sohaengsung/app/src/main/java/com/example/sohaengsung/ui/screens/LogInScreen.kt
+// import android.R.attr.checked  <- 이 줄이 삭제되었습니다.
+// ... (이하 생략)
+            topBar = {
+                CustomTopBar(contentText = "로그인")
+            }
         ) { innerPadding ->
             Column(
                 modifier = Modifier
