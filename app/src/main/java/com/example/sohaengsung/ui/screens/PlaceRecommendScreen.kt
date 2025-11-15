@@ -59,6 +59,8 @@ fun PlaceRecommendScreen() {
                         .background(MaterialTheme.colorScheme.secondary),
                 )
                 {
+                    MapScreen()
+
                     Column (
                         modifier = Modifier
                             .fillMaxHeight()
