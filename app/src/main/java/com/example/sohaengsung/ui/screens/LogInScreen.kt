@@ -28,13 +28,7 @@ fun LogInScreen() {
     SohaengsungTheme {
         Scaffold (
             modifier = Modifier
-                .fillMaxSize(),
-// C:/Users/kte04/sohaengsung/app/src/main/java/com/example/sohaengsung/ui/screens/LogInScreen.kt
-// import android.R.attr.checked  <- 이 줄이 삭제되었습니다.
-// ... (이하 생략)
-            topBar = {
-                CustomTopBar(contentText = "로그인")
-            }
+                .fillMaxSize()
         ) { innerPadding ->
             Column(
                 modifier = Modifier
@@ -76,7 +70,7 @@ fun LogInScreen() {
                         MaterialTheme.colorScheme.primary,
                         MaterialTheme.colorScheme.onPrimary,
                         onClick = {
-                              // 로그인 페이지로 이동
+                            // 로그인 페이지로 이동
                         }
                     )
                     LoginButton(
