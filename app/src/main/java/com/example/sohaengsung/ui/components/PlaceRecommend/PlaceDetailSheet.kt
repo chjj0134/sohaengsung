@@ -26,20 +26,14 @@ fun PlaceDetailSheet(
             onDismiss = onSheetDismiss // 닫힘 이벤트 처리
         ) {
 
-            // 1. 장소 상세 정보 컨테이너에 장소 객체 할당해서 가져 옴
+            // 장소 상세 정보
             PlaceDetailContainer(place)
 
-            // 2. Divider
+            // 디바이더
             CustomDivider(MaterialTheme.colorScheme.secondary)
 
-            // 3. ReviewContainer
-            // 임시 리뷰 영역으로 대체
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(150.dp)
-                    .background(MaterialTheme.colorScheme.secondary),
-            )
+            // 임시 리뷰 컨테이너
+            ReviewContainer()
         }
     }
 }
