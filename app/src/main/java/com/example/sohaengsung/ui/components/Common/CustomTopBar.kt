@@ -1,20 +1,22 @@
-import androidx.compose.foundation.layout.Arrangement
+package com.example.sohaengsung.ui.components.common
+
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MediumTopAppBar
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.example.sohaengsung.ui.theme.SohaengsungTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomTopBar(contentText: String) {
 
@@ -26,24 +28,36 @@ fun CustomTopBar(contentText: String) {
         )
     )
 
-    MediumTopAppBar(
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.background,
-            titleContentColor = Color.Unspecified,
-        ),
-        title = {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize(),
-                contentAlignment = Alignment.Center,
-            ) {
-                Text(
-                    text = contentText,
-                    style = MaterialTheme.typography.titleLarge.copy(
-                        brush = textGradientBrush
-                    )
+    // 커스텀 TopBar - 높이를 낮게 설정
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(56.dp), // SmallTopAppBar와 유사한 높이
+        color = MaterialTheme.colorScheme.background
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp)
+                .padding(start = 20.dp, top = 8.dp),
+            contentAlignment = Alignment.TopStart,
+        ) {
+            Text(
+                text = contentText,
+                style = MaterialTheme.typography.titleLarge.copy(
+                    brush = textGradientBrush,
+                    fontSize = 28.sp,
+                    fontWeight = FontWeight.Bold
                 )
-            }
+            )
         }
-    )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun CustomTopBarPreview() {
+    SohaengsungTheme {
+        CustomTopBar("태그헌터")
+    }
 }

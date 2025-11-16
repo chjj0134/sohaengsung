@@ -1,6 +1,5 @@
 package com.example.sohaengsung.ui.screens
 
-import CustomTopBar
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.sohaengsung.ui.components.Common.CustomDivider
+import com.example.sohaengsung.ui.components.common.CustomTopBar
 import com.example.sohaengsung.ui.components.Common.Dropdown
 import com.example.sohaengsung.ui.components.PathRecommend.PlaceForPathContainer
 import com.example.sohaengsung.ui.dummy.placeExample
