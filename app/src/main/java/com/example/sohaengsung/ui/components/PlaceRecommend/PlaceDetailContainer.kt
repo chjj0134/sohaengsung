@@ -30,7 +30,7 @@ fun PlaceDetailContainer(place: Place) {
         ) {
             Text(
                 text = place.name,
-                style = MaterialTheme.typography.bodyLarge
+                style = MaterialTheme.typography.titleSmall
             )
 
             Bookmark(

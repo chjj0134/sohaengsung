@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -23,9 +24,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.sohaengsung.data.model.User
+import com.example.sohaengsung.ui.components.Common.CustomVerticalDivider
 import com.example.sohaengsung.ui.screens.SettingScreen
 import com.example.sohaengsung.ui.theme.SohaengsungTheme
 
@@ -65,13 +68,13 @@ fun ProfileSettingContainer(
             Button(
                 onClick = { onLevelDetailClick() },
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(12.dp),
+                shape = RoundedCornerShape(16.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color(0xFFE5EEF2),
                     contentColor = Color.Black
                 ),
                 elevation = ButtonDefaults.buttonElevation(defaultElevation = 0.dp),
-                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp)
+                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -90,13 +93,19 @@ fun ProfileSettingContainer(
                         style = MaterialTheme.typography.bodyMedium
                     )
 
-                    // 두 그룹을 양쪽 끝으로 밀어내는 Spacer
-                    Spacer(modifier = Modifier.weight(1f))
+                    CustomVerticalDivider(
+                        MaterialTheme.colorScheme.onSecondary,
+                        modifier = Modifier
+                            .height(16.dp)
+                            .padding(horizontal = 6.dp),
+                    )
 
                     // 2. 오른쪽 그룹: 등급 확인 텍스트와 화살표
                     Text(
                         text = "등급 확인하러 가기",
-                        style = MaterialTheme.typography.bodySmall
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            textDecoration = TextDecoration.Underline
+                        )
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Icon(

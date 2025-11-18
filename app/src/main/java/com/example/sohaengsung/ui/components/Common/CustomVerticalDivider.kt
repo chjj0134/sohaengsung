@@ -12,12 +12,10 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun CustomVerticalDivider(
     color: Color,
-    height: Int
+    modifier: Modifier
 ) {
     VerticalDivider(
-        Modifier
-            .height(height.dp)
-            .fillMaxHeight(),
+        modifier = modifier,
         1.dp,
         color = color
     )
