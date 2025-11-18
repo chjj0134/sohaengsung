@@ -8,6 +8,7 @@ import androidx.compose.runtime.*
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.sohaengsung.ui.screens.HomeScreen
 import com.example.sohaengsung.ui.screens.LogInScreen
 import com.example.sohaengsung.ui.screens.MapScreen
 import com.example.sohaengsung.ui.screens.PathRecommendScreen
@@ -84,11 +85,42 @@ fun AppNavigation(
         }
     }
 
-    NavHost(navController = navController, startDestination = "place-recommend") {
+    NavHost(navController = navController, startDestination = "home") {
         composable("login") { LogInScreen() }
-        composable ("place-recommend" ) { PlaceRecommendScreen() }
-        composable ( "path-recommend" ) { PathRecommendScreen() }
-        composable ( "setting" ) { SettingScreen() }
+        composable("home") {
+            HomeScreen(
+                onNavigateToPlaceRecommend = {
+                    navController.navigate("place-recommend")
+                },
+                onNavigateToPathRecommend = {
+                    navController.navigate("path-recommend")
+                },
+                onNavigateToBookmark = {
+                    navController.navigate("place-recommend") // 북마크는 장소 추천 화면으로
+                },
+                onNavigateToCoupon = {
+                    navController.navigate("coupon")
+                },
+                onNavigateToEvent = {
+                    navController.navigate("event")
+                },
+                onNavigateToSetting = {
+                    navController.navigate("setting")
+                }
+            )
+        }
+        composable("place-recommend") { PlaceRecommendScreen() }
+        composable("path-recommend") { PathRecommendScreen() }
+        composable("setting") { SettingScreen() }
         composable("map") { MapScreen() }
+        // TODO: 추후 구현 예정
+        composable("coupon") { 
+            // CouponScreen() - 추후 구현
+            PlaceRecommendScreen() // 임시
+        }
+        composable("event") { 
+            // EventScreen() - 추후 구현
+            PlaceRecommendScreen() // 임시
+        }
     }
 }
