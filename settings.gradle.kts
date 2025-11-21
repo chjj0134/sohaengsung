@@ -1,20 +1,18 @@
 pluginManagement {
     repositories {
-        gradlePluginPortal()
         google()
         mavenCentral()
-        maven { url = uri("https://maven.google.com") }
-        maven { url = uri("https://dl.google.com/dl/android/maven2/") }
+        gradlePluginPortal()
+        maven(url = "https://devrepo.kakao.com/nexus/content/groups/public/")
     }
 }
 
 dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
     repositories {
         google()
         mavenCentral()
-        maven { url = uri("https://maven.google.com") }
-        maven { url = uri("https://dl.google.com/dl/android/maven2/") }
+        maven(url = "https://devrepo.kakao.com/nexus/content/groups/public/")
     }
 }
 
