@@ -9,21 +9,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-data class SettingScreenUiState(
-    val user: User = User(),
-    val isLoading: Boolean = false,
-    val errorMessage: String? = null
-)
-
-sealed class SettingScreenEvent {
-    object NavigateToAccountManagement : SettingScreenEvent()
-    object NavigateToThemeChange : SettingScreenEvent()
-    object NavigateToTerms : SettingScreenEvent()
-    object NavigateToNotice : SettingScreenEvent()
-    object NavigateToLevelDetail : SettingScreenEvent()
-    object EditProfilePicture : SettingScreenEvent()
-}
-
 class SettingScreenViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(SettingScreenUiState())
     val uiState: StateFlow<SettingScreenUiState> = _uiState.asStateFlow()
@@ -56,6 +41,8 @@ class SettingScreenViewModel : ViewModel() {
 
     fun onEvent(event: SettingScreenEvent) {
         viewModelScope.launch {
+            // onEvent 호출 시, 바로 _events에 값을 설정하고
+            // UI에서 해당 값을 소비한 후 clearEvent()를 호출해야 함
             _events.value = event
         }
     }
