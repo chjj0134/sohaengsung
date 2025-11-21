@@ -1,4 +1,4 @@
-package com.example.sohaengsung.ui.components.PlaceRecommend
+package com.example.sohaengsung.ui.features.placeRecommend.components
 
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement

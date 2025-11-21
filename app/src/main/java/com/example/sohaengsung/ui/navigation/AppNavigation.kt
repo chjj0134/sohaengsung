@@ -5,11 +5,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.sohaengsung.ui.screens.LogInScreen
-import com.example.sohaengsung.ui.screens.MapScreen
-import com.example.sohaengsung.ui.screens.PathRecommendScreen
-import com.example.sohaengsung.ui.screens.PlaceRecommendScreen
-import com.example.sohaengsung.ui.screens.SettingScreen
+import com.example.sohaengsung.ui.features.logIn.LogInScreen
+import com.example.sohaengsung.ui.features.map.MapScreen
+import com.example.sohaengsung.ui.features.pathRecommend.PathRecommendScreen
+import com.example.sohaengsung.ui.features.placeRecommend.PlaceRecommendScreen
+import com.example.sohaengsung.ui.features.setting.SettingScreen
 
 @Composable
 fun AppNavigation(

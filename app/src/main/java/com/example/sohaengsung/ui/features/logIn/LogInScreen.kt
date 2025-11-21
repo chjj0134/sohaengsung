@@ -1,4 +1,4 @@
-package com.example.sohaengsung.ui.screens
+package com.example.sohaengsung.ui.features.logIn
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -20,7 +20,6 @@ import androidx.compose.ui.unit.dp
 import com.example.sohaengsung.R
 
 import com.example.sohaengsung.ui.components.Common.LoginButton
-import com.example.sohaengsung.ui.components.common.CustomTopBar
 import com.example.sohaengsung.ui.theme.SohaengsungTheme
 
 @Composable

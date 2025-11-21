@@ -1,4 +1,4 @@
-package com.example.sohaengsung.ui.screens
+package com.example.sohaengsung.ui.features.map
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
