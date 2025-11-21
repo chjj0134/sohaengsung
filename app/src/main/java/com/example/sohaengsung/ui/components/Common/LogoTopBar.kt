@@ -1,10 +1,12 @@
 package com.example.sohaengsung.ui.components.Common
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -12,25 +14,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.sohaengsung.R
 import com.example.sohaengsung.ui.theme.SohaengsungTheme
 
 @Composable
 fun LogoTopBar(
     onProfileClick: () -> Unit = {},
-    profileContent: @Composable () -> Unit
+    profileContent: @Composable (() -> Unit)? = null
 ) {
-    // 그라데이션 색상 정의
-    val textGradientBrush = Brush.horizontalGradient(
-        listOf(
-            MaterialTheme.colorScheme.primary,   // 시작 색상
-            MaterialTheme.colorScheme.tertiary // 끝 색상
-        )
-    )
-
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -44,25 +40,26 @@ fun LogoTopBar(
                 .padding(horizontal = 20.dp),
             contentAlignment = Alignment.CenterStart
         ) {
-            // 왼쪽: 로고 텍스트
-            Text(
-                text = "소행성*",
-                style = MaterialTheme.typography.titleLarge.copy(
-                    brush = textGradientBrush,
-                    fontSize = 35.sp,
-                    fontWeight = FontWeight.Bold
-                ),
-                modifier = Modifier.padding(top = 20.dp)  // 위쪽 여백으로 텍스트를 아래로 이동
+            // 왼쪽: 로고 이미지
+            Image(
+                painter = painterResource(id = R.drawable.logo),
+                contentDescription = "로고",
+                modifier = Modifier
+                    .width(100.dp)
+                    .height(80.dp)
+                    .padding(top = 20.dp)  // 로고를 아래로 이동
             )
             
-            // 오른쪽: 프로필 이미지
-            Box(
-                modifier = Modifier
-                    .align(Alignment.CenterEnd)
-                    .clickable { onProfileClick() },
-                contentAlignment = Alignment.Center
-            ) {
-                profileContent()
+            // 오른쪽: 프로필 이미지 (옵션)
+            if (profileContent != null) {
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.CenterEnd)
+                        .clickable { onProfileClick() },
+                    contentAlignment = Alignment.Center
+                ) {
+                    profileContent()
+                }
             }
         }
     }

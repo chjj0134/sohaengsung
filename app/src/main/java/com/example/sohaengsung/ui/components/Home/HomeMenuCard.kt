@@ -1,5 +1,6 @@
 package com.example.sohaengsung.ui.components.Home
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -45,11 +46,12 @@ fun HomeMenuCard(
     Surface(
         modifier = modifier
             .width(170.dp)
-            .height(210.dp)
+            .height(220.dp)
             .clickable { onClick() },
         shape = RoundedCornerShape(16.dp),
         color = CardBackgroundWhite,
-        shadowElevation = 2.dp
+        border = BorderStroke(1.dp, Color(0xFFABABAB)),  // stroke 색상 ABABAB, weight 1dp
+        shadowElevation = 4.dp
     ) {
         Box(
             modifier = Modifier
@@ -60,8 +62,9 @@ fun HomeMenuCard(
             Text(
                 text = title,
                 style = MaterialTheme.typography.bodyLarge.copy(
-                    fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
-                    fontSize = 18.sp
+                    fontSize = 22.sp,
+                    lineHeight = 28.sp,  // 줄 간격 추가
+                    fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold
                 ),
                 color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier

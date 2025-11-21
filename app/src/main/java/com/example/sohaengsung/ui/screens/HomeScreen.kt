@@ -90,13 +90,14 @@ fun HomeScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding)
+                    .padding(top = 30.dp)  // topBar와의 간격 증가
                     .padding(horizontal = 20.dp, vertical = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                verticalArrangement = Arrangement.spacedBy(24.dp)  // Row 간 간격 증가
             ) {
                 // 첫 번째 행: 내 주변 장소 추천, 경로 추천
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    horizontalArrangement = Arrangement.spacedBy(24.dp)  // 카드 간 간격 증가
                 ) {
                     HomeMenuCard(
                         title = "내 주변\n장소 추천",
@@ -120,7 +121,7 @@ fun HomeScreen(
                 // 두 번째 행: 내 북마크 확인하기, 쿠폰 확인하기
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    horizontalArrangement = Arrangement.spacedBy(24.dp)  // 카드 간 간격 증가
                 ) {
                     HomeMenuCard(
                         title = "내 북마크\n확인하기",
@@ -143,7 +144,7 @@ fun HomeScreen(
 
                 // 세 번째 행: 행사 정보 확인하기
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    horizontalArrangement = Arrangement.spacedBy(24.dp)  // 카드 간 간격 증가
                 ) {
                     HomeMenuCard(
                         title = "행사 정보\n확인하기",
