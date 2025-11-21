@@ -8,6 +8,7 @@ import androidx.compose.runtime.*
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.sohaengsung.ui.navigation.AppNavigation
 import com.example.sohaengsung.ui.screens.LogInScreen
 import com.example.sohaengsung.ui.screens.MapScreen
 import com.example.sohaengsung.ui.screens.PathRecommendScreen
@@ -26,6 +27,8 @@ class MainActivity : ComponentActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var googleSignInClient: GoogleSignInClient
 
+    private var navigateToMap: (() -> Unit)? = null
+
     private val googleSignInLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
@@ -38,7 +41,6 @@ class MainActivity : ComponentActivity() {
             } catch (_: ApiException) { }
         }
 
-    private var navigateToMap: (() -> Unit)? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,7 +56,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             SohaengsungTheme {
-                AppNavigation(
+                SohaengsungApp(
                     startGoogleLogin = {
                         googleSignInLauncher.launch(googleSignInClient.signInIntent)
                     },
@@ -64,31 +66,5 @@ class MainActivity : ComponentActivity() {
                 )
             }
         }
-    }
-}
-
-@Composable
-fun AppNavigation(
-    startGoogleLogin: () -> Unit,
-    setNavCallback: ((() -> Unit) -> Unit)
-) {
-    val navController = rememberNavController()
-
-    LaunchedEffect(Unit) {
-        startGoogleLogin()
-    }
-
-    setNavCallback {
-        navController.navigate("map") {
-            popUpTo("login") { inclusive = true }
-        }
-    }
-
-    NavHost(navController = navController, startDestination = "login") {
-        composable("login") { LogInScreen() }
-        composable ("place-recommend" ) { PlaceRecommendScreen() }
-        composable ( "path-recommend" ) { PathRecommendScreen() }
-        composable ( "setting" ) { SettingScreen() }
-        composable("map") { MapScreen() }
     }
 }
