@@ -11,7 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.sohaengsung.data.model.Place
-import com.example.sohaengsung.ui.components.Common.Bookmark
+import com.example.sohaengsung.ui.common.Bookmark
 
 fun Boolean.toOXString(): String = if (this) "O" else "X"
 

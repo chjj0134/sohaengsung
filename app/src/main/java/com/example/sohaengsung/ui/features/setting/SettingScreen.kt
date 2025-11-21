@@ -18,7 +18,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sohaengsung.R
-import com.example.sohaengsung.ui.components.Common.CustomDivider
+import com.example.sohaengsung.ui.common.CustomDivider
+import com.example.sohaengsung.ui.features.setting.SettingScreenEvent
+import com.example.sohaengsung.ui.features.setting.SettingScreenViewModel
 import com.example.sohaengsung.ui.features.setting.components.ProfileSettingContainer
 import com.example.sohaengsung.ui.features.setting.components.SettingMenuItem
 import com.example.sohaengsung.ui.theme.SohaengsungTheme

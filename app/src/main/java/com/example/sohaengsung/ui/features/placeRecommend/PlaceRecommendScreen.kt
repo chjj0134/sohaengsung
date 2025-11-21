@@ -22,9 +22,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.sohaengsung.data.model.Place
 import com.example.sohaengsung.ui.features.placeRecommend.components.CustomContainer
-import com.example.sohaengsung.ui.components.Common.CustomDivider
-import com.example.sohaengsung.ui.components.common.CustomTopBar
-import com.example.sohaengsung.ui.components.Common.Dropdown
+import com.example.sohaengsung.ui.common.CustomDivider
+import com.example.sohaengsung.ui.common.CustomTopBar
+import com.example.sohaengsung.ui.common.Dropdown
 import com.example.sohaengsung.ui.features.placeRecommend.components.HashtagListContainer
 import com.example.sohaengsung.ui.features.placeRecommend.components.PlaceDetailSheet
 import com.example.sohaengsung.ui.features.placeRecommend.components.PlaceInfoContainer

@@ -1,4 +1,4 @@
-package com.example.sohaengsung.ui.components.Common
+package com.example.sohaengsung.ui.features.logIn.components
 
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding

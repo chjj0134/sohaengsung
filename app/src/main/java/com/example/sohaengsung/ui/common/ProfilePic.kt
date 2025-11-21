@@ -1,7 +1,8 @@
-package com.example.sohaengsung.ui.components.Common
+package com.example.sohaengsung.ui.common
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
@@ -39,7 +40,7 @@ fun ProfilePic(
                 model = user.profilePic, // 프로필 사진 URL
                 contentDescription = "${user.uid}님의 프로필 사진",
                 modifier = Modifier
-                    .matchParentSize(), // Box 크기에 맞춤
+                    .fillMaxSize(), // Box 크기에 맞춤
                 contentScale = ContentScale.Crop,
             )
         } else {
@@ -53,3 +54,4 @@ fun ProfilePic(
         }
     }
 }
+

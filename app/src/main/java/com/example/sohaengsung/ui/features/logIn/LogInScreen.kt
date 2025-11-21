@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sohaengsung.R
 
-import com.example.sohaengsung.ui.components.Common.LoginButton
+import com.example.sohaengsung.ui.features.logIn.components.LoginButton
 import com.example.sohaengsung.ui.theme.SohaengsungTheme
 
 @Composable

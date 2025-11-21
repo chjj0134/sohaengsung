@@ -14,10 +14,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.sohaengsung.ui.components.Common.CustomDivider
-import com.example.sohaengsung.ui.components.Common.Dropdown
+import com.example.sohaengsung.ui.common.CustomDivider
+import com.example.sohaengsung.ui.common.Dropdown
 import com.example.sohaengsung.ui.features.pathRecommend.components.PlaceForPathContainer
-import com.example.sohaengsung.ui.components.common.CustomTopBar
+import com.example.sohaengsung.ui.common.CustomTopBar
 import com.example.sohaengsung.ui.dummy.placeExample
 import com.example.sohaengsung.ui.theme.SohaengsungTheme
 
