@@ -4,10 +4,11 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -23,6 +24,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.example.sohaengsung.ui.theme.CardBackgroundWhite
 
 @Composable
 fun HomeMenuCard(
@@ -41,48 +44,47 @@ fun HomeMenuCard(
 
     Surface(
         modifier = modifier
-            .fillMaxWidth()
-            .height(120.dp)
+            .width(170.dp)
+            .height(210.dp)
             .clickable { onClick() },
         shape = RoundedCornerShape(16.dp),
-        color = MaterialTheme.colorScheme.surface,
+        color = CardBackgroundWhite,
         shadowElevation = 2.dp
     ) {
-        Column(
+        Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+                .fillMaxSize()
+                .padding(16.dp)
         ) {
-            // 아이콘 (그라데이션 색상 적용)
-            Box(
-                modifier = Modifier.size(48.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = icon,
-                    contentDescription = title,
-                    modifier = Modifier
-                        .size(48.dp)
-                        .drawWithContent {
-                            drawContent()
-                            drawRect(
-                                brush = iconGradientBrush,
-                                blendMode = BlendMode.SrcAtop
-                            )
-                        },
-                    tint = Color.Unspecified
-                )
-            }
-
-            // 제목
+            // 제목 (왼쪽 상단)
             Text(
                 text = title,
-                style = MaterialTheme.typography.bodyLarge,
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
+                    fontSize = 18.sp
+                ),
                 color = MaterialTheme.colorScheme.onSurface,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(top = 8.dp)
+                modifier = Modifier
+                    .align(Alignment.TopStart)
+            )
+            
+            // 아이콘 (하단 오른쪽, 아이콘 외곽선에 그라데이션 적용)
+            Icon(
+                imageVector = icon,
+                contentDescription = title,
+                modifier = Modifier
+                    .size(48.dp)
+                    .align(Alignment.BottomEnd)
+                    .drawWithContent {
+                        // 1단계: 아이콘을 흰색으로 그려서 알파 마스크 생성
+                        drawContent()
+                        // 2단계: 그라데이션을 아이콘의 알파 채널(외곽선)에만 적용
+                        drawRect(
+                            brush = iconGradientBrush,
+                            blendMode = BlendMode.SrcIn
+                        )
+                    },
+                tint = Color.White // 아이콘을 흰색으로 그려서 알파 채널 생성
             )
         }
     }

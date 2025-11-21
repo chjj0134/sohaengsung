@@ -20,9 +20,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sohaengsung.ui.components.Common.AppIcons
+import com.example.sohaengsung.ui.components.Common.LogoTopBar
 import com.example.sohaengsung.ui.components.Common.ProfilePic
 import com.example.sohaengsung.ui.components.Home.HomeMenuCard
-import com.example.sohaengsung.ui.components.common.CustomTopBar
 import com.example.sohaengsung.ui.theme.SohaengsungTheme
 
 @Composable
@@ -73,28 +73,17 @@ fun HomeScreen(
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             topBar = {
-                // 상단 헤더: CustomTopBar + 프로필 이미지
-                Box(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    // CustomTopBar 사용
-                    CustomTopBar(contentText = "소행성*")
-                    
-                    // 오른쪽: 프로필 이미지
-                    Box(
-                        modifier = Modifier
-                            .align(Alignment.CenterEnd)
-                            .padding(end = 20.dp)
-                            .clickable {
-                                viewModel.onEvent(HomeScreenEvent.NavigateToSetting)
-                            }
-                    ) {
+                LogoTopBar(
+                    onProfileClick = {
+                        viewModel.onEvent(HomeScreenEvent.NavigateToSetting)
+                    },
+                    profileContent = {
                         ProfilePic(
                             user = uiState.user,
                             size = 40
                         )
                     }
-                }
+                )
             }
         ) { innerPadding ->
             Column(
@@ -110,7 +99,7 @@ fun HomeScreen(
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     HomeMenuCard(
-                        title = "내 주변 장소 추천",
+                        title = "내 주변\n장소 추천",
                         icon = AppIcons.LocationOn,
                         onClick = {
                             viewModel.onEvent(HomeScreenEvent.NavigateToPlaceRecommend)
@@ -134,7 +123,7 @@ fun HomeScreen(
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     HomeMenuCard(
-                        title = "내 북마크 확인하기",
+                        title = "내 북마크\n확인하기",
                         icon = AppIcons.Folder,
                         onClick = {
                             viewModel.onEvent(HomeScreenEvent.NavigateToBookmark)
@@ -143,7 +132,7 @@ fun HomeScreen(
                     )
                     
                     HomeMenuCard(
-                        title = "쿠폰 확인하기",
+                        title = "쿠폰\n확인하기",
                         icon = AppIcons.CardGiftcard,
                         onClick = {
                             viewModel.onEvent(HomeScreenEvent.NavigateToCoupon)
@@ -152,15 +141,18 @@ fun HomeScreen(
                     )
                 }
 
-                // 세 번째 행: 행사 정보 확인하기 (중앙 정렬)
-                HomeMenuCard(
-                    title = "행사 정보 확인하기",
-                    icon = AppIcons.LocalCafe,
-                    onClick = {
-                        viewModel.onEvent(HomeScreenEvent.NavigateToEvent)
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                )
+                // 세 번째 행: 행사 정보 확인하기
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    HomeMenuCard(
+                        title = "행사 정보\n확인하기",
+                        icon = AppIcons.LocalCafe,
+                        onClick = {
+                            viewModel.onEvent(HomeScreenEvent.NavigateToEvent)
+                        }
+                    )
+                }
             }
         }
     }
