@@ -4,16 +4,12 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.runtime.*
-import androidx.navigation.compose.rememberNavController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import com.example.sohaengsung.ui.screens.LogInScreen
-import com.example.sohaengsung.ui.screens.MapScreen
-import com.example.sohaengsung.ui.screens.PathRecommendScreen
-import com.example.sohaengsung.ui.screens.PlaceRecommendScreen
-import com.example.sohaengsung.ui.screens.SettingScreen
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import com.example.sohaengsung.ui.screens.AppNavigation
 import com.example.sohaengsung.ui.theme.SohaengsungTheme
+
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -21,24 +17,73 @@ import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 
+import com.kakao.sdk.user.UserApiClient
+import com.example.sohaengsung.data.repository.UserRepository
+import com.example.sohaengsung.data.model.User
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+
 class MainActivity : ComponentActivity() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var googleSignInClient: GoogleSignInClient
 
+    private val userRepository = UserRepository()
+
+    private var loginSuccess by mutableStateOf(false)
+
+    // 구글 로그인 Launcher
     private val googleSignInLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
             try {
                 val account = task.getResult(ApiException::class.java)!!
                 val credential = GoogleAuthProvider.getCredential(account.idToken, null)
+
                 auth.signInWithCredential(credential).addOnSuccessListener {
-                    navigateToMap?.invoke()
+                    val uid = auth.currentUser?.uid ?: return@addOnSuccessListener
+                    saveUserToFirestore(uid)
                 }
             } catch (_: ApiException) { }
         }
 
-    private var navigateToMap: (() -> Unit)? = null
+    // 카카오 로그인
+    private fun startKakaoLogin() {
+        val context = this
+
+        UserApiClient.instance.loginWithKakaoTalk(context) { token, error ->
+            if (error != null) {
+                UserApiClient.instance.loginWithKakaoAccount(context) { token2, _ ->
+                    if (token2 != null) {
+                        onKakaoLoginSuccess()
+                    }
+                }
+            } else if (token != null) {
+                onKakaoLoginSuccess()
+            }
+        }
+    }
+
+    private fun onKakaoLoginSuccess() {
+        val uid = "kakao_" + System.currentTimeMillis()
+        saveUserToFirestore(uid)
+    }
+
+    // Firestore에 저장 처리
+    private fun saveUserToFirestore(uid: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+
+            val user = User(
+                uid = uid,
+                nickname = "Guest",
+                profilePic = null
+            )
+
+            userRepository.createUserIfNotExists(user)
+            loginSuccess = true
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,37 +103,12 @@ class MainActivity : ComponentActivity() {
                     startGoogleLogin = {
                         googleSignInLauncher.launch(googleSignInClient.signInIntent)
                     },
-                    setNavCallback = { callback ->
-                        navigateToMap = callback
-                    }
+                    startKakaoLogin = {
+                        startKakaoLogin()
+                    },
+                    loginSuccess = loginSuccess
                 )
             }
         }
-    }
-}
-
-@Composable
-fun AppNavigation(
-    startGoogleLogin: () -> Unit,
-    setNavCallback: ((() -> Unit) -> Unit)
-) {
-    val navController = rememberNavController()
-
-    LaunchedEffect(Unit) {
-        startGoogleLogin()
-    }
-
-    setNavCallback {
-        navController.navigate("map") {
-            popUpTo("login") { inclusive = true }
-        }
-    }
-
-    NavHost(navController = navController, startDestination = "login") {
-        composable("login") { LogInScreen() }
-        composable ("place-recommend" ) { PlaceRecommendScreen() }
-        composable ( "path-recommend" ) { PathRecommendScreen() }
-        composable ( "setting" ) { SettingScreen() }
-        composable("map") { MapScreen() }
     }
 }

@@ -20,11 +20,13 @@ import androidx.compose.ui.unit.dp
 import com.example.sohaengsung.R
 
 import com.example.sohaengsung.ui.components.Common.LoginButton
-import com.example.sohaengsung.ui.components.common.CustomTopBar
+//import com.example.sohaengsung.ui.components.common.CustomTopBar
 import com.example.sohaengsung.ui.theme.SohaengsungTheme
 
 @Composable
-fun LogInScreen() {
+fun LogInScreen(
+    onClickGoogleLogin: () -> Unit,
+    onClickKakaoLogin: () -> Unit) {
     SohaengsungTheme {
         Scaffold (
             modifier = Modifier
@@ -71,6 +73,7 @@ fun LogInScreen() {
                         MaterialTheme.colorScheme.onPrimary,
                         onClick = {
                             // 로그인 페이지로 이동
+                            onClickGoogleLogin()
                         }
                     )
                     LoginButton(
@@ -79,6 +82,8 @@ fun LogInScreen() {
                         MaterialTheme.colorScheme.onTertiary,
                         onClick = {
                             // 로그인 페이지로 이동
+                            println("카카오 로그인 버튼 클릭됨")
+                            onClickKakaoLogin()
                         }
                     )
                 }
