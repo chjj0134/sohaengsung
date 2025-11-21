@@ -1,4 +1,4 @@
-package com.example.sohaengsung.ui.components.Setting
+package com.example.sohaengsung.ui.features.setting.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

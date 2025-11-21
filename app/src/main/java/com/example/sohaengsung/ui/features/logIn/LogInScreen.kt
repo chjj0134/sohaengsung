@@ -1,4 +1,4 @@
-package com.example.sohaengsung.ui.screens
+package com.example.sohaengsung.ui.features.logIn
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -12,19 +12,35 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sohaengsung.R
 
 import com.example.sohaengsung.ui.components.Common.LoginButton
-import com.example.sohaengsung.ui.components.common.CustomTopBar
 import com.example.sohaengsung.ui.theme.SohaengsungTheme
 
 @Composable
-fun LogInScreen() {
+fun LogInScreen(
+    onNavigate: (route: LogInScreenEvent.Navigation) -> Unit,
+    viewModel: LogInViewModel = viewModel()
+) {
+    val uiState by viewModel.uiState.collectAsState()
+    val event by viewModel.events.collectAsState()
+
+    LaunchedEffect(event) {
+        event?.let { navigationEvent ->
+            onNavigate(navigationEvent)
+            viewModel.clearEvent()
+        }
+    }
+
     SohaengsungTheme {
         Scaffold (
             modifier = Modifier
@@ -70,7 +86,9 @@ fun LogInScreen() {
                         MaterialTheme.colorScheme.primary,
                         MaterialTheme.colorScheme.onPrimary,
                         onClick = {
-                            // 로그인 페이지로 이동
+                            viewModel.onEvent(
+                                LogInScreenEvent.onEmailLoginClick
+                            )
                         }
                     )
                     LoginButton(
@@ -78,7 +96,9 @@ fun LogInScreen() {
                         MaterialTheme.colorScheme.tertiary,
                         MaterialTheme.colorScheme.onTertiary,
                         onClick = {
-                            // 로그인 페이지로 이동
+                            viewModel.onEvent(
+                                LogInScreenEvent.onKakaoLoginClick
+                            )
                         }
                     )
                 }
@@ -87,10 +107,11 @@ fun LogInScreen() {
                     "회원가입",
                     modifier = Modifier
                         .clickable{
-                            // 회원가입 페이지로 이동
+                            viewModel.onEvent(
+                                LogInScreenEvent.onSignUpClick
+                            )
                         },
                     style = MaterialTheme.typography.labelLarge.copy(
-                        // textDecoration만 Underline으로
                         textDecoration = TextDecoration.Underline
                     ),
                     color = MaterialTheme.colorScheme.primary

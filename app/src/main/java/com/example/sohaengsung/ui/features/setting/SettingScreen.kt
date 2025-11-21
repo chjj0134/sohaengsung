@@ -13,16 +13,16 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.modifier.modifierLocalOf
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sohaengsung.R
 import com.example.sohaengsung.ui.components.Common.CustomDivider
-import com.example.sohaengsung.ui.components.Common.LogoTopBar
-import com.example.sohaengsung.ui.components.Setting.ProfileSettingContainer
-import com.example.sohaengsung.ui.components.Setting.SettingMenuItem
+import com.example.sohaengsung.ui.features.setting.SettingScreenEvent
+import com.example.sohaengsung.ui.features.setting.SettingScreenViewModel
+import com.example.sohaengsung.ui.features.setting.components.ProfileSettingContainer
+import com.example.sohaengsung.ui.features.setting.components.SettingMenuItem
 import com.example.sohaengsung.ui.theme.SohaengsungTheme
 
 @Composable
@@ -70,12 +70,19 @@ fun SettingScreen(
     }
 
     SohaengsungTheme {
+
             Column(
                 modifier = Modifier
                     .fillMaxSize()
+                    .padding(16.dp)
             ) {
-                // 로고 TopBar
-                LogoTopBar()
+                Image(
+                    painter = painterResource(id = R.drawable.logo),
+                    contentDescription = "로고",
+                    modifier = Modifier
+                        .width(100.dp)
+                        .height(80.dp)
+                )
 
                 // 프로필 섹션
                 ProfileSettingContainer(

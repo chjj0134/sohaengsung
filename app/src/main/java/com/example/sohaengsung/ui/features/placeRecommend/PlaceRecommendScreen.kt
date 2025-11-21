@@ -1,4 +1,4 @@
-package com.example.sohaengsung.ui.screens
+package com.example.sohaengsung.ui.features.placeRecommend
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -19,19 +19,19 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.sohaengsung.data.model.Place
-import com.example.sohaengsung.ui.components.PlaceRecommend.CustomContainer
+import com.example.sohaengsung.ui.features.placeRecommend.components.CustomContainer
 import com.example.sohaengsung.ui.components.Common.CustomDivider
 import com.example.sohaengsung.ui.components.common.CustomTopBar
 import com.example.sohaengsung.ui.components.Common.Dropdown
-import com.example.sohaengsung.ui.components.PlaceRecommend.HashtagListContainer
-import com.example.sohaengsung.ui.components.PlaceRecommend.PlaceDetailSheet
-import com.example.sohaengsung.ui.components.PlaceRecommend.PlaceInfoContainer
+import com.example.sohaengsung.ui.features.placeRecommend.components.HashtagListContainer
+import com.example.sohaengsung.ui.features.placeRecommend.components.PlaceDetailSheet
+import com.example.sohaengsung.ui.features.placeRecommend.components.PlaceInfoContainer
 import com.example.sohaengsung.ui.dummy.HashtagListExample01
 import com.example.sohaengsung.ui.dummy.HashtagListExample02
 import com.example.sohaengsung.ui.dummy.placeExample
+import com.example.sohaengsung.ui.features.map.MapScreen
 import com.example.sohaengsung.ui.theme.SohaengsungTheme
 
 @Composable
