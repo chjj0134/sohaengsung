@@ -12,8 +12,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.sohaengsung.data.model.Place
-import com.example.sohaengsung.ui.components.Common.CheckBox
-import com.example.sohaengsung.ui.components.Common.CustomDivider
+import com.example.sohaengsung.ui.common.CheckBox
+import com.example.sohaengsung.ui.common.CustomDivider
 
 @Composable
 fun PlaceForPathContainer(

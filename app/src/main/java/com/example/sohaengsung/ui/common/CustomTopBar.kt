@@ -1,4 +1,4 @@
-package com.example.sohaengsung.ui.components.common
+package com.example.sohaengsung.ui.common
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize

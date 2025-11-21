@@ -1,4 +1,4 @@
-package com.example.sohaengsung.ui.components.Home
+package com.example.sohaengsung.ui.features.home.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable

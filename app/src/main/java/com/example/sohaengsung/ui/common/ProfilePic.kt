@@ -1,4 +1,4 @@
-package com.example.sohaengsung.ui.components.Common
+package com.example.sohaengsung.ui.common
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -54,3 +54,4 @@ fun ProfilePic(
         }
     }
 }
+

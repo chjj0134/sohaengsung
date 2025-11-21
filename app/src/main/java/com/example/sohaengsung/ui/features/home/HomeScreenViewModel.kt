@@ -1,4 +1,4 @@
-package com.example.sohaengsung.ui.screens
+package com.example.sohaengsung.ui.features.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -60,4 +60,3 @@ class HomeScreenViewModel : ViewModel() {
         _events.value = null
     }
 }
-

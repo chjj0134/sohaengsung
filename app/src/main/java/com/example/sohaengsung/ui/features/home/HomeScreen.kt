@@ -1,4 +1,4 @@
-package com.example.sohaengsung.ui.screens
+package com.example.sohaengsung.ui.features.home
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -19,10 +19,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.sohaengsung.ui.components.Common.AppIcons
-import com.example.sohaengsung.ui.components.Common.LogoTopBar
-import com.example.sohaengsung.ui.components.Common.ProfilePic
-import com.example.sohaengsung.ui.components.Home.HomeMenuCard
+import com.example.sohaengsung.ui.common.AppIcons
+import com.example.sohaengsung.ui.common.LogoTopBar
+import com.example.sohaengsung.ui.common.ProfilePic
+import com.example.sohaengsung.ui.features.home.components.HomeMenuCard
 import com.example.sohaengsung.ui.theme.SohaengsungTheme
 
 @Composable

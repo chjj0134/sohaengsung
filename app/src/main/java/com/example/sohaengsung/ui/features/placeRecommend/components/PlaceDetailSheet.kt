@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import com.example.sohaengsung.data.model.Place
-import com.example.sohaengsung.ui.components.Common.CustomDivider
+import com.example.sohaengsung.ui.common.CustomDivider
 
 @Composable
 fun PlaceDetailSheet(

@@ -14,8 +14,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.sohaengsung.ui.components.Common.ProfilePic
-import com.example.sohaengsung.ui.components.Common.StarRating
+import com.example.sohaengsung.ui.common.ProfilePic
+import com.example.sohaengsung.ui.common.StarRating
 import com.example.sohaengsung.ui.dummy.reviewExample
 import com.example.sohaengsung.ui.dummy.userExample
 

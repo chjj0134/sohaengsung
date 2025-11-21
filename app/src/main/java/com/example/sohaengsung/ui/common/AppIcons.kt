@@ -1,4 +1,4 @@
-package com.example.sohaengsung.ui.components.Common
+package com.example.sohaengsung.ui.common
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.CardGiftcard

@@ -33,7 +33,7 @@ fun HashtagListContainer(HashtagList01: List<Hashtag>, HashtagList02: List<Hasht
         ) {
             // HashtagListExample을 map으로 분해하여 Hashtag 컴포저블에 배치
             HashtagList01.map { hashtagData ->
-                com.example.sohaengsung.ui.components.Common.Hashtag(
+                com.example.sohaengsung.ui.common.Hashtag(
                     content = "#${hashtagData.name}", // 해시태그 이름 앞에 # 붙이기
                     containerColor = MaterialTheme.colorScheme.primary,
                     contentColor = MaterialTheme.colorScheme.onPrimary
@@ -51,7 +51,7 @@ fun HashtagListContainer(HashtagList01: List<Hashtag>, HashtagList02: List<Hasht
         ) {
             // HashtagListExample을 map으로 분해하여 Hashtag 컴포저블에 배치
             HashtagList02.map { hashtagData ->
-                com.example.sohaengsung.ui.components.Common.Hashtag(
+                com.example.sohaengsung.ui.common.Hashtag(
                     content = "#${hashtagData.name}", // 해시태그 이름 앞에 # 붙이기
                     containerColor = MaterialTheme.colorScheme.tertiary,
                     contentColor = MaterialTheme.colorScheme.onTertiary
