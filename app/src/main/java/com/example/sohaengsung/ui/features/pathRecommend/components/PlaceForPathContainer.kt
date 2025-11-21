@@ -1,4 +1,4 @@
-package com.example.sohaengsung.ui.components.PathRecommend
+package com.example.sohaengsung.ui.features.pathRecommend.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,7 +10,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontVariation.weight
 import androidx.compose.ui.unit.dp
 import com.example.sohaengsung.data.model.Place
 import com.example.sohaengsung.ui.components.Common.CheckBox

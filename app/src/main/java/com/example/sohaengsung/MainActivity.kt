@@ -4,16 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.runtime.*
-import androidx.navigation.compose.rememberNavController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import com.example.sohaengsung.ui.navigation.AppNavigation
-import com.example.sohaengsung.ui.screens.LogInScreen
-import com.example.sohaengsung.ui.screens.MapScreen
-import com.example.sohaengsung.ui.screens.PathRecommendScreen
-import com.example.sohaengsung.ui.screens.PlaceRecommendScreen
-import com.example.sohaengsung.ui.screens.SettingScreen
 import com.example.sohaengsung.ui.theme.SohaengsungTheme
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient

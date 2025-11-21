@@ -1,4 +1,4 @@
-package com.example.sohaengsung.ui.screens
+package com.example.sohaengsung.ui.features.pathRecommend
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,12 +13,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.sohaengsung.ui.components.Common.CustomDivider
-import com.example.sohaengsung.ui.components.common.CustomTopBar
 import com.example.sohaengsung.ui.components.Common.Dropdown
-import com.example.sohaengsung.ui.components.PathRecommend.PlaceForPathContainer
+import com.example.sohaengsung.ui.features.pathRecommend.components.PlaceForPathContainer
+import com.example.sohaengsung.ui.components.common.CustomTopBar
 import com.example.sohaengsung.ui.dummy.placeExample
 import com.example.sohaengsung.ui.theme.SohaengsungTheme
 

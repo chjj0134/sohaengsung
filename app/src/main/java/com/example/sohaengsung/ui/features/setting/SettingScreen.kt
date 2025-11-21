@@ -1,4 +1,4 @@
-package com.example.sohaengsung.ui.screens
+package com.example.sohaengsung.ui.features.setting
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
@@ -19,8 +19,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sohaengsung.R
 import com.example.sohaengsung.ui.components.Common.CustomDivider
-import com.example.sohaengsung.ui.components.Setting.ProfileSettingContainer
-import com.example.sohaengsung.ui.components.Setting.SettingMenuItem
+import com.example.sohaengsung.ui.features.setting.components.ProfileSettingContainer
+import com.example.sohaengsung.ui.features.setting.components.SettingMenuItem
 import com.example.sohaengsung.ui.theme.SohaengsungTheme
 
 @Composable

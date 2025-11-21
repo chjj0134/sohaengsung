@@ -1,8 +1,9 @@
-package com.example.sohaengsung.ui.screens
+package com.example.sohaengsung.ui.features.setting
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sohaengsung.data.model.User
+import com.example.sohaengsung.ui.dummy.userExample
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -44,7 +45,7 @@ class SettingScreenViewModel : ViewModel() {
             // TODO: 실제 사용자 데이터 로드 (Repository에서 가져오기)
             // 현재는 더미 데이터 사용
             _uiState.value = _uiState.value.copy(
-                user = com.example.sohaengsung.ui.dummy.userExample.copy(
+                user = userExample.copy(
                     nickname = "카공탐험가",
                     level = 5
                 ),
