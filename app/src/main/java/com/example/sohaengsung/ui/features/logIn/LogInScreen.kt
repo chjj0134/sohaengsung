@@ -38,39 +38,39 @@ fun LogInScreen(
                 verticalArrangement = Arrangement.Center
             ) {
 
-                // ·Î°í ¿µ¿ª
+                // ë¡œê³  ì˜ì—­
                 Column(
                     modifier = Modifier.padding(32.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        "ÅÂ±×·Î °Ë»öÇÏ´Â ³» ÁÖº¯ °¡°Ô",
+                        "íƒœê·¸ë¡œ ê²€ìƒ‰í•˜ëŠ” ë‚´ ì£¼ë³€ ê°€ê²Œ",
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.primary
                     )
 
                     Image(
                         painter = painterResource(id = R.drawable.logo),
-                        contentDescription = "·Î°í",
+                        contentDescription = "ë¡œê³ ",
                         modifier = Modifier
                             .width(220.dp)
                             .height(90.dp)
                     )
                 }
 
-                // ·Î±×ÀÎ ¹öÆ° ¿µ¿ª
+                // ë¡œê·¸ì¸ ë²„íŠ¼ ì˜ì—­
                 Column(
                     modifier = Modifier.padding(16.dp)
                 ) {
                     LoginButton(
-                        text = "ÀÌ¸ŞÀÏ·Î ·Î±×ÀÎÇÏ±â",
+                        "ì´ë©”ì¼ë¡œ ë¡œê·¸ì¸í•˜ê¸°",
                         containerColor = MaterialTheme.colorScheme.primary,
                         contentColor = MaterialTheme.colorScheme.onPrimary,
                         onClick = { onClickGoogleLogin() }
                     )
 
                     LoginButton(
-                        text = "Ä«Ä«¿À·Î ·Î±×ÀÎÇÏ±â",
+                        "ì¹´ì¹´ì˜¤ë¡œ ë¡œê·¸ì¸í•˜ê¸°",
                         containerColor = MaterialTheme.colorScheme.tertiary,
                         contentColor = MaterialTheme.colorScheme.onTertiary,
                         onClick = { onClickKakaoLogin() }
@@ -78,8 +78,8 @@ fun LogInScreen(
                 }
 
                 Text(
-                    "È¸¿ø°¡ÀÔ",
-                    modifier = Modifier.clickable { /* ³ªÁß¿¡ ±¸Çö */ },
+                    "íšŒì›ê°€ì…",
+                    modifier = Modifier.clickable { /* ë‚˜ì¤‘ì— êµ¬í˜„ */ },
                     style = MaterialTheme.typography.labelLarge.copy(
                         textDecoration = TextDecoration.Underline
                     ),
