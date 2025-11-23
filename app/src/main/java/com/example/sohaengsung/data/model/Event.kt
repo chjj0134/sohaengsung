@@ -8,6 +8,7 @@ data class Event(
     val tags: List<String> = emptyList(),
     val startDate: Timestamp? = null,
     val endDate: Timestamp? = null,
+    val seasonInfo: String = "날짜 미정",
     val imageUrl: String = "",
     val externalLink: String = ""
 )
