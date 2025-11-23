@@ -13,10 +13,8 @@ class UserRepository {
     suspend fun createUserIfNotExists(user: User) {
         val doc = users.document(user.uid).get().await()
 
-        // 이미 존재하면 return
         if (doc.exists()) return
 
-        // 없으면 새로 생성
         users.document(user.uid).set(user).await()
     }
 

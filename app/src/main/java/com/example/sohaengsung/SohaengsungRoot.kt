@@ -1,15 +1,17 @@
 package com.example.sohaengsung
 
 import androidx.compose.runtime.Composable
-import com.example.sohaengsung.ui.navigation.AppNavigation
+import com.example.sohaengsung.ui.screens.AppNavigation
 
 @Composable
 fun SohaengsungRoot(
     startGoogleLogin: () -> Unit,
-    setNavCallback: ((() -> Unit) -> Unit)
+    startKakaoLogin: () -> Unit,
+    loginSuccess: Boolean
 ) {
     AppNavigation(
         startGoogleLogin = startGoogleLogin,
-        setNavCallback = setNavCallback
+        startKakaoLogin = startKakaoLogin,
+        loginSuccess = loginSuccess
     )
 }
