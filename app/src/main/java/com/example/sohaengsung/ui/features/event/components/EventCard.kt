@@ -4,9 +4,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -15,7 +19,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.sohaengsung.data.model.Event
 
@@ -26,8 +31,10 @@ fun EventCard(
 ) {
     Card(
         modifier = Modifier
-            .fillMaxWidth(0.8f) // 화면 전체 너비의 80%
+            .width(320.dp) // 화면 전체 너비의 80%
+            .height(300.dp) // 화면 전체 너비의 80%
             .padding(16.dp)
+            .background(MaterialTheme.colorScheme.onPrimary)
             .clickable {
                 onCardClick(event)
             },
@@ -38,13 +45,14 @@ fun EventCard(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(180.dp)
+                    .fillMaxHeight(0.6f)
                     .background(MaterialTheme.colorScheme.primary)
             ) {
                 // 사진 대체 임시 placeholder
                 Text(
                     text = "이미지 Placeholder",
-                    modifier = Modifier.align(Alignment.Center)
+                    modifier = Modifier.align(Alignment.Center),
+                    textAlign = TextAlign.Center
                 )
             }
 
@@ -56,16 +64,21 @@ fun EventCard(
             ) {
 
                 // 해시태그 목록
+                Row() {
                 event.tags.map { tag ->
-                    Text(
-                        text = "#${tag} ", // 해시태그 이름 앞에 # 붙이기
-                        color = MaterialTheme.colorScheme.primary,
-                        style = MaterialTheme.typography.bodySmall,
-                    ) }
+                        Text(
+                            text = "#${tag} ", // 해시태그 이름 앞에 # 붙이기
+                            color = MaterialTheme.colorScheme.primary,
+                            style = MaterialTheme.typography.bodySmall,
+                        )
+                    }
+                }
 
                 // 행사명
                 Text(
-                    text = "행사명: **${event.title}**",
+                    text = event.title,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(bottom = 4.dp)
                 )

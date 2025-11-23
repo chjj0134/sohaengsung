@@ -7,11 +7,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.sohaengsung.ui.features.coupon.CouponScreen
 import com.example.sohaengsung.ui.features.coupon.CouponScreenEvent
+import com.example.sohaengsung.ui.features.event.EventScreen
 import com.example.sohaengsung.ui.features.logIn.LogInScreen
 import com.example.sohaengsung.ui.features.map.MapScreen
 import com.example.sohaengsung.ui.features.pathRecommend.PathRecommendScreen
 import com.example.sohaengsung.ui.features.placeRecommend.PlaceRecommendScreen
 import com.example.sohaengsung.ui.features.setting.SettingScreen
+import com.example.sohaengsung.ui.navigation.ScreenRoute
 
 @Composable
 fun AppNavigation(
@@ -43,5 +45,15 @@ fun AppNavigation(
         composable("path-recommend") { PathRecommendScreen() }
         composable("setting") { SettingScreen() }
         composable("map") { MapScreen() }
+        composable("coupon") {
+            CouponScreen(
+                onNavigate = { navigationEvent ->
+                    val route = when (navigationEvent) {
+                        CouponScreenEvent.Navigation.NavigateToVoucherScreen ->  ScreenRoute.VOUCHER // 가정
+                    }
+                }
+            )
+        }
+        composable ("event") { EventScreen() }
     }
 }
