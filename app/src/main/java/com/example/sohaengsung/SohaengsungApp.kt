@@ -1,15 +1,11 @@
 package com.example.sohaengsung
 
-import androidx.compose.runtime.Composable
-import com.example.sohaengsung.ui.navigation.AppNavigation
+import android.app.Application
+import com.kakao.sdk.common.KakaoSdk
 
-@Composable
-fun SohaengsungApp(
-    startGoogleLogin: () -> Unit,
-    setNavCallback: ((() -> Unit) -> Unit)
-) {
-    AppNavigation(
-        startGoogleLogin = startGoogleLogin,
-        setNavCallback = setNavCallback
-    )
+class SohaengsungApp : Application() {
+    override fun onCreate() {
+        super.onCreate()
+        KakaoSdk.init(this, getString(R.string.kakao_native_app_key))
+    }
 }

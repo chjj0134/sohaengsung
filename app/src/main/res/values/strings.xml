@@ -7,4 +7,6 @@
     </string>
 
     <string name="google_maps_key">AIzaSyB3NBd6N6ayqmN59WLkNsWeRdKB66hI8Ng</string>
+    <!-- Kakao Native App Key -->
+    <string name="kakao_native_app_key">485141de5ee2282c64fc7c6364343547</string>
 </resources>
