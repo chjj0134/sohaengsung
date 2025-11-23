@@ -5,6 +5,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.sohaengsung.ui.features.coupon.CouponScreen
+import com.example.sohaengsung.ui.features.coupon.CouponScreenEvent
 import com.example.sohaengsung.ui.features.logIn.LogInScreen
 import com.example.sohaengsung.ui.features.map.MapScreen
 import com.example.sohaengsung.ui.features.pathRecommend.PathRecommendScreen

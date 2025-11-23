@@ -9,4 +9,6 @@ object ScreenRoute {
     const val PATH_RECOMMEND = "path-recommend"
     const val SETTING = "setting"
     const val MAP = "map"
+    const val COUPON = "coupon"
+    const val VOUCHER = "voucher"
 }

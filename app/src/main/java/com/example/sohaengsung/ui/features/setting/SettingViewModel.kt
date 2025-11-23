@@ -2,7 +2,6 @@ package com.example.sohaengsung.ui.features.setting
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.sohaengsung.data.model.User
 import com.example.sohaengsung.ui.dummy.userExample
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
