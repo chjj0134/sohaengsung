@@ -4,10 +4,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import com.example.sohaengsung.ui.screens.SohaengsungApp
 import com.example.sohaengsung.ui.theme.SohaengsungTheme
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -18,8 +17,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 
 import com.kakao.sdk.user.UserApiClient
-import com.example.sohaengsung.data.repository.UserRepository
 import com.example.sohaengsung.data.model.User
+import com.example.sohaengsung.data.repository.UserRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -29,13 +28,13 @@ class MainActivity : ComponentActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var googleSignInClient: GoogleSignInClient
 
-    // Firestore ¿˙¿ÂøÎ repo
+    // Firestore Ï†ÄÏû•Ïö© repo
     private val userRepository = UserRepository()
 
-    // ∑Œ±◊¿Œ º∫∞¯ ø©∫Œ °Ê true∏È MapScreen¿∏∑Œ ¿Ãµø
+    // Î°úÍ∑∏Ïù∏ ÏÑ±Í≥µ Ïó¨Î∂Ä ‚Üí trueÎ©¥ MapScreenÏúºÎ°ú Ïù¥Îèô
     private var loginSuccess by mutableStateOf(false)
 
-    // ±∏±€ ∑Œ±◊¿Œ Launcher
+    // Íµ¨Í∏Ä Î°úÍ∑∏Ïù∏ Launcher
     private val googleSignInLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
@@ -52,7 +51,7 @@ class MainActivity : ComponentActivity() {
             } catch (_: ApiException) { }
         }
 
-    // ƒ´ƒ´ø¿ ∑Œ±◊¿Œ √≥∏Æ
+    // Ïπ¥Ïπ¥Ïò§ Î°úÍ∑∏Ïù∏ Ï≤òÎ¶¨
     private fun startKakaoLogin() {
         val context = this
 
@@ -74,7 +73,7 @@ class MainActivity : ComponentActivity() {
         saveUserToFirestore(uid)
     }
 
-    // Firestore ¿˙¿Â √≥∏Æ
+    // Firestore Ï†ÄÏû• Ï≤òÎ¶¨
     private fun saveUserToFirestore(uid: String) {
         CoroutineScope(Dispatchers.IO).launch {
 
@@ -103,7 +102,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             SohaengsungTheme {
-                SohaengsungApp(
+                SohaengsungRoot(
                     startGoogleLogin = {
                         googleSignInLauncher.launch(googleSignInClient.signInIntent)
                     },
