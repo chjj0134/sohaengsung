@@ -12,39 +12,23 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sohaengsung.R
-
 import com.example.sohaengsung.ui.features.logIn.components.LoginButton
 import com.example.sohaengsung.ui.theme.SohaengsungTheme
 
 @Composable
 fun LogInScreen(
-    onNavigate: (route: LogInScreenEvent.Navigation) -> Unit,
-    viewModel: LogInViewModel = viewModel()
+    onClickGoogleLogin: () -> Unit,
+    onClickKakaoLogin: () -> Unit
 ) {
-    val uiState by viewModel.uiState.collectAsState()
-    val event by viewModel.events.collectAsState()
-
-    LaunchedEffect(event) {
-        event?.let { navigationEvent ->
-            onNavigate(navigationEvent)
-            viewModel.clearEvent()
-        }
-    }
-
     SohaengsungTheme {
-        Scaffold (
-            modifier = Modifier
-                .fillMaxSize()
+        Scaffold(
+            modifier = Modifier.fillMaxSize()
         ) { innerPadding ->
             Column(
                 modifier = Modifier
@@ -54,63 +38,48 @@ fun LogInScreen(
                 verticalArrangement = Arrangement.Center
             ) {
 
-                // ë¡œê³  ì»¨í…Œì´ë„ˆ
-                Column (
-                    modifier = Modifier
-                        .padding(32.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
+                // ·Î°í ¿µ¿ª
+                Column(
+                    modifier = Modifier.padding(32.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-
                     Text(
-                        "íƒœê·¸ë¡œ ê²€ìƒ‰í•˜ëŠ” ë‚´ ì£¼ë³€ ê°€ê²Œ",
+                        "ÅÂ±×·Î °Ë»öÇÏ´Â ³» ÁÖº¯ °¡°Ô",
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.primary
                     )
 
                     Image(
                         painter = painterResource(id = R.drawable.logo),
-                        contentDescription = "ë¡œê³ ",
+                        contentDescription = "·Î°í",
                         modifier = Modifier
                             .width(220.dp)
                             .height(90.dp)
                     )
                 }
 
-                // ë¡œê·¸ì¸ ë²„íŠ¼
-                Column (
-                    modifier = Modifier
-                        .padding(16.dp)
+                // ·Î±×ÀÎ ¹öÆ° ¿µ¿ª
+                Column(
+                    modifier = Modifier.padding(16.dp)
                 ) {
                     LoginButton(
-                        "ì´ë©”ì¼ë¡œ ë¡œê·¸ì¸í•˜ê¸°",
-                        MaterialTheme.colorScheme.primary,
-                        MaterialTheme.colorScheme.onPrimary,
-                        onClick = {
-                            viewModel.onEvent(
-                                LogInScreenEvent.onEmailLoginClick
-                            )
-                        }
+                        text = "ÀÌ¸ŞÀÏ·Î ·Î±×ÀÎÇÏ±â",
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary,
+                        onClick = { onClickGoogleLogin() }
                     )
+
                     LoginButton(
-                        "ì¹´ì¹´ì˜¤ë¡œ ë¡œê·¸ì¸í•˜ê¸°",
-                        MaterialTheme.colorScheme.tertiary,
-                        MaterialTheme.colorScheme.onTertiary,
-                        onClick = {
-                            viewModel.onEvent(
-                                LogInScreenEvent.onKakaoLoginClick
-                            )
-                        }
+                        text = "Ä«Ä«¿À·Î ·Î±×ÀÎÇÏ±â",
+                        containerColor = MaterialTheme.colorScheme.tertiary,
+                        contentColor = MaterialTheme.colorScheme.onTertiary,
+                        onClick = { onClickKakaoLogin() }
                     )
                 }
 
                 Text(
-                    "íšŒì›ê°€ì…",
-                    modifier = Modifier
-                        .clickable{
-                            viewModel.onEvent(
-                                LogInScreenEvent.onSignUpClick
-                            )
-                        },
+                    "È¸¿ø°¡ÀÔ",
+                    modifier = Modifier.clickable { /* ³ªÁß¿¡ ±¸Çö */ },
                     style = MaterialTheme.typography.labelLarge.copy(
                         textDecoration = TextDecoration.Underline
                     ),
