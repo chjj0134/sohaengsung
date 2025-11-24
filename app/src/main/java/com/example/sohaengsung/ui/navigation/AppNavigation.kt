@@ -12,6 +12,7 @@ import com.example.sohaengsung.ui.features.logIn.LogInScreen
 import com.example.sohaengsung.ui.features.map.MapScreen
 import com.example.sohaengsung.ui.features.pathRecommend.PathRecommendScreen
 import com.example.sohaengsung.ui.features.placeRecommend.PlaceRecommendScreen
+import com.example.sohaengsung.ui.features.placeRecommend.PlaceRecommendScreenEvent
 import com.example.sohaengsung.ui.features.setting.SettingScreen
 import com.example.sohaengsung.ui.navigation.ScreenRoute
 
@@ -32,7 +33,7 @@ fun AppNavigation(
         }
     }
 
-    NavHost(navController = navController, startDestination = "login") {
+    NavHost(navController = navController, startDestination = "place-recommend") {
 
         composable("login") {
             LogInScreen(
@@ -41,19 +42,35 @@ fun AppNavigation(
             )
         }
 
-        composable("place-recommend") { PlaceRecommendScreen() }
+        composable("place-recommend") {
+            PlaceRecommendScreen(
+                onNavigate = { navigationEvent ->
+                    val route = when (navigationEvent) {
+                        PlaceRecommendScreenEvent.Navigation.NavigateToReview
+                            -> ScreenRoute.REVIEW // 가정
+                    }
+                    navController.navigate(route)
+                }
+            )
+        }
         composable("path-recommend") { PathRecommendScreen() }
+
         composable("setting") { SettingScreen() }
+
         composable("map") { MapScreen() }
+
         composable("coupon") {
             CouponScreen(
                 onNavigate = { navigationEvent ->
                     val route = when (navigationEvent) {
-                        CouponScreenEvent.Navigation.NavigateToVoucherScreen ->  ScreenRoute.VOUCHER // 가정
+                        CouponScreenEvent.Navigation.NavigateToVoucherScreen
+                            -> ScreenRoute.VOUCHER // 가정
                     }
+                    navController.navigate(route)
                 }
             )
         }
+
         composable ("event") { EventScreen() }
     }
 }

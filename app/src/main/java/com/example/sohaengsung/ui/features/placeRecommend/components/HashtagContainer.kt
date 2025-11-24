@@ -1,5 +1,6 @@
 package com.example.sohaengsung.ui.features.placeRecommend.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,11 +13,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sohaengsung.data.model.Hashtag
+import com.example.sohaengsung.ui.features.coupon.CouponScreenEvent
+import com.example.sohaengsung.ui.features.placeRecommend.PlaceRecommendScreenEvent
+import com.example.sohaengsung.ui.features.placeRecommend.PlaceRecommendViewModel
 import kotlin.collections.map
 
 @Composable
-fun HashtagListContainer(HashtagList01: List<Hashtag>, HashtagList02: List<Hashtag>) {
+fun HashtagListContainer(
+    HashtagList01: List<Hashtag>,
+    HashtagList02: List<Hashtag>,
+    viewModel: PlaceRecommendViewModel = viewModel(),
+) {
     Column(
         modifier = Modifier
             .padding(vertical = 8.dp),
@@ -36,7 +45,13 @@ fun HashtagListContainer(HashtagList01: List<Hashtag>, HashtagList02: List<Hasht
                 com.example.sohaengsung.ui.common.Hashtag(
                     content = "#${hashtagData.name}", // 해시태그 이름 앞에 # 붙이기
                     containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.onPrimary
+                    contentColor = MaterialTheme.colorScheme.onPrimary,
+                    modifier = Modifier
+                        .clickable {
+                            viewModel.onEvent(
+                                PlaceRecommendScreenEvent.onHashtagClick
+                            )
+                        }
                 )
             }
         }
@@ -54,7 +69,13 @@ fun HashtagListContainer(HashtagList01: List<Hashtag>, HashtagList02: List<Hasht
                 com.example.sohaengsung.ui.common.Hashtag(
                     content = "#${hashtagData.name}", // 해시태그 이름 앞에 # 붙이기
                     containerColor = MaterialTheme.colorScheme.tertiary,
-                    contentColor = MaterialTheme.colorScheme.onTertiary
+                    contentColor = MaterialTheme.colorScheme.onTertiary,
+                    modifier = Modifier
+                        .clickable {
+                            viewModel.onEvent(
+                                PlaceRecommendScreenEvent.onHashtagClick
+                            )
+                        }
                 )
             }
         }
