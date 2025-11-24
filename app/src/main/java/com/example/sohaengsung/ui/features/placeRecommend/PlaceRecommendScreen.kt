@@ -14,12 +14,15 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sohaengsung.data.model.Place
 import com.example.sohaengsung.ui.features.placeRecommend.components.CustomContainer
 import com.example.sohaengsung.ui.common.CustomDivider
@@ -28,17 +31,28 @@ import com.example.sohaengsung.ui.common.Dropdown
 import com.example.sohaengsung.ui.features.placeRecommend.components.HashtagListContainer
 import com.example.sohaengsung.ui.features.placeRecommend.components.PlaceDetailSheet
 import com.example.sohaengsung.ui.features.placeRecommend.components.PlaceInfoContainer
-import com.example.sohaengsung.ui.dummy.HashtagListExample01
-import com.example.sohaengsung.ui.dummy.HashtagListExample02
 import com.example.sohaengsung.ui.dummy.placeExample
 import com.example.sohaengsung.ui.features.map.MapScreen
 import com.example.sohaengsung.ui.theme.SohaengsungTheme
 
 @Composable
-fun PlaceRecommendScreen() {
+fun PlaceRecommendScreen(
+    onNavigate: (route: PlaceRecommendScreenEvent.Navigation) -> Unit,
+    viewModel: PlaceRecommendViewModel = viewModel(),
+) {
 
     var isSheetOpen by remember { mutableStateOf(false) }
     var selectedPlace by remember { mutableStateOf<Place?>(null) }
+
+    val uiState by viewModel.uiState.collectAsState()
+    val event by viewModel.events.collectAsState()
+
+    LaunchedEffect(event) {
+        event?.let { navigationEvent ->
+            onNavigate(navigationEvent)
+            viewModel.clearEvent()
+        }
+    }
 
     SohaengsungTheme {
         Scaffold(
@@ -70,8 +84,9 @@ fun PlaceRecommendScreen() {
 
                         // 해시태그 영역
                         HashtagListContainer(
-                            HashtagListExample01,
-                            HashtagListExample02
+                            uiState.hashtag,
+                            uiState.hashtag,
+                            viewModel
                         )
 
                         // 드롭다운 영역

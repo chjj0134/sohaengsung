@@ -11,5 +11,6 @@ object ScreenRoute {
     const val MAP = "map"
     const val COUPON = "coupon"
     const val VOUCHER = "voucher"
+    const val REVIEW = "review"
     const val EVENT = "event"
 }
