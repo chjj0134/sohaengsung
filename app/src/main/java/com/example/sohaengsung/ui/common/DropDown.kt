@@ -1,11 +1,14 @@
 package com.example.sohaengsung.ui.common
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -85,7 +88,6 @@ fun Dropdown(
 
     // DropdownMenu를 DropdownButton 위에 배치
     Box(
-        modifier = Modifier,
         contentAlignment = Alignment.TopStart
     ) {
         // 위에서 정의해 둔 DropdownButton (클릭 가능한 부분)
@@ -99,7 +101,10 @@ fun Dropdown(
         // 4. DropdownMenu (선택 리스트)
         DropdownMenu(
             expanded = expanded, // 확장 상태
-            onDismissRequest = { expanded = false } // 메뉴 바깥을 클릭하면 닫힘
+            onDismissRequest = { expanded = false },
+            modifier = Modifier
+                .fillMaxWidth(0.25f)
+                .background(MaterialTheme.colorScheme.onPrimary)
         ) {
             items.forEach { selectionOption ->
                 DropdownMenuItem(
@@ -109,7 +114,8 @@ fun Dropdown(
                         selectedText = selectionOption // 텍스트 업데이트
                         expanded = false // 메뉴 닫기
                     },
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier
+                        .height(32.dp)
                 )
             }
         }

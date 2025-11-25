@@ -33,7 +33,7 @@ fun AppNavigation(
         }
     }
 
-    NavHost(navController = navController, startDestination = "place-recommend") {
+    NavHost(navController = navController, startDestination = "login") {
 
         composable("login") {
             LogInScreen(
