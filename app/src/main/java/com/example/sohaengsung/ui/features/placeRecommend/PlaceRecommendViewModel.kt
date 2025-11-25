@@ -92,7 +92,6 @@ class PlaceRecommendViewModel : ViewModel() {
     fun onEvent(event: PlaceRecommendScreenEvent) {
         viewModelScope.launch {
             when (event) {
-                // 클릭 시 사용처 안내 화면으로 이동
                 PlaceRecommendScreenEvent.onDropDownClick -> {
                    // 드롭다운 클릭 시 로직
                 }

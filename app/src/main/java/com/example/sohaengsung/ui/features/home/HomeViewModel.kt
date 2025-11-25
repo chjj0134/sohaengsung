@@ -2,26 +2,11 @@ package com.example.sohaengsung.ui.features.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.sohaengsung.data.model.User
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-data class HomeScreenUiState(
-    val user: User = User(),
-    val isLoading: Boolean = false,
-    val errorMessage: String? = null
-)
-
-sealed class HomeScreenEvent {
-    object NavigateToPlaceRecommend : HomeScreenEvent()
-    object NavigateToPathRecommend : HomeScreenEvent()
-    object NavigateToBookmark : HomeScreenEvent()
-    object NavigateToCoupon : HomeScreenEvent()
-    object NavigateToEvent : HomeScreenEvent()
-    object NavigateToSetting : HomeScreenEvent()
-}
 
 class HomeScreenViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(HomeScreenUiState())
@@ -52,7 +37,35 @@ class HomeScreenViewModel : ViewModel() {
 
     fun onEvent(event: HomeScreenEvent) {
         viewModelScope.launch {
-            _events.value = event
+            when (event) {
+                HomeScreenEvent.onPlaceRecommendClick -> {
+                    _events.value = HomeScreenEvent.Navigation.NavigateToPlaceRecommend
+                }
+
+                HomeScreenEvent.onPathRecommendClick -> {
+                    _events.value = HomeScreenEvent.Navigation.NavigateToPathRecommend
+                }
+
+                HomeScreenEvent.onBookmarkClick -> {
+                    _events.value = HomeScreenEvent.Navigation.NavigateToBookmark
+                }
+
+                HomeScreenEvent.onCouponClick -> {
+                    _events.value = HomeScreenEvent.Navigation.NavigateToCoupon
+                }
+
+                HomeScreenEvent.onEventClick -> {
+                    _events.value = HomeScreenEvent.Navigation.NavigateToEvent
+                }
+
+                HomeScreenEvent.onSettingClick -> {
+                    _events.value = HomeScreenEvent.Navigation.NavigateToSetting
+                }
+
+                is HomeScreenEvent.Navigation -> {
+                    /* do nothing */
+                }
+            }
         }
     }
 

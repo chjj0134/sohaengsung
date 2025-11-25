@@ -45,8 +45,8 @@ fun HomeMenuCard(
 
     Surface(
         modifier = modifier
-            .width(170.dp)
-            .height(220.dp)
+            .width(180.dp)
+            .height(180.dp)
             .clickable { onClick() },
         shape = RoundedCornerShape(16.dp),
         color = CardBackgroundWhite,
