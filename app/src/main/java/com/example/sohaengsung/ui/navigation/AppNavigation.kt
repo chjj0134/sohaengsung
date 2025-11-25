@@ -2,12 +2,16 @@ package com.example.sohaengsung.ui.screens
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.input.key.Key.Companion.Home
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.sohaengsung.ui.features.coupon.CouponScreen
 import com.example.sohaengsung.ui.features.coupon.CouponScreenEvent
 import com.example.sohaengsung.ui.features.event.EventScreen
+import com.example.sohaengsung.ui.features.home.HomeScreen
+import com.example.sohaengsung.ui.features.home.HomeScreenEvent
 import com.example.sohaengsung.ui.features.logIn.LogInScreen
 import com.example.sohaengsung.ui.features.map.MapScreen
 import com.example.sohaengsung.ui.features.pathRecommend.PathRecommendScreen
@@ -27,18 +31,40 @@ fun AppNavigation(
     // 로그인 성공하면 map으로 이동
     LaunchedEffect(loginSuccess) {
         if (loginSuccess) {
-            navController.navigate("map") {
+            navController.navigate("place-recommend") {
                 popUpTo("login") { inclusive = true }
             }
         }
     }
 
-    NavHost(navController = navController, startDestination = "login") {
+    NavHost(navController = navController, startDestination = "home") {
 
         composable("login") {
             LogInScreen(
                 onClickGoogleLogin = startGoogleLogin,
                 onClickKakaoLogin = startKakaoLogin
+            )
+        }
+
+        composable ("home") {
+            HomeScreen(
+                onNavigate = { navigationEvent ->
+                    val route = when (navigationEvent) {
+                        HomeScreenEvent.Navigation.NavigateToPlaceRecommend
+                            -> ScreenRoute.PLACE_RECOMMEND
+                        HomeScreenEvent.Navigation.NavigateToPathRecommend
+                            -> ScreenRoute.PATH_RECOMMEND
+                        HomeScreenEvent.Navigation.NavigateToBookmark
+                            -> ScreenRoute.BOOKMARK // 가정
+                        HomeScreenEvent.Navigation.NavigateToCoupon
+                            -> ScreenRoute.COUPON
+                        HomeScreenEvent.Navigation.NavigateToEvent
+                            -> ScreenRoute.EVENT
+                        HomeScreenEvent.Navigation.NavigateToSetting
+                            -> ScreenRoute.SETTING
+                    }
+                    navController.navigate(route)
+                }
             )
         }
 
@@ -53,6 +79,7 @@ fun AppNavigation(
                 }
             )
         }
+
         composable("path-recommend") { PathRecommendScreen() }
 
         composable("setting") { SettingScreen() }
