@@ -18,6 +18,7 @@ import com.example.sohaengsung.ui.features.pathRecommend.PathRecommendScreen
 import com.example.sohaengsung.ui.features.placeRecommend.PlaceRecommendScreen
 import com.example.sohaengsung.ui.features.placeRecommend.PlaceRecommendScreenEvent
 import com.example.sohaengsung.ui.features.setting.SettingScreen
+import com.example.sohaengsung.ui.features.setting.SettingScreenEvent
 import com.example.sohaengsung.ui.navigation.ScreenRoute
 
 @Composable
@@ -28,16 +29,16 @@ fun AppNavigation(
 ) {
     val navController = rememberNavController()
 
-    // 로그인 성공하면 map으로 이동
+    // 로그인 성공하면 home으로 이동
     LaunchedEffect(loginSuccess) {
         if (loginSuccess) {
-            navController.navigate("place-recommend") {
+            navController.navigate("home") {
                 popUpTo("login") { inclusive = true }
             }
         }
     }
 
-    NavHost(navController = navController, startDestination = "home") {
+    NavHost(navController = navController, startDestination = "login") {
 
         composable("login") {
             LogInScreen(
@@ -82,9 +83,24 @@ fun AppNavigation(
 
         composable("path-recommend") { PathRecommendScreen() }
 
-        composable("setting") { SettingScreen() }
-
-        composable("map") { MapScreen() }
+        composable("setting") { SettingScreen(
+            onNavigate = { navigationEvent ->
+                val route = when (navigationEvent) {
+                    SettingScreenEvent.Navigation.NavigateToLevelDetail
+                        -> ScreenRoute.LEVEL_DETAIL
+                    SettingScreenEvent.Navigation.NavigateToAccountManagement
+                        -> ScreenRoute.ACCOUNT_MANAGEMENT
+                    SettingScreenEvent.Navigation.NavigateToThemeChange
+                        -> ScreenRoute.THEME_CHANGE // 가정
+                    SettingScreenEvent.Navigation.NavigateToTerms
+                        -> ScreenRoute.TERMS
+                    SettingScreenEvent.Navigation.NavigateToNotice
+                        -> ScreenRoute.NOTICE
+                }
+                navController.navigate(route)
+            }
+        )
+        }
 
         composable("coupon") {
             CouponScreen(
@@ -99,5 +115,7 @@ fun AppNavigation(
         }
 
         composable ("event") { EventScreen() }
+
+        composable("map") { MapScreen() }
     }
 }
