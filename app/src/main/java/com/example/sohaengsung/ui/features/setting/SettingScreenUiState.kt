@@ -13,7 +13,7 @@ sealed class SettingScreenEvent {
     object onThemeChangeClick : SettingScreenEvent()
     object onTermsClick : SettingScreenEvent()
     object onNoticeClick : SettingScreenEvent()
-    object onLevelDetailClick : SettingScreenEvent()
+    object onLevelClick : SettingScreenEvent()
     object EditProfilePicture : SettingScreenEvent()
 
     sealed class Navigation : SettingScreenEvent() {
@@ -21,6 +21,6 @@ sealed class SettingScreenEvent {
         object NavigateToThemeChange : Navigation()
         object NavigateToTerms : Navigation()
         object NavigateToNotice : Navigation()
-        object NavigateToLevelDetail : Navigation()
+        object NavigateToLevel : Navigation()
     }
 }

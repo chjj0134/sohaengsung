@@ -14,14 +14,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sohaengsung.R
 import com.example.sohaengsung.ui.common.CustomDivider
-import com.example.sohaengsung.ui.features.home.HomeScreenEvent
-import com.example.sohaengsung.ui.features.setting.SettingScreenEvent
-import com.example.sohaengsung.ui.features.setting.SettingScreenViewModel
 import com.example.sohaengsung.ui.features.setting.components.ProfileSettingContainer
 import com.example.sohaengsung.ui.features.setting.components.SettingMenuItem
 import com.example.sohaengsung.ui.theme.SohaengsungTheme
@@ -29,7 +25,7 @@ import com.example.sohaengsung.ui.theme.SohaengsungTheme
 @Composable
 fun SettingScreen(
     onNavigate: (route: SettingScreenEvent.Navigation) -> Unit,
-    viewModel: SettingScreenViewModel = viewModel(),
+    viewModel: SettingViewModel = viewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val event by viewModel.events.collectAsState()
@@ -60,7 +56,7 @@ fun SettingScreen(
                 ProfileSettingContainer(
                     user = uiState.user,
                     onLevelDetailClick = {
-                        viewModel.onEvent(SettingScreenEvent.onLevelDetailClick)
+                        viewModel.onEvent(SettingScreenEvent.onLevelClick)
                     },
                     onProfileEditClick = {
                         viewModel.onEvent(SettingScreenEvent.EditProfilePicture)
