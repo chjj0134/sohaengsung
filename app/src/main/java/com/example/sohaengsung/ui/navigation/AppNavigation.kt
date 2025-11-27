@@ -12,6 +12,8 @@ import com.example.sohaengsung.ui.features.coupon.CouponScreenEvent
 import com.example.sohaengsung.ui.features.event.EventScreen
 import com.example.sohaengsung.ui.features.home.HomeScreen
 import com.example.sohaengsung.ui.features.home.HomeScreenEvent
+import com.example.sohaengsung.ui.features.level.LevelScreen
+import com.example.sohaengsung.ui.features.level.LevelScreenEvent
 import com.example.sohaengsung.ui.features.logIn.LogInScreen
 import com.example.sohaengsung.ui.features.map.MapScreen
 import com.example.sohaengsung.ui.features.pathRecommend.PathRecommendScreen
@@ -38,7 +40,7 @@ fun AppNavigation(
         }
     }
 
-    NavHost(navController = navController, startDestination = "login") {
+    NavHost(navController = navController, startDestination = "home") {
 
         composable("login") {
             LogInScreen(
@@ -86,8 +88,8 @@ fun AppNavigation(
         composable("setting") { SettingScreen(
             onNavigate = { navigationEvent ->
                 val route = when (navigationEvent) {
-                    SettingScreenEvent.Navigation.NavigateToLevelDetail
-                        -> ScreenRoute.LEVEL_DETAIL
+                    SettingScreenEvent.Navigation.NavigateToLevel
+                        -> ScreenRoute.LEVEL
                     SettingScreenEvent.Navigation.NavigateToAccountManagement
                         -> ScreenRoute.ACCOUNT_MANAGEMENT
                     SettingScreenEvent.Navigation.NavigateToThemeChange
@@ -96,10 +98,21 @@ fun AppNavigation(
                         -> ScreenRoute.TERMS
                     SettingScreenEvent.Navigation.NavigateToNotice
                         -> ScreenRoute.NOTICE
+                    }
+                    navController.navigate(route)
+                }
+            )
+        }
+
+        composable ("level") { LevelScreen(
+            onNavigate = { navigationEvent ->
+                val route = when (navigationEvent) {
+                    LevelScreenEvent.Navigation.NavigateToLevelInfo
+                        -> ScreenRoute.LEVEL_INFO
                 }
                 navController.navigate(route)
-            }
-        )
+                }
+            )
         }
 
         composable("coupon") {

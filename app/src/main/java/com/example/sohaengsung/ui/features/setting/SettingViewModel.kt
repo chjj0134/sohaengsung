@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class SettingScreenViewModel : ViewModel() {
+class SettingViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(SettingScreenUiState())
     val uiState: StateFlow<SettingScreenUiState> = _uiState.asStateFlow()
 
@@ -58,8 +58,8 @@ class SettingScreenViewModel : ViewModel() {
                     _events.value = SettingScreenEvent.Navigation.NavigateToNotice
                 }
 
-                SettingScreenEvent.onLevelDetailClick -> {
-                    _events.value = SettingScreenEvent.Navigation.NavigateToLevelDetail
+                SettingScreenEvent.onLevelClick -> {
+                    _events.value = SettingScreenEvent.Navigation.NavigateToLevel
                 }
 
                 SettingScreenEvent.EditProfilePicture -> {
