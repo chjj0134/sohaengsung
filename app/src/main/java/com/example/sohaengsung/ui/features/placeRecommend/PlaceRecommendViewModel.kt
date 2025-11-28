@@ -5,12 +5,24 @@ import androidx.lifecycle.viewModelScope
 import com.example.sohaengsung.data.model.Hashtag
 import com.example.sohaengsung.data.model.Place
 import com.example.sohaengsung.data.model.PlaceDetail
+import com.example.sohaengsung.data.repository.BookmarkRepository
+import com.example.sohaengsung.data.repository.PlaceRepository
+import com.example.sohaengsung.data.util.LocationService
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class PlaceRecommendViewModel : ViewModel() {
+class PlaceRecommendViewModel(
+    private val placeRepository: PlaceRepository = PlaceRepository(),
+    private val locationService: LocationService? = null,
+    private val uid: String
+) : ViewModel() {
+
+    private val bookmarkRepository = BookmarkRepository()
+    private val _bookmarkIds = MutableStateFlow<List<String>>(emptyList())
+    val bookmarkIds = _bookmarkIds.asStateFlow()
+
     private val _uiState = MutableStateFlow(PlaceRecommendScreenUiState())
     val uiState: StateFlow<PlaceRecommendScreenUiState> = _uiState.asStateFlow()
 
@@ -20,27 +32,33 @@ class PlaceRecommendViewModel : ViewModel() {
     init {
         loadPlaceData()
         loadHashtagData()
+        observeBookmarks()
     }
 
     private fun loadPlaceData() {
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(
-                isLoading = true,
-                errorMessage = null
-            )
+            _uiState.value = _uiState.value.copy(isLoading = true)
 
-            // TODO: 실제 장소 데이터 로드 (Repository에서 가져오기)
-            // 현재는 더미 데이터 사용
-            _uiState.value = _uiState.value.copy(
-                place = listOf(
-                    Place(placeId = "C001", name = "올웨이즈어거스트제작소", address = "서울 마포구 연남로 71 1층", latitude = 37.5051, longitude = 127.0507, hashtags = listOf("카공", "노트북", "콘센트"), rating = 4.5, reviewCount = 53, details = PlaceDetail(wifi = true, parking = true, kidsZone = false, signatureMenu = "흑임자 크림 라떼")),
-                    Place(placeId = "R005", name = "너드커피", address = "서울 용산구 청파로27길 제1호 내제1층호", latitude = 37.5145, longitude = 127.1050, hashtags = listOf("시즌음료", "테이크아웃전문"), rating = 4.8, reviewCount = 132, details = PlaceDetail(wifi = false, parking = false, kidsZone = false, signatureMenu = "말차밀크티")),
-                    Place(placeId = "M012", name = "책방죄책감", address = "서울 용산구 청파로47길 8 2층", latitude = 37.5760, longitude = 126.9800, hashtags = listOf("다양한책", "아늑한분위기", "북카페"), rating = 4.2, reviewCount = 28, details = PlaceDetail(wifi = true, parking = false, kidsZone = false, signatureMenu = null))
-                ),
-                isLoading = false
-            )
+            try {
+                val location = locationService?.getCurrentLocation()
+                val (lat, lng) = location ?: (37.5665 to 126.9780)
+
+                val places = placeRepository.getNearbyPlaces(lat, lng)
+
+                _uiState.value = _uiState.value.copy(
+                    place = places,
+                    isLoading = false
+                )
+
+            } catch (e: Exception) {
+                _uiState.value = _uiState.value.copy(
+                    errorMessage = e.message,
+                    isLoading = false
+                )
+            }
         }
     }
+
 
     private fun loadHashtagData() {
         viewModelScope.launch {
@@ -93,15 +111,20 @@ class PlaceRecommendViewModel : ViewModel() {
         viewModelScope.launch {
             when (event) {
                 PlaceRecommendScreenEvent.onDropDownClick -> {
-                   // 드롭다운 클릭 시 로직
+                    // 드롭다운 클릭 시 로직
                 }
 
                 PlaceRecommendScreenEvent.onBookmarkClick -> {
                     // 북마크 아이콘 클릭 시 로직
+                    fun setSelectedPlace(placeId: String) {
+                        _uiState.value = _uiState.value.copy(
+                            selectedPlaceId = placeId
+                        )
+                    }
                 }
 
                 PlaceRecommendScreenEvent.onHashtagClick -> {
-                   // 해시태그 클릭 시 로직
+                    // 해시태그 클릭 시 로직
                 }
 
                 PlaceRecommendScreenEvent.onNavigateToReview -> {
@@ -117,5 +140,36 @@ class PlaceRecommendViewModel : ViewModel() {
 
     fun clearEvent() {
         _events.value = null
+    }
+
+    //GPS Update
+    fun updateLocation(lat: Double, lng: Double) {
+        _uiState.value = _uiState.value.copy(
+            currentLat = lat,
+            currentLng = lng
+        )
+    }
+
+    private fun observeBookmarks() {
+        viewModelScope.launch {
+            bookmarkRepository.observeBookmarks(uid).collect { ids ->
+                _bookmarkIds.value = ids
+            }
+        }
+    }
+
+    fun setSelectedPlace(placeId: String) {
+        _uiState.value = _uiState.value.copy(
+            selectedPlaceId = placeId
+        )
+    }
+
+    fun toggleBookmark(place: Place) {
+        viewModelScope.launch {
+
+            bookmarkRepository.toggleBookmark(uid, place.placeId)
+
+            placeRepository.addUserPlace(place)
+        }
     }
 }

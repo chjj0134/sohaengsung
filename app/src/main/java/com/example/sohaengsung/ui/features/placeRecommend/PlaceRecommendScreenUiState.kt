@@ -7,7 +7,11 @@ data class PlaceRecommendScreenUiState(
     val place: List<Place> = listOf(),
     val hashtag: List<Hashtag> = listOf(),
     val isLoading: Boolean = false,
-    val errorMessage: String? = null
+    val errorMessage: String? = null,
+    val selectedPlaceId: String? = null,
+    val currentLat: Double = 37.5665,
+    val currentLng: Double = 126.9780
+
 )
 
 sealed class PlaceRecommendScreenEvent {

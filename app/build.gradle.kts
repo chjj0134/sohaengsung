@@ -88,4 +88,8 @@ dependencies {
     implementation("com.kakao.sdk:v2-auth:2.20.1")
     implementation("com.kakao.sdk:v2-common:2.20.1")
 
+    //GPS
+    implementation("com.google.accompanist:accompanist-permissions:0.34.0")
+    implementation("com.google.android.gms:play-services-location:21.0.1")
+
 }

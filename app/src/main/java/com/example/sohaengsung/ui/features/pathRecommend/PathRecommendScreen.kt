@@ -11,9 +11,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sohaengsung.ui.common.CustomDivider
 import com.example.sohaengsung.ui.common.Dropdown
 import com.example.sohaengsung.ui.features.pathRecommend.components.PlaceForPathContainer
@@ -22,7 +25,10 @@ import com.example.sohaengsung.ui.dummy.placeExample
 import com.example.sohaengsung.ui.theme.SohaengsungTheme
 
 @Composable
-fun PathRecommendScreen() {
+fun PathRecommendScreen(uid: String = "dummy-user-id") {
+    val viewModel: PathRecommendViewModel = viewModel(
+        factory = PathRecommendViewModelFactory(uid))
+        val bookmarkPlaces by viewModel.bookmarkPlaces.collectAsState()
     SohaengsungTheme {
         Scaffold(
             topBar = {
@@ -67,12 +73,10 @@ fun PathRecommendScreen() {
                     )
                 }
 
-                placeExample.forEach { place ->
-                    PlaceForPathContainer(
-                        place = place
-                    )
-                }
+                bookmarkPlaces.forEach { place ->
+                    PlaceForPathContainer(place = place)
             }
         }
     }
+}
 }

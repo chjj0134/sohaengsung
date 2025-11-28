@@ -3,13 +3,21 @@ package com.example.sohaengsung.ui.features.coupon
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sohaengsung.data.model.Coupon
+import com.example.sohaengsung.data.repository.CouponRepository
+import com.example.sohaengsung.data.repository.UserRepository
 import com.example.sohaengsung.ui.dummy.userExample
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class CouponViewModel : ViewModel() {
+
+    private val userRepository = UserRepository()
+    private val couponRepository = CouponRepository()
+
     private val _uiState = MutableStateFlow(CouponScreenUiState())
     val uiState: StateFlow<CouponScreenUiState> = _uiState.asStateFlow()
 
@@ -23,42 +31,43 @@ class CouponViewModel : ViewModel() {
 
     private fun loadUserData() {
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(
-                isLoading = true,
-                errorMessage = null
-            )
+            try {
+                _uiState.update { it.copy(isLoading = true, errorMessage = null) }
 
-            // TODO: 실제 사용자 데이터 로드 (Repository에서 가져오기)
-            // 현재는 더미 데이터 사용
-            _uiState.value = _uiState.value.copy(
-                user = userExample.copy(
-                    nickname = "카공탐험가",
-                    uid = "u1939"
-                ),
-                isLoading = false
-            )
+                val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return@launch
+                val user = userRepository.getUser(uid)
+
+                if (user != null) {
+                    _uiState.update { it.copy(user = user, isLoading = false) }
+                } else {
+                    _uiState.update { it.copy(errorMessage = "사용자 정보를 찾을 수 없습니다.", isLoading = false) }
+                }
+
+            } catch (e: Exception) {
+                _uiState.update { it.copy(errorMessage = e.message, isLoading = false) }
+            }
         }
     }
 
     private fun loadCouponData() {
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(
-                isLoading = true,
-                errorMessage = null
-            )
+            try {
+                _uiState.update { it.copy(isLoading = true, errorMessage = null) }
 
-            // TODO: 실제 쿠폰 데이터 로드 (Repository에서 가져오기)
-            // 현재는 더미 데이터 사용
-            _uiState.value = _uiState.value.copy(
-                coupon = Coupon(
-                    "c15355",
-                    "u1939",
-                    "2q623y",
-                    4,
-                    false
-                ),
-                isLoading = false
-            )
+                val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return@launch
+                val coupons = couponRepository.getUserCoupons(uid)
+
+                val coupon = coupons.firstOrNull()
+
+                if (coupon != null) {
+                    _uiState.update { it.copy(coupon = coupon, isLoading = false) }
+                } else {
+                    _uiState.update { it.copy(errorMessage = "쿠폰 정보가 없습니다.", isLoading = false) }
+                }
+
+            } catch (e: Exception) {
+                _uiState.update { it.copy(errorMessage = e.message, isLoading = false) }
+            }
         }
     }
 

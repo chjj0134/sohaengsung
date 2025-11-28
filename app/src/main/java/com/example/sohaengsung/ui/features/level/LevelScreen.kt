@@ -76,7 +76,7 @@ fun LevelScreen(
                         ProfilePic(uiState.user, 50)
 
                         Text(
-                            "${uiState.user.nickname} 님은\n현재 레벨 ${uiState.user.activityScore}입니다!",
+                            "${uiState.user.nickname} 님은\n현재 레벨 ${uiState.user.level}입니다!",
                             style = MaterialTheme.typography.titleLarge,
                             textAlign = TextAlign.Center,
                         )

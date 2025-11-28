@@ -2,13 +2,18 @@ package com.example.sohaengsung.ui.features.level
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.sohaengsung.data.repository.UserRepository
 import com.example.sohaengsung.ui.dummy.userExample
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class LevelViewModel : ViewModel() {
+
+    private val userRepository = UserRepository()
     private val _uiState = MutableStateFlow(LevelScreenUiState())
     val uiState: StateFlow<LevelScreenUiState> = _uiState.asStateFlow()
 
@@ -21,21 +26,31 @@ class LevelViewModel : ViewModel() {
 
     private fun loadUserData() {
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(
-                isLoading = true,
-                errorMessage = null
-            )
+            try {
+                _uiState.update { it.copy(isLoading = true, errorMessage = null) }
 
-            // TODO: 실제 사용자 데이터 로드 (Repository에서 가져오기)
-            // 현재는 더미 데이터 사용
-            _uiState.value = _uiState.value.copy(
-                user = userExample.copy(
-                    nickname = "카공탐험가",
-                    level = 5,
-                    activityScore = 4,
-                ),
-                isLoading = false
-            )
+                val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return@launch
+                val user = userRepository.getUser(uid)
+
+                if (user != null) {
+                    _uiState.update { it.copy(user = user, isLoading = false) }
+                } else {
+                    _uiState.update {
+                        it.copy(
+                            errorMessage = "사용자 정보가 없습니다.",
+                            isLoading = false
+                        )
+                    }
+                }
+
+            } catch (e: Exception) {
+                _uiState.update {
+                    it.copy(
+                        errorMessage = e.message ?: "알 수 없는 오류",
+                        isLoading = false
+                    )
+                }
+            }
         }
     }
 

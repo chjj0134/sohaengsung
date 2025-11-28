@@ -3,14 +3,17 @@ package com.example.sohaengsung.ui.features.placeRecommend.components
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sohaengsung.data.model.Place
 import com.example.sohaengsung.ui.common.CustomDivider
+import com.example.sohaengsung.ui.features.placeRecommend.PlaceRecommendViewModel
 
 @Composable
 fun PlaceDetailSheet(
     place: Place,
     isSheetOpen: Boolean,
-    onSheetDismiss: () -> Unit
+    onSheetDismiss: () -> Unit,
+    viewModel: PlaceRecommendViewModel
 ) {
 
     Column {
@@ -21,7 +24,8 @@ fun PlaceDetailSheet(
         ) {
 
             // 장소 상세 정보
-            PlaceDetailContainer(place)
+            PlaceDetailContainer(place = place,
+                viewModel = viewModel)
 
             // 디바이더
             CustomDivider(MaterialTheme.colorScheme.secondary)
