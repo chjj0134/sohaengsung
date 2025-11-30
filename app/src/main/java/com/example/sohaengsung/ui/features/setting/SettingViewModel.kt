@@ -3,12 +3,13 @@ package com.example.sohaengsung.ui.features.setting
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sohaengsung.ui.dummy.userExample
+import com.example.sohaengsung.ui.features.home.HomeScreenEvent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class SettingScreenViewModel : ViewModel() {
+class SettingViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(SettingScreenUiState())
     val uiState: StateFlow<SettingScreenUiState> = _uiState.asStateFlow()
 
@@ -40,9 +41,35 @@ class SettingScreenViewModel : ViewModel() {
 
     fun onEvent(event: SettingScreenEvent) {
         viewModelScope.launch {
-            // onEvent 호출 시, 바로 _events에 값을 설정하고
-            // UI에서 해당 값을 소비한 후 clearEvent()를 호출해야 함
-            _events.value = event
+            when (event) {
+                SettingScreenEvent.onAccountManagementClick -> {
+                    _events.value = SettingScreenEvent.Navigation.NavigateToAccountManagement
+                }
+
+                SettingScreenEvent.onThemeChangeClick -> {
+                    _events.value = SettingScreenEvent.Navigation.NavigateToThemeChange
+                }
+
+                SettingScreenEvent.onTermsClick -> {
+                    _events.value = SettingScreenEvent.Navigation.NavigateToTerms
+                }
+
+                SettingScreenEvent.onNoticeClick -> {
+                    _events.value = SettingScreenEvent.Navigation.NavigateToNotice
+                }
+
+                SettingScreenEvent.onLevelClick -> {
+                    _events.value = SettingScreenEvent.Navigation.NavigateToLevel
+                }
+
+                SettingScreenEvent.EditProfilePicture -> {
+                    // 정의
+                }
+
+                is SettingScreenEvent.Navigation -> {
+                    /* do nothing */
+                }
+            }
         }
     }
 

@@ -14,58 +14,26 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sohaengsung.R
 import com.example.sohaengsung.ui.common.CustomDivider
-import com.example.sohaengsung.ui.features.setting.SettingScreenEvent
-import com.example.sohaengsung.ui.features.setting.SettingScreenViewModel
 import com.example.sohaengsung.ui.features.setting.components.ProfileSettingContainer
 import com.example.sohaengsung.ui.features.setting.components.SettingMenuItem
 import com.example.sohaengsung.ui.theme.SohaengsungTheme
 
 @Composable
 fun SettingScreen(
-    viewModel: SettingScreenViewModel = viewModel(),
-    onNavigateToAccountManagement: () -> Unit = {},
-    onNavigateToThemeChange: () -> Unit = {},
-    onNavigateToTerms: () -> Unit = {},
-    onNavigateToNotice: () -> Unit = {},
-    onNavigateToLevelDetail: () -> Unit = {},
-    onEditProfilePicture: () -> Unit = {}
+    onNavigate: (route: SettingScreenEvent.Navigation) -> Unit,
+    viewModel: SettingViewModel = viewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    val events by viewModel.events.collectAsState()
+    val event by viewModel.events.collectAsState()
 
-    // 이벤트 처리
-    LaunchedEffect(events) {
-        when (val event = events) {
-            is SettingScreenEvent.NavigateToAccountManagement -> {
-                onNavigateToAccountManagement()
-                viewModel.clearEvent()
-            }
-            is SettingScreenEvent.NavigateToThemeChange -> {
-                onNavigateToThemeChange()
-                viewModel.clearEvent()
-            }
-            is SettingScreenEvent.NavigateToTerms -> {
-                onNavigateToTerms()
-                viewModel.clearEvent()
-            }
-            is SettingScreenEvent.NavigateToNotice -> {
-                onNavigateToNotice()
-                viewModel.clearEvent()
-            }
-            is SettingScreenEvent.NavigateToLevelDetail -> {
-                onNavigateToLevelDetail()
-                viewModel.clearEvent()
-            }
-            is SettingScreenEvent.EditProfilePicture -> {
-                onEditProfilePicture()
-                viewModel.clearEvent()
-            }
-            null -> {}
+    LaunchedEffect(event) {
+        event?.let { navigationEvent ->
+            onNavigate(navigationEvent as SettingScreenEvent.Navigation)
+            viewModel.clearEvent()
         }
     }
 
@@ -88,7 +56,7 @@ fun SettingScreen(
                 ProfileSettingContainer(
                     user = uiState.user,
                     onLevelDetailClick = {
-                        viewModel.onEvent(SettingScreenEvent.NavigateToLevelDetail)
+                        viewModel.onEvent(SettingScreenEvent.onLevelClick)
                     },
                     onProfileEditClick = {
                         viewModel.onEvent(SettingScreenEvent.EditProfilePicture)
@@ -108,7 +76,7 @@ fun SettingScreen(
                     SettingMenuItem(
                         text = "계정 관리",
                         onClick = {
-                            viewModel.onEvent(SettingScreenEvent.NavigateToAccountManagement)
+                            viewModel.onEvent(SettingScreenEvent.onAccountManagementClick)
                         }
                     )
 
@@ -120,7 +88,7 @@ fun SettingScreen(
                     SettingMenuItem(
                         text = "테마 변경",
                         onClick = {
-                            viewModel.onEvent(SettingScreenEvent.NavigateToThemeChange)
+                            viewModel.onEvent(SettingScreenEvent.onThemeChangeClick)
                         }
                     )
 
@@ -132,7 +100,7 @@ fun SettingScreen(
                     SettingMenuItem(
                         text = "약관 확인",
                         onClick = {
-                            viewModel.onEvent(SettingScreenEvent.NavigateToTerms)
+                            viewModel.onEvent(SettingScreenEvent.onTermsClick)
                         }
                     )
 
@@ -144,19 +112,10 @@ fun SettingScreen(
                     SettingMenuItem(
                         text = "공지사항",
                         onClick = {
-                            viewModel.onEvent(SettingScreenEvent.NavigateToNotice)
+                            viewModel.onEvent(SettingScreenEvent.onNoticeClick)
                         }
                     )
                 }
             }
         }
     }
-
-
-@Preview(showBackground = true)
-@Composable
-fun SettingScreenPreview() {
-    SohaengsungTheme {
-        SettingScreen()
-    }
-}

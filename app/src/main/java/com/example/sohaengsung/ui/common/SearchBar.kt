@@ -2,9 +2,13 @@ package com.example.sohaengsung.ui.common
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Search
@@ -27,11 +31,12 @@ fun SearchBar(
         value = query,
         onValueChange = onQueryChange, // 텍스트 변경 이벤트 처리
         placeholder = { Text("search event") },
+        shape = RoundedCornerShape(30.dp),
         modifier = Modifier
-            .fillMaxWidth()
-            .heightIn(min = 56.dp)
+            .fillMaxSize()
             .clip(CircleShape)
-            .background(MaterialTheme.colorScheme.secondary),
+            .padding(vertical = 4.dp)
+            .background(MaterialTheme.colorScheme.onPrimary),
 
         // 캘린더 아이콘
         leadingIcon = {
@@ -42,6 +47,7 @@ fun SearchBar(
                 // 캘린더 아이콘 클릭 이벤트 처리
                 modifier = Modifier
                     .clickable { onCalendarClick() }
+                    .size(30.dp)
             )
         },
 
@@ -51,6 +57,8 @@ fun SearchBar(
                 imageVector = Icons.Filled.Search,
                 contentDescription = "검색",
                 tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier
+                    .size(30.dp)
             )
         },
         singleLine = true

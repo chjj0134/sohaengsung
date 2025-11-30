@@ -9,10 +9,18 @@ data class SettingScreenUiState(
 )
 
 sealed class SettingScreenEvent {
-    object NavigateToAccountManagement : SettingScreenEvent()
-    object NavigateToThemeChange : SettingScreenEvent()
-    object NavigateToTerms : SettingScreenEvent()
-    object NavigateToNotice : SettingScreenEvent()
-    object NavigateToLevelDetail : SettingScreenEvent()
+    object onAccountManagementClick : SettingScreenEvent()
+    object onThemeChangeClick : SettingScreenEvent()
+    object onTermsClick : SettingScreenEvent()
+    object onNoticeClick : SettingScreenEvent()
+    object onLevelClick : SettingScreenEvent()
     object EditProfilePicture : SettingScreenEvent()
+
+    sealed class Navigation : SettingScreenEvent() {
+        object NavigateToAccountManagement : Navigation()
+        object NavigateToThemeChange : Navigation()
+        object NavigateToTerms : Navigation()
+        object NavigateToNotice : Navigation()
+        object NavigateToLevel : Navigation()
+    }
 }

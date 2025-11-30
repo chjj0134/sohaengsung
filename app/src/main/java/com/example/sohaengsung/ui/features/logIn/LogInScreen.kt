@@ -63,7 +63,7 @@ fun LogInScreen(
                     modifier = Modifier.padding(16.dp)
                 ) {
                     LoginButton(
-                        "이메일로 로그인하기",
+                        "구글로 로그인하기",
                         containerColor = MaterialTheme.colorScheme.primary,
                         contentColor = MaterialTheme.colorScheme.onPrimary,
                         onClick = { onClickGoogleLogin() }

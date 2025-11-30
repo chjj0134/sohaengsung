@@ -78,13 +78,15 @@ fun ReviewContainer(
                     Text(
                         text = "#${tag}", // 해시태그 이름 앞에 # 붙이기
                         color = MaterialTheme.colorScheme.primary,
+                        style = MaterialTheme.typography.titleSmall
                     )
                 }
             }
 
             // 리뷰 본문
             Text(
-                text = "${reviewExample[1].content}"
+                text = "${reviewExample[1].content}",
+                style = MaterialTheme.typography.bodyMedium
             )
         }
     }

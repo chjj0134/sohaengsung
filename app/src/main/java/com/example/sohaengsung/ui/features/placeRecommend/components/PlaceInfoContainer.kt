@@ -12,18 +12,25 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.sohaengsung.data.model.Place
 import com.example.sohaengsung.ui.common.Bookmark
+import com.example.sohaengsung.ui.features.placeRecommend.PlaceRecommendViewModel
 
 @Composable
 fun PlaceInfoContainer(
     place: Place,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    viewModel: PlaceRecommendViewModel
 ) {
-        Column (
+    val bookmarkIds by viewModel.bookmarkIds.collectAsState()
+    val isBookmarked = bookmarkIds.contains(place.placeId)
+
+    Column (
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable(onClick = onClick),
@@ -42,8 +49,8 @@ fun PlaceInfoContainer(
                 )
 
                 Bookmark(
-                    initialChecked = true,
-                    onBookmarkToggle = { /* 작업 내용(예시: viewModel.updateBookmark(storeId, isChecked)) */ }
+                    initialChecked = isBookmarked,
+                    onBookmarkToggle = {  viewModel.toggleBookmark(place)}
                 )
             }
 

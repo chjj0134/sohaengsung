@@ -1,20 +1,16 @@
 package com.example.sohaengsung.ui.features.home
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -27,45 +23,17 @@ import com.example.sohaengsung.ui.theme.SohaengsungTheme
 
 @Composable
 fun HomeScreen(
+    onNavigate: (route: HomeScreenEvent.Navigation) -> Unit,
     viewModel: HomeScreenViewModel = viewModel(),
-    onNavigateToPlaceRecommend: () -> Unit = {},
-    onNavigateToPathRecommend: () -> Unit = {},
-    onNavigateToBookmark: () -> Unit = {},
-    onNavigateToCoupon: () -> Unit = {},
-    onNavigateToEvent: () -> Unit = {},
-    onNavigateToSetting: () -> Unit = {}
 ) {
-    val uiState by viewModel.uiState.collectAsState()
-    val events by viewModel.events.collectAsState()
 
-    // 이벤트 처리
-    LaunchedEffect(events) {
-        when (val event = events) {
-            is HomeScreenEvent.NavigateToPlaceRecommend -> {
-                onNavigateToPlaceRecommend()
-                viewModel.clearEvent()
-            }
-            is HomeScreenEvent.NavigateToPathRecommend -> {
-                onNavigateToPathRecommend()
-                viewModel.clearEvent()
-            }
-            is HomeScreenEvent.NavigateToBookmark -> {
-                onNavigateToBookmark()
-                viewModel.clearEvent()
-            }
-            is HomeScreenEvent.NavigateToCoupon -> {
-                onNavigateToCoupon()
-                viewModel.clearEvent()
-            }
-            is HomeScreenEvent.NavigateToEvent -> {
-                onNavigateToEvent()
-                viewModel.clearEvent()
-            }
-            is HomeScreenEvent.NavigateToSetting -> {
-                onNavigateToSetting()
-                viewModel.clearEvent()
-            }
-            null -> {}
+    val uiState by viewModel.uiState.collectAsState()
+    val event by viewModel.events.collectAsState()
+
+    LaunchedEffect(event) {
+        event?.let { navigationEvent ->
+            onNavigate(navigationEvent as HomeScreenEvent.Navigation)
+            viewModel.clearEvent()
         }
     }
 
@@ -75,7 +43,9 @@ fun HomeScreen(
             topBar = {
                 LogoTopBar(
                     onProfileClick = {
-                        viewModel.onEvent(HomeScreenEvent.NavigateToSetting)
+                        viewModel.onEvent(
+                            HomeScreenEvent.onSettingClick
+                        )
                     },
                     profileContent = {
                         ProfilePic(
@@ -103,7 +73,7 @@ fun HomeScreen(
                         title = "내 주변\n장소 추천",
                         icon = AppIcons.LocationOn,
                         onClick = {
-                            viewModel.onEvent(HomeScreenEvent.NavigateToPlaceRecommend)
+                            viewModel.onEvent(HomeScreenEvent.onPlaceRecommendClick)
                         },
                         modifier = Modifier.weight(1f)
                     )
@@ -112,7 +82,7 @@ fun HomeScreen(
                         title = "경로 추천",
                         icon = AppIcons.Map,
                         onClick = {
-                            viewModel.onEvent(HomeScreenEvent.NavigateToPathRecommend)
+                            viewModel.onEvent(HomeScreenEvent.onPathRecommendClick)
                         },
                         modifier = Modifier.weight(1f)
                     )
@@ -127,7 +97,7 @@ fun HomeScreen(
                         title = "내 북마크\n확인하기",
                         icon = AppIcons.Folder,
                         onClick = {
-                            viewModel.onEvent(HomeScreenEvent.NavigateToBookmark)
+                            viewModel.onEvent(HomeScreenEvent.onBookmarkClick)
                         },
                         modifier = Modifier.weight(1f)
                     )
@@ -136,7 +106,7 @@ fun HomeScreen(
                         title = "쿠폰\n확인하기",
                         icon = AppIcons.CardGiftcard,
                         onClick = {
-                            viewModel.onEvent(HomeScreenEvent.NavigateToCoupon)
+                            viewModel.onEvent(HomeScreenEvent.onCouponClick)
                         },
                         modifier = Modifier.weight(1f)
                     )
@@ -150,7 +120,7 @@ fun HomeScreen(
                         title = "행사 정보\n확인하기",
                         icon = AppIcons.LocalCafe,
                         onClick = {
-                            viewModel.onEvent(HomeScreenEvent.NavigateToEvent)
+                            viewModel.onEvent(HomeScreenEvent.onEventClick)
                         }
                     )
                 }
@@ -159,11 +129,11 @@ fun HomeScreen(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun HomeScreenPreview() {
-    SohaengsungTheme {
-        HomeScreen()
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun HomeScreenPreview() {
+//    SohaengsungTheme {
+//        HomeScreen()
+//    }
+//}
 

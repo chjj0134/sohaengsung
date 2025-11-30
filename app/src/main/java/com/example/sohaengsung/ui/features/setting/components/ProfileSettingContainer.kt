@@ -99,7 +99,7 @@ fun ProfileSettingContainer(
 
                     // 2. 오른쪽 그룹: 등급 확인 텍스트와 화살표
                     Text(
-                        text = "등급 확인하러 가기",
+                        text = "레벨 확인하러 가기",
                         style = MaterialTheme.typography.bodyMedium.copy(
                             textDecoration = TextDecoration.Underline
                         )

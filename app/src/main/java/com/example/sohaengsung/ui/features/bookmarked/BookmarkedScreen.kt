@@ -1,4 +1,4 @@
-package com.example.sohaengsung.ui.features.pathRecommend
+package com.example.sohaengsung.ui.features.bookmarked
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,28 +11,30 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sohaengsung.ui.common.CustomDivider
-import com.example.sohaengsung.ui.common.Dropdown
-import com.example.sohaengsung.ui.features.pathRecommend.components.PlaceForPathContainer
 import com.example.sohaengsung.ui.common.CustomTopBar
-import com.example.sohaengsung.ui.dummy.placeExample
+import com.example.sohaengsung.ui.common.Dropdown
 import com.example.sohaengsung.ui.theme.SohaengsungTheme
 
 @Composable
-fun PathRecommendScreen(uid: String = "dummy-user-id") {
-    val viewModel: PathRecommendViewModel = viewModel(
-        factory = PathRecommendViewModelFactory(uid))
-        val bookmarkPlaces by viewModel.bookmarkPlaces.collectAsState()
+fun BookmarkedScreen(
+    uid: String = "dummy-user-id"
+) {
+    // TODO: 리포지토리 연결 후 주석만 풀어 주세요!
+    // val viewModel: BookmarkedViewModel = viewModel(
+    //    factory = BookmarkedRecommendViewModelFactory(uid))
+
+    // val bookmarkPlaces by viewModel.bookmarkPlaces.collectAsState()
+
     SohaengsungTheme {
         Scaffold(
             topBar = {
-                CustomTopBar(contentText = "경로 추천")
+                CustomTopBar(contentText = "북마크 확인하기")
             }
         ) { innerPadding ->
             Column(
@@ -73,10 +75,10 @@ fun PathRecommendScreen(uid: String = "dummy-user-id") {
                     )
                 }
 
-                bookmarkPlaces.forEach { place ->
-                    PlaceForPathContainer(place = place)
+                // TODO: 리포지토리 연결 후 주석만 풀어 주세요!
+                // bookmarkPlaces.forEach { place ->
+                //    BookmarkedItem(place = place)
+                }
             }
         }
     }
-}
-}

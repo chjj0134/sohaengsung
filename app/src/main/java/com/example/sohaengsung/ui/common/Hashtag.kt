@@ -14,9 +14,11 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun Hashtag(content: String,
             containerColor: Color,
-            contentColor: Color
+            contentColor: Color,
+            modifier: Modifier
 ) {
     Surface(
+        modifier = modifier,
         shape = RoundedCornerShape(percent = 50),
         color = containerColor, // 배경 색
         tonalElevation = 1.dp,
