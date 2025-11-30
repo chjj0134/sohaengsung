@@ -21,4 +21,5 @@ object ScreenRoute {
     const val VOUCHER = "voucher"
     const val REVIEW = "review"
     const val EVENT = "event"
+    const val MAP_PATH_RECOMMEND = "map-path-recommend"
 }

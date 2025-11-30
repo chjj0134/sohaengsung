@@ -12,3 +12,7 @@ import androidx.compose.ui.graphics.Color
 
 // HomeMenuCard 배경 색상 (흰색)
 val CardBackgroundWhite = Color(0xFFFFFFFF)
+
+// MapPathRecommend 관련 색상
+val RouteLineBlack = Color(0xFF000000)  // 경로 선 색상
+val DividerGray = Color(0xFF808080)    // 구분선 색상 (Gray)

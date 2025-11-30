@@ -17,6 +17,7 @@ import com.example.sohaengsung.ui.features.level.LevelScreen
 import com.example.sohaengsung.ui.features.level.LevelScreenEvent
 import com.example.sohaengsung.ui.features.logIn.LogInScreen
 import com.example.sohaengsung.ui.features.map.MapScreen
+import com.example.sohaengsung.ui.features.mapPathRecommend.MapPathRecommendScreen
 import com.example.sohaengsung.ui.features.pathRecommend.PathRecommendScreen
 import com.example.sohaengsung.ui.features.placeRecommend.PlaceRecommendScreen
 import com.example.sohaengsung.ui.features.placeRecommend.PlaceRecommendScreenEvent
@@ -41,6 +42,8 @@ fun AppNavigation(
         }
     }
 
+    // TODO: 테스트용 - map-path-recommend 화면으로 바로 이동
+    // 테스트 완료 후 "home"으로 변경
     NavHost(navController = navController, startDestination = "home") {
 
         composable("login") {
@@ -57,7 +60,8 @@ fun AppNavigation(
                         HomeScreenEvent.Navigation.NavigateToPlaceRecommend
                             -> ScreenRoute.PLACE_RECOMMEND
                         HomeScreenEvent.Navigation.NavigateToPathRecommend
-                            -> ScreenRoute.PATH_RECOMMEND
+                            -> ScreenRoute.MAP_PATH_RECOMMEND  // TODO: 테스트용 - map-path-recommend로 이동
+                            // -> ScreenRoute.PATH_RECOMMEND  // 원래 경로
                         HomeScreenEvent.Navigation.NavigateToBookmark
                             -> ScreenRoute.BOOKMARK // 가정
                         HomeScreenEvent.Navigation.NavigateToCoupon
@@ -133,5 +137,9 @@ fun AppNavigation(
         composable ("event") { EventScreen() }
 
         composable("map") { MapScreen() }
+
+        composable("map-path-recommend") {
+            MapPathRecommendScreen()
+        }
     }
 }
