@@ -7,6 +7,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.sohaengsung.ui.features.bookmarked.BookmarkedScreen
 import com.example.sohaengsung.ui.features.coupon.CouponScreen
 import com.example.sohaengsung.ui.features.coupon.CouponScreenEvent
 import com.example.sohaengsung.ui.features.event.EventScreen
@@ -84,6 +85,8 @@ fun AppNavigation(
         }
 
         composable("path-recommend") { PathRecommendScreen() }
+
+        composable( "bookmark") { BookmarkedScreen() }
 
         composable("setting") { SettingScreen(
             onNavigate = { navigationEvent ->
