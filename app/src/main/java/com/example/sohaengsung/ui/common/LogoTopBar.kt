@@ -1,8 +1,12 @@
 package com.example.sohaengsung.ui.common
 
+import android.R.attr.top
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -25,20 +29,21 @@ import com.example.sohaengsung.ui.theme.SohaengsungTheme
 @Composable
 fun LogoTopBar(
     onProfileClick: () -> Unit = {},
-    profileContent: @Composable (() -> Unit)? = null
+    profileContent: @Composable (() -> Unit)
 ) {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
             .height(80.dp),
-        color = MaterialTheme.colorScheme.background
+        color = MaterialTheme.colorScheme.background,
     ) {
-        Box(
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(80.dp)
                 .padding(horizontal = 20.dp),
-            contentAlignment = Alignment.CenterStart
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
             // 왼쪽: 로고 이미지
             Image(
@@ -49,39 +54,18 @@ fun LogoTopBar(
                     .height(80.dp)
                     .padding(top = 20.dp)  // 로고를 아래로 이동
             )
-            
-            // 오른쪽: 프로필 이미지 (옵션)
-            if (profileContent != null) {
+
+
                 Box(
                     modifier = Modifier
-                        .align(Alignment.CenterEnd)
-                        .clickable { onProfileClick() },
+                        .padding(top = 20.dp)
+                        .clickable {
+                            onProfileClick()
+                        },
                     contentAlignment = Alignment.Center
                 ) {
                     profileContent()
                 }
-            }
         }
     }
 }
-
-@Preview(showBackground = true)
-@Composable
-fun LogoTopBarPreview() {
-    SohaengsungTheme {
-        LogoTopBar(
-            onProfileClick = {},
-            profileContent = {
-                // 프로필 이미지 프리뷰
-                Box(
-                    modifier = Modifier
-                        .height(40.dp)
-                        .padding(8.dp)
-                ) {
-                    Text("프로필")
-                }
-            }
-        )
-    }
-}
-
