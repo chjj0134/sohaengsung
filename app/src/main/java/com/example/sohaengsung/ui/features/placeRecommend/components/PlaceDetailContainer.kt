@@ -41,7 +41,7 @@ fun PlaceDetailContainer(place: Place, viewModel: PlaceRecommendViewModel) {
 
             Bookmark(
                 initialChecked = isBookmarked,
-                onBookmarkToggle = {  viewModel.toggleBookmark(place)}
+                onBookmarkToggle = { viewModel.toggleBookmark(place) }
             )
         }
 
