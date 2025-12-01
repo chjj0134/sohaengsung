@@ -19,6 +19,7 @@ import com.example.sohaengsung.ui.features.logIn.LogInScreen
 import com.example.sohaengsung.ui.features.map.MapScreen
 import com.example.sohaengsung.ui.features.mapPathRecommend.MapPathRecommendScreen
 import com.example.sohaengsung.ui.features.pathRecommend.PathRecommendScreen
+import com.example.sohaengsung.ui.features.pathRecommend.PathRecommendScreenEvent
 import com.example.sohaengsung.ui.features.placeRecommend.PlaceRecommendScreen
 import com.example.sohaengsung.ui.features.placeRecommend.PlaceRecommendScreenEvent
 import com.example.sohaengsung.ui.features.setting.SettingScreen
@@ -42,8 +43,6 @@ fun AppNavigation(
         }
     }
 
-    // TODO: 테스트용 - map-path-recommend 화면으로 바로 이동
-    // 테스트 완료 후 "home"으로 변경
     NavHost(navController = navController, startDestination = "home") {
 
         composable("login") {
@@ -60,7 +59,7 @@ fun AppNavigation(
                         HomeScreenEvent.Navigation.NavigateToPlaceRecommend
                             -> ScreenRoute.PLACE_RECOMMEND
                         HomeScreenEvent.Navigation.NavigateToPathRecommend
-                            -> ScreenRoute.MAP_PATH_RECOMMEND  // TODO: 테스트용 - map-path-recommend로 이동
+                            -> ScreenRoute.PATH_RECOMMEND  // TODO: 테스트용 - map-path-recommend로 이동
                             // -> ScreenRoute.PATH_RECOMMEND  // 원래 경로
                         HomeScreenEvent.Navigation.NavigateToBookmark
                             -> ScreenRoute.BOOKMARK // 가정
@@ -80,6 +79,8 @@ fun AppNavigation(
             PlaceRecommendScreen(
                 onNavigate = { navigationEvent ->
                     val route = when (navigationEvent) {
+                        PlaceRecommendScreenEvent.Navigation.NavigateToCoupon
+                            -> ScreenRoute.COUPON
                         PlaceRecommendScreenEvent.Navigation.NavigateToReview
                             -> ScreenRoute.REVIEW // 가정
                     }
@@ -88,7 +89,17 @@ fun AppNavigation(
             )
         }
 
-        composable("path-recommend") { PathRecommendScreen() }
+        composable("path-recommend") {
+            PathRecommendScreen(
+                onNavigate = { navigationEvent ->
+                    val route = when (navigationEvent) {
+                        PathRecommendScreenEvent.Navigation.NavigateToPathCompose
+                            -> ScreenRoute.MAP_PATH_RECOMMEND
+                    }
+                    navController.navigate(route)
+                }
+            )
+        }
 
         composable( "bookmark") { BookmarkedScreen() }
 

@@ -2,6 +2,8 @@ package com.example.sohaengsung.ui.features.placeRecommend
 
 import com.example.sohaengsung.data.model.Hashtag
 import com.example.sohaengsung.data.model.Place
+import com.example.sohaengsung.ui.features.pathRecommend.PathRecommendScreenEvent
+import com.example.sohaengsung.ui.features.pathRecommend.PathRecommendScreenEvent.Navigation
 
 data class PlaceRecommendScreenUiState(
     val place: List<Place> = listOf(),
@@ -11,7 +13,6 @@ data class PlaceRecommendScreenUiState(
     val selectedPlaceId: String? = null,
     val currentLat: Double = 37.5665,
     val currentLng: Double = 126.9780
-
 )
 
 sealed class PlaceRecommendScreenEvent {
@@ -19,10 +20,12 @@ sealed class PlaceRecommendScreenEvent {
     object onDropDownClick : PlaceRecommendScreenEvent()
     object onHashtagClick : PlaceRecommendScreenEvent()
     object onBookmarkClick : PlaceRecommendScreenEvent()
-    object onNavigateToReview : PlaceRecommendScreenEvent()
+    object onCouponClick : PlaceRecommendScreenEvent()
+    object onReviewClick : PlaceRecommendScreenEvent()
 
     // ViewModel이 UI에게 특정 동작을 요청하는 단일 이벤트
     sealed class Navigation : PlaceRecommendScreenEvent() {
+        object NavigateToCoupon : Navigation()
         object NavigateToReview : Navigation()
     }
 }

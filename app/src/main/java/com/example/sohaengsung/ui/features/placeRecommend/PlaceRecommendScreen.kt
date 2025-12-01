@@ -41,7 +41,15 @@ import com.google.accompanist.permissions.rememberPermissionState
 import com.google.android.gms.location.LocationServices
 import android.Manifest
 import android.content.pm.PackageManager
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Create
+import androidx.compose.material.icons.filled.Redeem
+import androidx.compose.ui.Alignment
 import androidx.core.content.ContextCompat
+import com.example.sohaengsung.ui.common.BottomActionButtton
+import com.example.sohaengsung.ui.features.pathRecommend.PathRecommendScreenEvent
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.firebase.auth.FirebaseAuth
 
@@ -184,6 +192,7 @@ fun PlaceRecommendScreen(
 
                 /// 바텀 시트 호출 및 데이터 전달
                 // selectedPlace가 null이 아닐 때만 시트를 표시
+                // TODO: 내 경로 추천 화면이 잘 열리지 않아 배치가 제대로 됐는지 확인 안 됨; 열리면 꼭 재확인
                 if (selectedPlace != null) {
                     PlaceDetailSheet(
                         isSheetOpen = isSheetOpen,
@@ -194,6 +203,43 @@ fun PlaceRecommendScreen(
                         place = selectedPlace!!, // 널 검사 후 저장된 place 객체를 전달
                         viewModel = viewModel
                     )
+
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.BottomEnd
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(16.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+
+                            // 쿠폰 확인 버튼
+                            BottomActionButtton(
+                                onClickAction = {
+                                    viewModel.onEvent(
+                                        PlaceRecommendScreenEvent.onCouponClick
+                                    )
+                                },
+                                icon = Icons.Filled.Redeem,
+                                text = "쿠폰 확인",
+                                modifier = Modifier.padding(horizontal = 8.dp)
+                            )
+
+                            Spacer(modifier = Modifier.height(16.dp))
+
+                            // 리뷰 작성 버튼
+                            BottomActionButtton(
+                                onClickAction = {
+                                    viewModel.onEvent(
+                                        PlaceRecommendScreenEvent.onReviewClick
+                                    )
+                                },
+                                icon = Icons.Filled.Create,
+                                text = "리뷰 작성",
+                                modifier = Modifier.padding(horizontal = 8.dp)
+                            )
+                        }
+                    }
                 }
             }
         }

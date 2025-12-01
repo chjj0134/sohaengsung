@@ -8,6 +8,7 @@ import com.example.sohaengsung.data.model.PlaceDetail
 import com.example.sohaengsung.data.repository.BookmarkRepository
 import com.example.sohaengsung.data.repository.PlaceRepository
 import com.example.sohaengsung.data.util.LocationService
+import com.example.sohaengsung.ui.features.pathRecommend.PathRecommendScreenEvent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -127,7 +128,11 @@ class PlaceRecommendViewModel(
                     // 해시태그 클릭 시 로직
                 }
 
-                PlaceRecommendScreenEvent.onNavigateToReview -> {
+                PlaceRecommendScreenEvent.onCouponClick -> {
+                    _events.value = PlaceRecommendScreenEvent.Navigation.NavigateToCoupon
+                }
+
+                PlaceRecommendScreenEvent.onReviewClick -> {
                     _events.value = PlaceRecommendScreenEvent.Navigation.NavigateToReview
                 }
 
@@ -166,9 +171,7 @@ class PlaceRecommendViewModel(
 
     fun toggleBookmark(place: Place) {
         viewModelScope.launch {
-
             bookmarkRepository.toggleBookmark(uid, place.placeId)
-
             placeRepository.addUserPlace(place)
         }
     }
