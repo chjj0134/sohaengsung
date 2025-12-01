@@ -20,7 +20,7 @@ import com.example.sohaengsung.ui.features.placeRecommend.PlaceRecommendViewMode
 @Composable
 fun PlaceForPathContainer(
     place: Place,
-    viewModel: PathRecommendViewModel
+    onCheckBoxClick: (Place) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -43,7 +43,7 @@ fun PlaceForPathContainer(
             CheckBox(
                 initialChecked = false,
                 onClick = {
-                    // TODO: 체크박스 클릭 시 로직
+                    onCheckBoxClick
                 }
             )
 
