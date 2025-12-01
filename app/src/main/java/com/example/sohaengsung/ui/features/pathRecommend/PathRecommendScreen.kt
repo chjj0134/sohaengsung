@@ -4,16 +4,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Create
-import androidx.compose.material.icons.filled.Redeem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -28,7 +25,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sohaengsung.ui.common.BottomActionButtton
 import com.example.sohaengsung.ui.common.CustomDivider
 import com.example.sohaengsung.ui.common.Dropdown
-import com.example.sohaengsung.ui.features.pathRecommend.components.PlaceForPathContainer
 import com.example.sohaengsung.ui.common.CustomTopBar
 import com.example.sohaengsung.ui.theme.SohaengsungTheme
 
@@ -95,9 +91,32 @@ fun PathRecommendScreen(
                     )
                 }
 
+                // TODO: 오류 발생으로 우선 주석 처리
 //                bookmarkPlaces.forEach { place ->
 //                    PlaceForPathContainer(place = place)
 //                }
+
+            }
+
+            // 쿠폰 확인 버튼
+            Box(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxSize(),
+                contentAlignment = Alignment.BottomEnd
+            ) {
+
+                // 경로 작성 버튼
+                BottomActionButtton(
+                    onClickAction = {
+                        viewModel.onEvent(
+                            PathRecommendScreenEvent.onPathComposeClick
+                        )
+                    },
+                    icon = Icons.Filled.Create,
+                    text = "경로 작성",
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                )
             }
         }
     }

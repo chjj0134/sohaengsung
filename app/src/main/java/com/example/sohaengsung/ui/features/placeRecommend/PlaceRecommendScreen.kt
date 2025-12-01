@@ -192,6 +192,7 @@ fun PlaceRecommendScreen(
 
                 /// 바텀 시트 호출 및 데이터 전달
                 // selectedPlace가 null이 아닐 때만 시트를 표시
+                // TODO: 내 경로 추천 화면이 잘 열리지 않아 배치가 제대로 됐는지 확인 안 됨; 열리면 꼭 재확인
                 if (selectedPlace != null) {
                     PlaceDetailSheet(
                         isSheetOpen = isSheetOpen,
