@@ -43,7 +43,7 @@ fun AppNavigation(
         }
     }
 
-    NavHost(navController = navController, startDestination = "home") {
+    NavHost(navController = navController, startDestination = "login") {
 
         composable("login") {
             LogInScreen(
@@ -59,10 +59,9 @@ fun AppNavigation(
                         HomeScreenEvent.Navigation.NavigateToPlaceRecommend
                             -> ScreenRoute.PLACE_RECOMMEND
                         HomeScreenEvent.Navigation.NavigateToPathRecommend
-                            -> ScreenRoute.PATH_RECOMMEND  // TODO: 테스트용 - map-path-recommend로 이동
-                            // -> ScreenRoute.PATH_RECOMMEND  // 원래 경로
+                            -> ScreenRoute.PATH_RECOMMEND
                         HomeScreenEvent.Navigation.NavigateToBookmark
-                            -> ScreenRoute.BOOKMARK // 가정
+                            -> ScreenRoute.BOOKMARK
                         HomeScreenEvent.Navigation.NavigateToCoupon
                             -> ScreenRoute.COUPON
                         HomeScreenEvent.Navigation.NavigateToEvent
@@ -111,7 +110,7 @@ fun AppNavigation(
                     SettingScreenEvent.Navigation.NavigateToAccountManagement
                         -> ScreenRoute.ACCOUNT_MANAGEMENT
                     SettingScreenEvent.Navigation.NavigateToThemeChange
-                        -> ScreenRoute.THEME_CHANGE // 가정
+                        -> ScreenRoute.THEME_CHANGE
                     SettingScreenEvent.Navigation.NavigateToTerms
                         -> ScreenRoute.TERMS
                     SettingScreenEvent.Navigation.NavigateToNotice
@@ -138,7 +137,7 @@ fun AppNavigation(
                 onNavigate = { navigationEvent ->
                     val route = when (navigationEvent) {
                         CouponScreenEvent.Navigation.NavigateToVoucherScreen
-                            -> ScreenRoute.VOUCHER // 가정
+                            -> ScreenRoute.VOUCHER
                     }
                     navController.navigate(route)
                 }
