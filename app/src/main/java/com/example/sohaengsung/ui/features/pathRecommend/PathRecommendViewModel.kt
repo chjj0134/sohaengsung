@@ -5,8 +5,9 @@ import androidx.lifecycle.viewModelScope
 import com.example.sohaengsung.data.model.Place
 import com.example.sohaengsung.data.repository.BookmarkRepository
 import com.example.sohaengsung.data.repository.PlaceRepository
-import com.example.sohaengsung.ui.dummy.placeExample
+import com.example.sohaengsung.ui.features.placeRecommend.PlaceRecommendScreenEvent
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -22,6 +23,12 @@ class PathRecommendViewModel(
 
     private val _bookmarkPlaces = MutableStateFlow<List<Place>>(emptyList())
     val bookmarkPlaces = _bookmarkPlaces.asStateFlow()
+
+//    private val _uiState = MutableStateFlow(PathRecommendScreenUiState())
+//    val uiState: StateFlow<PathRecommendScreenUiState> = _uiState.asStateFlow()
+
+    private val _events = MutableStateFlow<PathRecommendScreenEvent.Navigation?>(null)
+    val events: StateFlow<PathRecommendScreenEvent.Navigation?> = _events.asStateFlow()
 
     init {
         observeBookmarkIds()
@@ -44,5 +51,31 @@ class PathRecommendViewModel(
         // 지금은 UI dummy 예시 사용 (프론트 스크린 참고)
         val places = placeRepository.getPlaces(ids)
         _bookmarkPlaces.value = places
+    }
+
+    fun onEvent(event: PathRecommendScreenEvent) {
+        viewModelScope.launch {
+            when (event) {
+                PathRecommendScreenEvent.onDropDownClick -> {
+                    // 드롭다운 클릭 시 로직
+                }
+
+                PathRecommendScreenEvent.onCheckboxClick -> {
+                    // 체크박스 아이콘 클릭 시 로직
+                }
+
+                PathRecommendScreenEvent.onPathComposeClick -> {
+                    _events.value = PathRecommendScreenEvent.Navigation.NavigateToPathCompose
+                }
+
+                is PathRecommendScreenEvent.Navigation -> {
+                    /* do nothing */
+                }
+            }
+        }
+    }
+
+    fun clearEvent() {
+        _events.value = null
     }
 }

@@ -1,6 +1,7 @@
 package com.example.sohaengsung.ui.features.home.components
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,15 +19,18 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.sohaengsung.ui.theme.CardBackgroundWhite
+import androidx.compose.ui.graphics.ColorFilter
 
 @Composable
 fun HomeMenuCard(
@@ -72,22 +76,22 @@ fun HomeMenuCard(
             )
             
             // 아이콘 (하단 오른쪽, 아이콘 외곽선에 그라데이션 적용)
+            // TODO: 그라데이션 적용이 안 되고 네모 박스 형태로 나타나는 관계로, 임시 주석 처리 후 단색으로 변경함
+            // 기말 끝난 이후 점검해 볼 것
             Icon(
                 imageVector = icon,
                 contentDescription = title,
                 modifier = Modifier
-                    .size(48.dp)
-                    .align(Alignment.BottomEnd)
-                    .drawWithContent {
-                        // 1단계: 아이콘을 흰색으로 그려서 알파 마스크 생성
-                        drawContent()
-                        // 2단계: 그라데이션을 아이콘의 알파 채널(외곽선)에만 적용
-                        drawRect(
-                            brush = iconGradientBrush,
-                            blendMode = BlendMode.SrcIn
-                        )
-                    },
-                tint = Color.White // 아이콘을 흰색으로 그려서 알파 채널 생성
+                    .size(64.dp)
+                    .align(Alignment.BottomEnd),
+                //.drawWithContent {
+                    //drawContent()
+                //drawRect(
+                        // brush = iconGradientBrush,
+                        // blendMode = BlendMode.SrcIn
+                    //)
+                //},
+                tint = MaterialTheme.colorScheme.tertiary
             )
         }
     }

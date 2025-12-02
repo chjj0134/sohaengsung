@@ -14,10 +14,13 @@ import androidx.compose.ui.unit.dp
 import com.example.sohaengsung.data.model.Place
 import com.example.sohaengsung.ui.common.CheckBox
 import com.example.sohaengsung.ui.common.CustomDivider
+import com.example.sohaengsung.ui.features.pathRecommend.PathRecommendViewModel
+import com.example.sohaengsung.ui.features.placeRecommend.PlaceRecommendViewModel
 
 @Composable
 fun PlaceForPathContainer(
     place: Place,
+    onCheckBoxClick: (Place) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -39,8 +42,8 @@ fun PlaceForPathContainer(
             // 체크박스
             CheckBox(
                 initialChecked = false,
-                onBookmarkToggle = {
-                    /* 작업 내용(예시: viewModel.updateBookmark(storeId, isChecked)) */
+                onClick = {
+                    onCheckBoxClick
                 }
             )
 

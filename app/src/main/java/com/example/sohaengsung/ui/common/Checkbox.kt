@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun CheckBox(
     initialChecked: Boolean, // 초기 상태
-    onBookmarkToggle: (Boolean) -> Unit
+    onClick: () -> Unit
 ) {
     var checked by remember { mutableStateOf(initialChecked) }
     // 채워진 아이콘 or 빈 아이콘
@@ -31,7 +31,7 @@ fun CheckBox(
             .size(24.dp)
             .clickable {
                 checked = !checked
-                onBookmarkToggle(checked)
+                onClick
             },
         contentAlignment = Alignment.Center
     ) {
