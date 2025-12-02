@@ -28,6 +28,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sohaengsung.ui.common.CustomTopBar
 import com.example.sohaengsung.ui.common.ProfilePic
+import com.example.sohaengsung.ui.dummy.userExample
+import com.example.sohaengsung.ui.features.level.components.LevelOrbitAnimation
 import com.example.sohaengsung.ui.features.level.components.ScoreContainer
 import com.example.sohaengsung.ui.features.setting.SettingScreenEvent
 import com.example.sohaengsung.ui.theme.SohaengsungTheme
@@ -73,7 +75,10 @@ fun LevelScreen(
                         verticalArrangement = Arrangement.spacedBy(16.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        ProfilePic(uiState.user, 50)
+                        LevelOrbitAnimation(
+                            //uiState.user
+                            userExample
+                        )
 
                         Text(
                             "${uiState.user.nickname} 님은\n현재 레벨 ${uiState.user.level}입니다!",

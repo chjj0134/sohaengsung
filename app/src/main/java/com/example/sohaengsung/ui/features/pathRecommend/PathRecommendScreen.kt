@@ -26,6 +26,7 @@ import com.example.sohaengsung.ui.common.BottomActionButtton
 import com.example.sohaengsung.ui.common.CustomDivider
 import com.example.sohaengsung.ui.common.Dropdown
 import com.example.sohaengsung.ui.common.CustomTopBar
+import com.example.sohaengsung.ui.features.pathRecommend.components.PlaceForPathContainer
 import com.example.sohaengsung.ui.theme.SohaengsungTheme
 
 @Composable
@@ -91,10 +92,13 @@ fun PathRecommendScreen(
                     )
                 }
 
-                // TODO: 오류 발생으로 우선 주석 처리
-//                bookmarkPlaces.forEach { place ->
-//                    PlaceForPathContainer(place = place)
-//                }
+                bookmarkPlaces.forEach { place ->
+                    PlaceForPathContainer(
+                        place = place,
+                        onCheckBoxClick = { place ->
+                            viewModel.onEvent(PathRecommendScreenEvent.onCheckboxClick) }
+                        )
+                }
 
             }
 
