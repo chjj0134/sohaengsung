@@ -22,6 +22,8 @@ import com.example.sohaengsung.ui.features.pathRecommend.PathRecommendScreen
 import com.example.sohaengsung.ui.features.pathRecommend.PathRecommendScreenEvent
 import com.example.sohaengsung.ui.features.placeRecommend.PlaceRecommendScreen
 import com.example.sohaengsung.ui.features.placeRecommend.PlaceRecommendScreenEvent
+import com.example.sohaengsung.ui.features.review.ReviewScreen
+import com.example.sohaengsung.ui.features.review.ReviewScreenEvent
 import com.example.sohaengsung.ui.features.setting.SettingScreen
 import com.example.sohaengsung.ui.features.setting.SettingScreenEvent
 import com.example.sohaengsung.ui.navigation.ScreenRoute
@@ -79,10 +81,8 @@ fun AppNavigation(
             PlaceRecommendScreen(
                 onNavigate = { navigationEvent ->
                     val route = when (navigationEvent) {
-                        PlaceRecommendScreenEvent.Navigation.NavigateToCoupon
-                            -> ScreenRoute.COUPON
                         PlaceRecommendScreenEvent.Navigation.NavigateToReview
-                            -> ScreenRoute.REVIEW // 가정
+                            -> ScreenRoute.REVIEW
                     }
                     navController.navigate(route)
                 }
@@ -151,6 +151,18 @@ fun AppNavigation(
 
         composable("map-path-recommend") {
             MapPathRecommendScreen()
+        }
+
+        composable(ScreenRoute.REVIEW) {
+            ReviewScreen(
+                onNavigate = { navigationEvent ->
+                    when (navigationEvent) {
+                        ReviewScreenEvent.Navigation.NavigateBack -> {
+                            navController.popBackStack()
+                        }
+                    }
+                }
+            )
         }
     }
 }
