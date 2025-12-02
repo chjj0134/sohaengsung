@@ -77,7 +77,7 @@ fun LevelScreen(
                     ) {
                         LevelOrbitAnimation(
                             //uiState.user
-                            userExample
+                            uiState.user
                         )
 
                         Text(
