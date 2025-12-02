@@ -203,43 +203,43 @@ fun PlaceRecommendScreen(
                         place = selectedPlace!!, // 널 검사 후 저장된 place 객체를 전달
                         viewModel = viewModel
                     )
+                }
+            }
 
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.BottomEnd
-                    ) {
-                        Row(
-                            modifier = Modifier.padding(16.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.BottomEnd
+            ) {
+                Row(
+                    modifier = Modifier.padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
 
-                            // 쿠폰 확인 버튼
-                            BottomActionButtton(
-                                onClickAction = {
-                                    viewModel.onEvent(
-                                        PlaceRecommendScreenEvent.onCouponClick
-                                    )
-                                },
-                                icon = Icons.Filled.Redeem,
-                                text = "쿠폰 확인",
-                                modifier = Modifier.padding(horizontal = 8.dp)
+                    // 쿠폰 확인 버튼
+                    BottomActionButtton(
+                        onClickAction = {
+                            viewModel.onEvent(
+                                PlaceRecommendScreenEvent.onCouponClick
                             )
+                        },
+                        icon = Icons.Filled.Redeem,
+                        text = "쿠폰 확인",
+                        modifier = Modifier.padding(horizontal = 8.dp)
+                    )
 
-                            Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
 
-                            // 리뷰 작성 버튼
-                            BottomActionButtton(
-                                onClickAction = {
-                                    viewModel.onEvent(
-                                        PlaceRecommendScreenEvent.onReviewClick
-                                    )
-                                },
-                                icon = Icons.Filled.Create,
-                                text = "리뷰 작성",
-                                modifier = Modifier.padding(horizontal = 8.dp)
+                    // 리뷰 작성 버튼
+                    BottomActionButtton(
+                        onClickAction = {
+                            viewModel.onEvent(
+                                PlaceRecommendScreenEvent.onReviewClick
                             )
-                        }
-                    }
+                        },
+                        icon = Icons.Filled.Create,
+                        text = "리뷰 작성",
+                        modifier = Modifier.padding(horizontal = 8.dp)
+                    )
                 }
             }
         }
