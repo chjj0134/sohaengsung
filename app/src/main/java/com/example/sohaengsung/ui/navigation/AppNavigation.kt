@@ -83,6 +83,8 @@ fun AppNavigation(
                     val route = when (navigationEvent) {
                         PlaceRecommendScreenEvent.Navigation.NavigateToReview
                             -> ScreenRoute.REVIEW
+                        PlaceRecommendScreenEvent.Navigation.NavigateToCoupon
+                            -> ScreenRoute.COUPON
                     }
                     navController.navigate(route)
                 }
