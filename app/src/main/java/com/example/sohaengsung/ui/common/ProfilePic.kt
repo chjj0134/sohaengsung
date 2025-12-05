@@ -55,3 +55,36 @@ fun ProfilePic(
     }
 }
 
+@Composable
+fun ProfilePic(
+    imageUrl: String?,   // 구글 리뷰용
+    size: Int
+) {
+    val imageSize = size.dp
+
+    Box(
+        modifier = Modifier
+            .size(imageSize)
+            .clip(CircleShape)
+            .background(Color.LightGray),
+        contentAlignment = Alignment.Center
+    ) {
+        if (!imageUrl.isNullOrEmpty()) {
+            AsyncImage(
+                model = imageUrl,
+                contentDescription = "프로필 사진",
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop
+            )
+        } else {
+            Icon(
+                imageVector = Icons.Default.Person,
+                contentDescription = "기본 프로필 아이콘",
+                modifier = Modifier.size(imageSize * 0.7f),
+                tint = Color.DarkGray
+            )
+        }
+    }
+}
+
+

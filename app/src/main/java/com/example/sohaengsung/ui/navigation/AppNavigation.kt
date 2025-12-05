@@ -27,6 +27,7 @@ import com.example.sohaengsung.ui.features.review.ReviewScreenEvent
 import com.example.sohaengsung.ui.features.setting.SettingScreen
 import com.example.sohaengsung.ui.features.setting.SettingScreenEvent
 import com.example.sohaengsung.ui.navigation.ScreenRoute
+import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun AppNavigation(
@@ -45,7 +46,7 @@ fun AppNavigation(
         }
     }
 
-    NavHost(navController = navController, startDestination = "home") {
+    NavHost(navController = navController, startDestination = "login") {
 
         composable("login") {
             LogInScreen(
@@ -91,7 +92,10 @@ fun AppNavigation(
         }
 
         composable("path-recommend") {
+            val uid = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+
             PathRecommendScreen(
+                uid = uid,
                 onNavigate = { navigationEvent ->
                     val route = when (navigationEvent) {
                         PathRecommendScreenEvent.Navigation.NavigateToPathCompose

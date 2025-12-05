@@ -2,12 +2,18 @@ package com.example.sohaengsung.data.repository
 
 import com.example.sohaengsung.data.model.Review
 import com.google.firebase.Timestamp
-import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class ReviewRepository {
 
-    private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
+    private val db = FirebaseFirestore.getInstance()
+    private val couponRepo = CouponRepository()
+    private val userRepo = UserRepository()
+
+    private val repoScope = CoroutineScope(Dispatchers.IO)
 
     fun addReview(
         review: Review,
@@ -23,27 +29,28 @@ class ReviewRepository {
             createdAt = Timestamp.now()
         )
 
-        db.runBatch { batch ->
-            batch.set(reviewRef, newReview)
+        reviewRef.set(newReview)
+            .addOnSuccessListener {
 
-            val userRef = db.collection("users").document(review.userId)
-            batch.update(
-                userRef,
-                "activityScore",
-                FieldValue.increment(15)
-            )
+                repoScope.launch {
 
-            val couponRef = userRef
-                .collection("coupons")
-                .document(review.placeId)
+                    try {
+                        // 활동 점수 +15
+                        userRepo.addActivityScore(review.userId, 15)
 
-            batch.update(
-                couponRef,
-                "stampCount",
-                FieldValue.increment(1)
-            )
-        }
-            .addOnSuccessListener { onComplete(true) }
-            .addOnFailureListener { onComplete(false) }
+                        // 스탬프 3개 증가
+                        couponRepo.addStamp(review.userId, 3)
+
+                        onComplete(true)
+
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        onComplete(false)
+                    }
+                }
+            }
+            .addOnFailureListener {
+                onComplete(false)
+            }
     }
 }

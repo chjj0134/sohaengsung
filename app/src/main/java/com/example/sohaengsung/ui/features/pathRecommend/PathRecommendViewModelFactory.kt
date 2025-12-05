@@ -13,7 +13,7 @@ class PathRecommendViewModelFactory(
         if (modelClass.isAssignableFrom(PathRecommendViewModel::class.java)) {
             return PathRecommendViewModel(
                 bookmarkRepository = BookmarkRepository(),
-                placeRepository = PlaceRepository(),      // //추가
+                placeRepository = PlaceRepository(),
                 uid = uid
             ) as T
         }

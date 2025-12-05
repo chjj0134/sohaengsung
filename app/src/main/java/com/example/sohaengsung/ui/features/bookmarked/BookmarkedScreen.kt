@@ -16,9 +16,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sohaengsung.ui.common.CustomDivider
 import com.example.sohaengsung.ui.common.CustomTopBar
 import com.example.sohaengsung.ui.common.Dropdown
+import com.example.sohaengsung.ui.features.bookmarked.components.BookmarkedItem
 import com.example.sohaengsung.ui.theme.SohaengsungTheme
 
 @Composable
@@ -26,10 +28,9 @@ fun BookmarkedScreen(
     uid: String = "dummy-user-id"
 ) {
     // TODO: 리포지토리 연결 후 주석만 풀어 주세요!
-    // val viewModel: BookmarkedViewModel = viewModel(
-    //    factory = BookmarkedRecommendViewModelFactory(uid))
+    val viewModel: BookmarkedViewModel = viewModel()
+    val uiState by viewModel.uiState.collectAsState()
 
-    // val bookmarkPlaces by viewModel.bookmarkPlaces.collectAsState()
 
     SohaengsungTheme {
         Scaffold(
@@ -61,7 +62,7 @@ fun BookmarkedScreen(
                 }
 
                 // 드롭다운
-                Row (
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 20.dp, vertical = 20.dp),
@@ -76,9 +77,10 @@ fun BookmarkedScreen(
                 }
 
                 // TODO: 리포지토리 연결 후 주석만 풀어 주세요!
-                // bookmarkPlaces.forEach { place ->
-                //    BookmarkedItem(place = place)
+                uiState.bookmarkedPlaces.forEach { place ->
+                    BookmarkedItem(place = place)
                 }
             }
         }
     }
+}

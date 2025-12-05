@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.sohaengsung.data.model.Hashtag
 import com.example.sohaengsung.data.model.Place
 import com.example.sohaengsung.data.model.PlaceDetail
+import com.example.sohaengsung.data.model.GoogleReview
 import com.example.sohaengsung.data.repository.BookmarkRepository
 import com.example.sohaengsung.data.repository.PlaceRepository
 import com.example.sohaengsung.data.util.LocationService
@@ -30,21 +31,24 @@ class PlaceRecommendViewModel(
     private val _events = MutableStateFlow<PlaceRecommendScreenEvent.Navigation?>(null)
     val events: StateFlow<PlaceRecommendScreenEvent.Navigation?> = _events.asStateFlow()
 
+    private val _reviews = MutableStateFlow<List<GoogleReview>>(emptyList())
+    val reviews: StateFlow<List<GoogleReview>> = _reviews.asStateFlow()
+
     init {
         loadPlaceData()
         loadHashtagData()
         observeBookmarks()
     }
 
-    private fun loadPlaceData() {
+    private fun loadPlaceData(lat: Double? = null, lng: Double? = null) {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
 
             try {
-                val location = locationService?.getCurrentLocation()
-                val (lat, lng) = location ?: (37.5665 to 126.9780)
+                val currentLat = lat ?: _uiState.value.currentLat ?: 37.5665
+                val currentLng = lng ?: _uiState.value.currentLng ?: 126.9780
 
-                val places = placeRepository.getNearbyPlaces(lat, lng)
+                val places = placeRepository.getNearbyPlaces(currentLat, currentLng)
 
                 _uiState.value = _uiState.value.copy(
                     place = places,
@@ -60,7 +64,6 @@ class PlaceRecommendViewModel(
         }
     }
 
-
     private fun loadHashtagData() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(
@@ -69,7 +72,7 @@ class PlaceRecommendViewModel(
             )
 
             // TODO: 실제 해시태그 데이터 로드 (Repository에서 가져오기)
-            // 현재는 더미 데이터 사용
+            /* 현재는 더미 데이터 사용
             _uiState.value = _uiState.value.copy(
                 hashtag = listOf(
                     Hashtag(
@@ -104,7 +107,18 @@ class PlaceRecommendViewModel(
                     ),
                 ),
                 isLoading = false
-            )
+            )*/
+        }
+    }
+
+    fun loadReviews(placeId: String) {
+        viewModelScope.launch {
+            try {
+                val list = placeRepository.getPlaceReviews(placeId)
+                _reviews.value = list
+            } catch (e: Exception) {
+                _reviews.value = emptyList()   // 실패 시 빈 리스트
+            }
         }
     }
 
@@ -152,7 +166,9 @@ class PlaceRecommendViewModel(
         _uiState.value = _uiState.value.copy(
             currentLat = lat,
             currentLng = lng
+
         )
+        loadPlaceData(lat, lng)
     }
 
     private fun observeBookmarks() {
@@ -164,9 +180,9 @@ class PlaceRecommendViewModel(
     }
 
     fun setSelectedPlace(placeId: String) {
-        _uiState.value = _uiState.value.copy(
-            selectedPlaceId = placeId
-        )
+        _uiState.value = _uiState.value.copy(selectedPlaceId = placeId)
+
+        loadReviews(placeId)
     }
 
     fun toggleBookmark(place: Place) {

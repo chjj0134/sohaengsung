@@ -24,8 +24,8 @@ class PathRecommendViewModel(
     private val _bookmarkPlaces = MutableStateFlow<List<Place>>(emptyList())
     val bookmarkPlaces = _bookmarkPlaces.asStateFlow()
 
-//    private val _uiState = MutableStateFlow(PathRecommendScreenUiState())
-//    val uiState: StateFlow<PathRecommendScreenUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(PathRecommendScreenUiState())
+    val uiState: StateFlow<PathRecommendScreenUiState> = _uiState.asStateFlow()
 
     private val _events = MutableStateFlow<PathRecommendScreenEvent.Navigation?>(null)
     val events: StateFlow<PathRecommendScreenEvent.Navigation?> = _events.asStateFlow()
@@ -51,6 +51,11 @@ class PathRecommendViewModel(
         // 지금은 UI dummy 예시 사용 (프론트 스크린 참고)
         val places = placeRepository.getPlaces(ids)
         _bookmarkPlaces.value = places
+
+        _uiState.value = _uiState.value.copy(
+            place = places,
+            isLoading = false
+        )
     }
 
     fun onEvent(event: PathRecommendScreenEvent) {

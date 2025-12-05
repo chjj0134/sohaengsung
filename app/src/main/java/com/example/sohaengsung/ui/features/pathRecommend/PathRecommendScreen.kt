@@ -31,8 +31,8 @@ import com.example.sohaengsung.ui.theme.SohaengsungTheme
 
 @Composable
 fun PathRecommendScreen(
-    uid: String = "dummy-user-id",
-    onNavigate: (route: PathRecommendScreenEvent.Navigation) -> Unit,
+    uid: String,
+    onNavigate: (PathRecommendScreenEvent.Navigation) -> Unit,
 ) {
     val viewModel: PathRecommendViewModel = viewModel(
         factory = PathRecommendViewModelFactory(uid))

@@ -9,10 +9,17 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import com.example.sohaengsung.data.repository.BookmarkRepository
+import com.example.sohaengsung.data.repository.PlaceRepository
+import com.example.sohaengsung.data.model.Place
 
 class BookmarkedViewModel : ViewModel() {
 
     private val userRepository = UserRepository()
+
+    private val bookmarkRepository = BookmarkRepository()
+    private val placeRepository = PlaceRepository()
+
     private val _uiState = MutableStateFlow(BookmarkedScreenUiState())
     val uiState: StateFlow<BookmarkedScreenUiState> = _uiState.asStateFlow()
 
@@ -21,6 +28,7 @@ class BookmarkedViewModel : ViewModel() {
 
     init {
         loadUserData()
+        loadBookmarkedPlaces()
     }
 
     private fun loadUserData() {
@@ -49,6 +57,27 @@ class BookmarkedViewModel : ViewModel() {
                         isLoading = false
                     )
                 }
+            }
+        }
+    }
+
+    private fun loadBookmarkedPlaces() {
+        viewModelScope.launch {
+
+            val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return@launch
+
+            try {
+                // placeId 리스트 가져오기
+                val ids = bookmarkRepository.getBookmarksOnce(uid)
+
+                // placeId → Place 객체 리스트 변환
+                val places = placeRepository.getPlaces(ids)
+
+                // UI 업데이트
+                _uiState.update { it.copy(bookmarkedPlaces = places) }
+
+            } catch (e: Exception) {
+                _uiState.update { it.copy(errorMessage = e.message ?: "북마크 로드 실패") }
             }
         }
     }

@@ -1,13 +1,19 @@
 package com.example.sohaengsung.ui.features.review
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.sohaengsung.data.model.Review
+import com.example.sohaengsung.data.repository.ReviewRepository
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class ReviewViewModel : ViewModel() {
+class ReviewViewModel(
+    savedStateHandle: SavedStateHandle
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ReviewScreenUiState())
     val uiState: StateFlow<ReviewScreenUiState> = _uiState.asStateFlow()
@@ -15,8 +21,10 @@ class ReviewViewModel : ViewModel() {
     private val _events = MutableStateFlow<ReviewScreenEvent.Navigation?>(null)
     val events: StateFlow<ReviewScreenEvent.Navigation?> = _events.asStateFlow()
 
+    private val reviewRepository = ReviewRepository()
+    private val placeId: String = savedStateHandle.get<String>("placeId") ?: ""
+
     fun updateRating(rating: Int) {
-        // 같은 별을 다시 클릭하면 0으로, 아니면 해당 별점으로 설정
         val newRating = if (_uiState.value.rating == rating) 0 else rating
         _uiState.value = _uiState.value.copy(rating = newRating)
     }
@@ -46,13 +54,42 @@ class ReviewViewModel : ViewModel() {
     fun submitReview() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
-            
+
             // TODO: 실제 리뷰 제출 로직 구현
             // 예: repository.submitReview(...)
-            
-            // 임시로 성공 처리
-            _uiState.value = _uiState.value.copy(isLoading = false)
-            _events.value = ReviewScreenEvent.Navigation.NavigateBack
+
+            val uid = FirebaseAuth.getInstance().currentUser?.uid
+            if (uid == null) {
+                _uiState.value = _uiState.value.copy(isLoading = false)
+                return@launch
+            }
+
+            val tags = listOfNotNull(
+                _uiState.value.selectedThemeTag,
+                _uiState.value.selectedAtmosphereTag,
+                _uiState.value.selectedConvenienceTag
+            )
+
+            val review = Review(
+                reviewId = "",
+                userId = uid,
+                placeId = placeId,
+                rating = _uiState.value.rating.toDouble(),
+                content = _uiState.value.reviewText,
+                tags = tags
+            )
+
+            reviewRepository.addReview(
+                review = review,
+                onComplete = { success ->
+                    if (success) {
+                        _uiState.value = _uiState.value.copy(isLoading = false)
+                        _events.value = ReviewScreenEvent.Navigation.NavigateBack
+                    } else {
+                        _uiState.value = _uiState.value.copy(isLoading = false)
+                    }
+                }
+            )
         }
     }
 
@@ -64,4 +101,3 @@ class ReviewViewModel : ViewModel() {
         _events.value = null
     }
 }
-

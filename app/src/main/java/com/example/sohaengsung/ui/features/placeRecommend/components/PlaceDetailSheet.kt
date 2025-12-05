@@ -7,6 +7,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sohaengsung.data.model.Place
 import com.example.sohaengsung.ui.common.CustomDivider
 import com.example.sohaengsung.ui.features.placeRecommend.PlaceRecommendViewModel
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+
 
 @Composable
 fun PlaceDetailSheet(
@@ -15,6 +18,13 @@ fun PlaceDetailSheet(
     onSheetDismiss: () -> Unit,
     viewModel: PlaceRecommendViewModel
 ) {
+    //장소 리뷰 로드
+    LaunchedEffect(isSheetOpen, place.placeId) {
+        if (isSheetOpen) {
+            viewModel.loadReviews(place.placeId)
+        }
+    }
+    val reviewList = viewModel.reviews.collectAsState().value
 
     Column {
 
@@ -31,7 +41,10 @@ fun PlaceDetailSheet(
             CustomDivider(MaterialTheme.colorScheme.secondary)
 
             // 임시 리뷰 컨테이너
-            ReviewContainer()
+            reviewList.forEach { review ->
+                ReviewContainer(review = review)
+                CustomDivider(MaterialTheme.colorScheme.secondary)
+            }
         }
     }
 }

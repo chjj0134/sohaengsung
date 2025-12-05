@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.sohaengsung.data.repository.UserRepository
 import com.example.sohaengsung.ui.dummy.userExample
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.ListenerRegistration
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,8 +21,11 @@ class LevelViewModel : ViewModel() {
     private val _events = MutableStateFlow<LevelScreenEvent?>(null)
     val events: StateFlow<LevelScreenEvent?> = _events.asStateFlow()
 
+    private var userListener: ListenerRegistration? = null
+
     init {
         loadUserData()
+        startUserRealtimeListener()
     }
 
     private fun loadUserData() {
@@ -33,7 +37,15 @@ class LevelViewModel : ViewModel() {
                 val user = userRepository.getUser(uid)
 
                 if (user != null) {
-                    _uiState.update { it.copy(user = user, isLoading = false) }
+                    val nextScore = calculateNextScore(user.activityScore)
+                    val remainingReviews = calculateRemainingReviews(nextScore)
+                    _uiState.update {
+                        it.copy(
+                            user = user,
+                            nextScoreNeeded = nextScore,
+                            remainingReviews = remainingReviews,
+                            isLoading = false
+                        ) }
                 } else {
                     _uiState.update {
                         it.copy(
@@ -53,6 +65,34 @@ class LevelViewModel : ViewModel() {
             }
         }
     }
+
+    private fun startUserRealtimeListener() {
+        val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return
+
+        userListener = userRepository.listenUser(uid) { user ->
+            _uiState.update {
+                it.copy(
+                    user = user,
+                    nextScoreNeeded = calculateNextScore(user.activityScore)
+                )
+            }
+        }
+    }
+
+    private fun calculateNextScore(activityScore: Int): Int {
+        return when {
+            activityScore < 3 -> 3 - activityScore
+            activityScore < 15 -> 15 - activityScore
+            activityScore < 30 -> 30 - activityScore
+            activityScore < 60 -> 60 - activityScore
+            else -> 1
+        }
+    }
+
+    private fun calculateRemainingReviews(nextScoreNeeded: Int): Int {
+        return if (nextScoreNeeded <= 0) 0 else ((nextScoreNeeded + 14) / 15)
+    }
+
 
     fun onEvent(event: LevelScreenEvent) {
         viewModelScope.launch {
