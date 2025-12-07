@@ -22,6 +22,7 @@ import com.example.sohaengsung.ui.features.pathRecommend.PathRecommendScreen
 import com.example.sohaengsung.ui.features.pathRecommend.PathRecommendScreenEvent
 import com.example.sohaengsung.ui.features.placeRecommend.PlaceRecommendScreen
 import com.example.sohaengsung.ui.features.placeRecommend.PlaceRecommendScreenEvent
+import com.example.sohaengsung.ui.features.placeRecommend.PlaceRecommendViewModel
 import com.example.sohaengsung.ui.features.review.ReviewScreen
 import com.example.sohaengsung.ui.features.review.ReviewScreenEvent
 import com.example.sohaengsung.ui.features.setting.SettingScreen
@@ -33,7 +34,8 @@ import com.google.firebase.auth.FirebaseAuth
 fun AppNavigation(
     startGoogleLogin: () -> Unit,
     startKakaoLogin: () -> Unit,
-    loginSuccess: Boolean
+    loginSuccess: Boolean,
+    placeRecommendViewModel: PlaceRecommendViewModel
 ) {
     val navController = rememberNavController()
 
@@ -79,6 +81,7 @@ fun AppNavigation(
 
         composable("place-recommend") {
             PlaceRecommendScreen(
+                viewModel = placeRecommendViewModel,
                 onNavigate = { navigationEvent ->
                     val route = when (navigationEvent) {
                         PlaceRecommendScreenEvent.Navigation.NavigateToReview

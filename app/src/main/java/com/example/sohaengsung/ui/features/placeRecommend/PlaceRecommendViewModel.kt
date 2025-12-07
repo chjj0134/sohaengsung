@@ -37,6 +37,8 @@ class PlaceRecommendViewModel(
 
     private val _originalPlaces = MutableStateFlow<List<Place>>(emptyList())
 
+    private var isPlaceDataLoaded = false
+
     init {
         loadPlaceData()
         loadHashtagData()
@@ -45,6 +47,10 @@ class PlaceRecommendViewModel(
 
     private fun loadPlaceData(lat: Double? = null, lng: Double? = null) {
         viewModelScope.launch {
+            if (isPlaceDataLoaded && lat == null) {
+                return@launch
+            }
+
             _uiState.value = _uiState.value.copy(isLoading = true)
 
             try {
@@ -59,6 +65,8 @@ class PlaceRecommendViewModel(
                     place = places,
                     isLoading = false
                 )
+
+                isPlaceDataLoaded = true
 
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(

@@ -4,11 +4,16 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.example.sohaengsung.data.model.User
+import com.example.sohaengsung.data.repository.PlaceRepository
 import com.example.sohaengsung.data.repository.UserRepository
+import com.example.sohaengsung.data.util.LocationService
+import com.example.sohaengsung.ui.features.placeRecommend.PlaceRecommendViewModel
+import com.example.sohaengsung.ui.features.placeRecommend.PlaceRecommendViewModelFactory
 import com.example.sohaengsung.ui.theme.SohaengsungTheme
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -117,6 +122,21 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    private val placeRepository = PlaceRepository()
+    private val locationService: LocationService? = null
+
+    private val currentFirebaseUser = FirebaseAuth.getInstance().currentUser
+    private val userId: String = currentFirebaseUser?.uid ?: "guest"
+
+    private val placeRecommendViewModel: PlaceRecommendViewModel by viewModels {
+        PlaceRecommendViewModelFactory(
+            uid = userId,
+            placeRepository = placeRepository,
+            locationService = locationService
+        )
+    }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -138,7 +158,8 @@ class MainActivity : ComponentActivity() {
                     startKakaoLogin = {
                         startKakaoLogin()
                     },
-                    loginSuccess = loginSuccess
+                    loginSuccess = loginSuccess,
+                    placeRecommendViewModel
                 )
             }
         }
