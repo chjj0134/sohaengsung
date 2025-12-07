@@ -13,19 +13,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.sohaengsung.data.model.Place
 import com.example.sohaengsung.ui.common.Bookmark
+import com.example.sohaengsung.ui.features.placeRecommend.PlaceRecommendScreenEvent
 import com.example.sohaengsung.ui.features.placeRecommend.PlaceRecommendViewModel
 
 fun Boolean.toOXString(): String = if (this) "O" else "X"
 
 @Composable
-fun PlaceDetailContainer(place: Place, viewModel: PlaceRecommendViewModel) {
+fun PlaceDetailContainer(
+    place: Place,
+    viewModel: PlaceRecommendViewModel
+) {
 
     val bookmarkIds = viewModel.bookmarkIds.collectAsState()
     val isBookmarked = bookmarkIds.value.contains(place.placeId)
 
     Column (
-//        modifier = Modifier
-//            .padding(horizontal = 16.dp, vertical = 16.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
         Row(
@@ -41,7 +43,9 @@ fun PlaceDetailContainer(place: Place, viewModel: PlaceRecommendViewModel) {
 
             Bookmark(
                 initialChecked = isBookmarked,
-                onBookmarkToggle = { viewModel.toggleBookmark(place) }
+                onBookmarkToggle = {
+                    viewModel.onEvent(PlaceRecommendScreenEvent.onBookmarkClick(place))
+                }
             )
         }
 
