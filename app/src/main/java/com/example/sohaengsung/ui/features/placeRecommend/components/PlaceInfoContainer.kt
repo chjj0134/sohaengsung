@@ -21,6 +21,7 @@ import com.example.sohaengsung.data.model.Place
 import com.example.sohaengsung.ui.common.Bookmark
 import com.example.sohaengsung.ui.features.placeRecommend.PlaceRecommendViewModel
 import coil.compose.AsyncImage
+import com.example.sohaengsung.ui.features.placeRecommend.PlaceRecommendScreenEvent
 
 @Composable
 fun PlaceInfoContainer(
@@ -28,8 +29,11 @@ fun PlaceInfoContainer(
     onClick: () -> Unit,
     viewModel: PlaceRecommendViewModel
 ) {
-    val bookmarkIds by viewModel.bookmarkIds.collectAsState()
-    val isBookmarked = bookmarkIds.contains(place.placeId)
+
+    // TODO: 북마크 상태 못 불러오는 문제: 상위 컴포넌트 범위 문제인지 확인하기
+    // 바텀시트는 잘 불러 오는 중...
+    val bookmarkIds = viewModel.bookmarkIds.collectAsState()
+    val isBookmarked = bookmarkIds.value.contains(place.placeId)
 
     Column(
         modifier = Modifier
@@ -51,7 +55,9 @@ fun PlaceInfoContainer(
 
             Bookmark(
                 initialChecked = isBookmarked,
-                onBookmarkToggle = { viewModel.toggleBookmark(place) }
+                onBookmarkToggle = {
+                    viewModel.onEvent(PlaceRecommendScreenEvent.onBookmarkClick(place))
+                }
             )
         }
 
@@ -71,8 +77,7 @@ fun PlaceInfoContainer(
             style = MaterialTheme.typography.labelSmall
         )
 
-        // 임시 사진 영역
-        //사진 연결 추가
+
         val firstPhoto = place.photoUrls.firstOrNull()
 
         if (firstPhoto != null) {

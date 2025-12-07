@@ -10,6 +10,7 @@ import com.example.sohaengsung.data.repository.BookmarkRepository
 import com.example.sohaengsung.data.repository.PlaceRepository
 import com.example.sohaengsung.data.util.LocationService
 import com.example.sohaengsung.ui.features.pathRecommend.PathRecommendScreenEvent
+import com.google.android.libraries.places.api.model.kotlin.place
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -34,6 +35,8 @@ class PlaceRecommendViewModel(
     private val _reviews = MutableStateFlow<List<GoogleReview>>(emptyList())
     val reviews: StateFlow<List<GoogleReview>> = _reviews.asStateFlow()
 
+    private val _originalPlaces = MutableStateFlow<List<Place>>(emptyList())
+
     init {
         loadPlaceData()
         loadHashtagData()
@@ -50,6 +53,8 @@ class PlaceRecommendViewModel(
 
                 val places = placeRepository.getNearbyPlaces(currentLat, currentLng)
 
+                _originalPlaces.value = places
+
                 _uiState.value = _uiState.value.copy(
                     place = places,
                     isLoading = false
@@ -64,6 +69,14 @@ class PlaceRecommendViewModel(
         }
     }
 
+    private fun observeBookmarks() {
+        viewModelScope.launch {
+            bookmarkRepository.observeBookmarks(uid).collect { ids ->
+                _bookmarkIds.value = ids
+            }
+        }
+    }
+
     private fun loadHashtagData() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(
@@ -72,42 +85,6 @@ class PlaceRecommendViewModel(
             )
 
             // TODO: 실제 해시태그 데이터 로드 (Repository에서 가져오기)
-            /* 현재는 더미 데이터 사용
-            _uiState.value = _uiState.value.copy(
-                hashtag = listOf(
-                    Hashtag(
-                        tagId = "h001",
-                        name = "카공",
-                        useCount = 125
-                    ),
-                    Hashtag(
-                        tagId = "h002",
-                        name = "따뜻한",
-                        useCount = 98
-                    ),
-                    Hashtag(
-                        tagId = "h003",
-                        name = "노트북",
-                        useCount = 75
-                    ),
-                    Hashtag(
-                        tagId = "h004",
-                        name = "콘센트",
-                        useCount = 52
-                    ),
-                    Hashtag(
-                        tagId = "h005",
-                        name = "레트로",
-                        useCount = 125
-                    ),
-                    Hashtag(
-                        tagId = "h007",
-                        name = "주차장",
-                        useCount = 75
-                    ),
-                ),
-                isLoading = false
-            )*/
         }
     }
 
@@ -125,17 +102,78 @@ class PlaceRecommendViewModel(
     fun onEvent(event: PlaceRecommendScreenEvent) {
         viewModelScope.launch {
             when (event) {
-                PlaceRecommendScreenEvent.onDropDownClick -> {
-                    // 드롭다운 클릭 시 로직
+                is PlaceRecommendScreenEvent.onDropDownClick -> {
+                    val criteria = event.sortCriteria
+                    val currentPlaces = _uiState.value.place.toMutableList()
+
+                    val sortedPlaces = when (criteria) {
+                        "거리순" -> {
+                            // 별도 거리 계산 로직 (예: Haversine)이 필요함
+                            // 우선 placeId로 정렬
+                            currentPlaces.sortedBy { it.placeId }
+                        }
+                        "별점높은순" -> {
+                            currentPlaces.sortedByDescending { it.rating }
+                        }
+                        "리뷰많은순" -> {
+                            currentPlaces.sortedByDescending { it.reviewCount }
+                        }
+                        else -> currentPlaces // 그 외의 경우 현재 순서 유지
+                    }
+
+                    // 정렬된 리스트로 UI 상태 업데이트
+                    _uiState.value = _uiState.value.copy(
+                        place = sortedPlaces
+                    )
                 }
 
-                PlaceRecommendScreenEvent.onBookmarkClick -> {
-                    // 북마크 아이콘 클릭 시 로직
-                    fun setSelectedPlace(placeId: String) {
-                        _uiState.value = _uiState.value.copy(
-                            selectedPlaceId = placeId
-                        )
+                is PlaceRecommendScreenEvent.onTypeFilterClick -> {
+                    val selectedType = event.placeType
+                    val originalList = _originalPlaces.value
+
+                    val filteredList = when (selectedType) {
+                        "전체" -> {
+                            // '전체'를 선택하면 원본 목록 그대로 사용
+                            originalList
+                        }
+                        "카페" -> {
+                            originalList.filter { place ->
+                                place.category == "cafe"
+                            }
+                        }
+                        "서점" -> {
+                            originalList.filter { place ->
+                                place.category == "bookstore"
+                            }
+                        }
+                        "편집샵" -> {
+                            originalList.filter { place ->
+                                place.category == "select_shop"
+                            }
+                        }
+                        "갤러리" -> {
+                            originalList.filter { place ->
+                                place.category == "gallery"
+                            }
+                        }
+                        else -> originalList
                     }
+
+                    // 필터링된 리스트로 UI 상태 업데이트
+                    _uiState.value = _uiState.value.copy(
+                        place = filteredList
+                    )
+
+                    // 필터링 후 현재 적용된 정렬 기준에 따라 다시 정렬해야 할 수도 있습니다.
+                    // (이전 질문에서 정의한 정렬 로직을 재사용하는 함수를 호출하는 것이 이상적입니다.)
+                }
+
+                // 북마크 아이콘 클릭 시 로직
+                is PlaceRecommendScreenEvent.onBookmarkClick -> {
+                    val place = event.place
+
+                    bookmarkRepository.toggleBookmark(uid, place.placeId)
+                    placeRepository.addUserPlace(place)
                 }
 
                 PlaceRecommendScreenEvent.onHashtagClick -> {
@@ -171,24 +209,8 @@ class PlaceRecommendViewModel(
         loadPlaceData(lat, lng)
     }
 
-    private fun observeBookmarks() {
-        viewModelScope.launch {
-            bookmarkRepository.observeBookmarks(uid).collect { ids ->
-                _bookmarkIds.value = ids
-            }
-        }
-    }
-
     fun setSelectedPlace(placeId: String) {
         _uiState.value = _uiState.value.copy(selectedPlaceId = placeId)
-
         loadReviews(placeId)
-    }
-
-    fun toggleBookmark(place: Place) {
-        viewModelScope.launch {
-            bookmarkRepository.toggleBookmark(uid, place.placeId)
-            placeRepository.addUserPlace(place)
-        }
     }
 }

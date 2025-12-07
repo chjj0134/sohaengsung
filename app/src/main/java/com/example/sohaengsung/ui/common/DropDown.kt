@@ -79,7 +79,8 @@ fun Dropdown(
     items: List<String>, // 선택 가능 리스트 (카페, 서점, 소품샵...)
     initialSelection: String? = null, // 초기 선택 값
     containerColor: Color,
-    contentColor: Color
+    contentColor: Color,
+    onItemSelected: (String) -> Unit
 ) {
     // 열림/닫힘 상태
     var expanded by remember { mutableStateOf(false) }
@@ -110,9 +111,9 @@ fun Dropdown(
                 DropdownMenuItem(
                     text = { Text(selectionOption) },
                     onClick = {
-                        // 항목 선택 시 상태 변경
                         selectedText = selectionOption // 텍스트 업데이트
-                        expanded = false // 메뉴 닫기
+                        expanded = false
+                        onItemSelected(selectionOption)
                     },
                     modifier = Modifier
                         .height(32.dp)

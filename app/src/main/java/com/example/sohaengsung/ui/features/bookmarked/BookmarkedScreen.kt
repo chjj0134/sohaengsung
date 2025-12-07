@@ -21,13 +21,14 @@ import com.example.sohaengsung.ui.common.CustomDivider
 import com.example.sohaengsung.ui.common.CustomTopBar
 import com.example.sohaengsung.ui.common.Dropdown
 import com.example.sohaengsung.ui.features.bookmarked.components.BookmarkedItem
+import com.example.sohaengsung.ui.features.placeRecommend.PlaceRecommendScreenEvent
 import com.example.sohaengsung.ui.theme.SohaengsungTheme
 
 @Composable
 fun BookmarkedScreen(
     uid: String = "dummy-user-id"
 ) {
-    // TODO: 리포지토리 연결 후 주석만 풀어 주세요!
+
     val viewModel: BookmarkedViewModel = viewModel()
     val uiState by viewModel.uiState.collectAsState()
 
@@ -70,13 +71,15 @@ fun BookmarkedScreen(
                 ) {
                     Dropdown(
                         label = "거리순",
-                        items = listOf("별점높은순", "리뷰많은순"),
+                        items = listOf("거리순", "별점높은순", "리뷰많은순"),
                         containerColor = MaterialTheme.colorScheme.primary,
-                        contentColor = MaterialTheme.colorScheme.onPrimary
+                        contentColor = MaterialTheme.colorScheme.onPrimary,
+                        onItemSelected = {
+                                // 정렬 로직 place에서 가져다 복붙
+                        }
                     )
                 }
 
-                // TODO: 리포지토리 연결 후 주석만 풀어 주세요!
                 uiState.bookmarkedPlaces.forEach { place ->
                     BookmarkedItem(place = place)
                 }

@@ -27,6 +27,7 @@ import com.example.sohaengsung.ui.common.CustomDivider
 import com.example.sohaengsung.ui.common.Dropdown
 import com.example.sohaengsung.ui.common.CustomTopBar
 import com.example.sohaengsung.ui.features.pathRecommend.components.PlaceForPathContainer
+import com.example.sohaengsung.ui.features.placeRecommend.PlaceRecommendScreenEvent
 import com.example.sohaengsung.ui.theme.SohaengsungTheme
 
 @Composable
@@ -86,9 +87,12 @@ fun PathRecommendScreen(
                 ) {
                     Dropdown(
                         label = "거리순",
-                        items = listOf("별점높은순", "리뷰많은순"),
+                        items = listOf("거리순", "별점높은순", "리뷰많은순"),
                         containerColor = MaterialTheme.colorScheme.primary,
                         contentColor = MaterialTheme.colorScheme.onPrimary,
+                        onItemSelected = {
+                                // 장소 추천에서 로직 가져다 복붙
+                        }
                     )
                 }
 
