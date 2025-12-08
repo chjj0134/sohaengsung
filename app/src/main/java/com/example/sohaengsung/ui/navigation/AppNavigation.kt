@@ -20,6 +20,7 @@ import com.example.sohaengsung.ui.features.map.MapScreen
 import com.example.sohaengsung.ui.features.mapPathRecommend.MapPathRecommendScreen
 import com.example.sohaengsung.ui.features.pathRecommend.PathRecommendScreen
 import com.example.sohaengsung.ui.features.pathRecommend.PathRecommendScreenEvent
+import com.example.sohaengsung.ui.features.pathRecommend.PathRecommendViewModel
 import com.example.sohaengsung.ui.features.placeRecommend.PlaceRecommendScreen
 import com.example.sohaengsung.ui.features.placeRecommend.PlaceRecommendScreenEvent
 import com.example.sohaengsung.ui.features.placeRecommend.PlaceRecommendViewModel
@@ -35,7 +36,8 @@ fun AppNavigation(
     startGoogleLogin: () -> Unit,
     startKakaoLogin: () -> Unit,
     loginSuccess: Boolean,
-    placeRecommendViewModel: PlaceRecommendViewModel
+    placeRecommendViewModel: PlaceRecommendViewModel,
+    pathRecommendViewModel: PathRecommendViewModel
 ) {
     val navController = rememberNavController()
 
@@ -98,11 +100,13 @@ fun AppNavigation(
             val uid = FirebaseAuth.getInstance().currentUser?.uid ?: ""
 
             PathRecommendScreen(
-                uid = uid,
+                viewModel = pathRecommendViewModel,
                 onNavigate = { navigationEvent ->
                     val route = when (navigationEvent) {
-                        PathRecommendScreenEvent.Navigation.NavigateToPathCompose
-                            -> ScreenRoute.MAP_PATH_RECOMMEND
+                        is PathRecommendScreenEvent.Navigation.NavigateToPathCompose -> {
+                            val idString = navigationEvent.placeIds.joinToString(separator = ",")
+                            "${ScreenRoute.MAP_PATH_RECOMMEND}/$idString"
+                        }
                     }
                     navController.navigate(route)
                 }

@@ -12,6 +12,8 @@ import com.example.sohaengsung.data.model.User
 import com.example.sohaengsung.data.repository.PlaceRepository
 import com.example.sohaengsung.data.repository.UserRepository
 import com.example.sohaengsung.data.util.LocationService
+import com.example.sohaengsung.ui.features.pathRecommend.PathRecommendViewModel
+import com.example.sohaengsung.ui.features.pathRecommend.PathRecommendViewModelFactory
 import com.example.sohaengsung.ui.features.placeRecommend.PlaceRecommendViewModel
 import com.example.sohaengsung.ui.features.placeRecommend.PlaceRecommendViewModelFactory
 import com.example.sohaengsung.ui.theme.SohaengsungTheme
@@ -136,6 +138,12 @@ class MainActivity : ComponentActivity() {
         )
     }
 
+    private val pathRecommendViewModel: PathRecommendViewModel by viewModels {
+        PathRecommendViewModelFactory(
+            uid = userId,
+        )
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -159,7 +167,8 @@ class MainActivity : ComponentActivity() {
                         startKakaoLogin()
                     },
                     loginSuccess = loginSuccess,
-                    placeRecommendViewModel
+                    placeRecommendViewModel,
+                    pathRecommendViewModel
                 )
             }
         }

@@ -17,6 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sohaengsung.data.model.Place
 import com.example.sohaengsung.ui.common.Bookmark
 import com.example.sohaengsung.ui.features.placeRecommend.PlaceRecommendViewModel
@@ -27,14 +28,9 @@ import com.example.sohaengsung.ui.features.placeRecommend.PlaceRecommendScreenEv
 fun PlaceInfoContainer(
     place: Place,
     onClick: () -> Unit,
-    viewModel: PlaceRecommendViewModel
+    isBookmarked: Boolean,
+    onBookmarkToggle: (Place) -> Unit
 ) {
-
-    // TODO: 북마크 상태 못 불러오는 문제: 상위 컴포넌트 범위 문제인지 확인하기
-    // 바텀시트는 잘 불러 오는 중...
-    val bookmarkIds = viewModel.bookmarkIds.collectAsState()
-    val isBookmarked = bookmarkIds.value.contains(place.placeId)
-
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -54,9 +50,9 @@ fun PlaceInfoContainer(
             )
 
             Bookmark(
-                initialChecked = isBookmarked,
+                isBookmarked = isBookmarked,
                 onBookmarkToggle = {
-                    viewModel.onEvent(PlaceRecommendScreenEvent.onBookmarkClick(place))
+                    onBookmarkToggle(place)
                 }
             )
         }

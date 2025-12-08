@@ -1,5 +1,6 @@
 package com.example.sohaengsung.ui.features.placeRecommend
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sohaengsung.data.model.Hashtag
@@ -191,9 +192,6 @@ class PlaceRecommendViewModel(
                     _uiState.value = _uiState.value.copy(
                         place = filteredList
                     )
-
-                    // 필터링 후 현재 적용된 정렬 기준에 따라 다시 정렬해야 할 수도 있습니다.
-                    // (이전 질문에서 정의한 정렬 로직을 재사용하는 함수를 호출하는 것이 이상적입니다.)
                 }
 
                 // 북마크 아이콘 클릭 시 로직
