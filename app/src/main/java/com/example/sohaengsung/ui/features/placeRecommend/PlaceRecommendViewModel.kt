@@ -54,10 +54,14 @@ class PlaceRecommendViewModel(
             _uiState.value = _uiState.value.copy(isLoading = true)
 
             try {
-                val currentLat = lat ?: _uiState.value.currentLat ?: 37.5665
-                val currentLng = lng ?: _uiState.value.currentLng ?: 126.9780
+                // loadPlaceData()가 불필요하게 호출되어 초기값으로 덮어쓰지 않도록 로직을 수정
+                val currentLat = lat ?: _uiState.value.currentLat
+                val currentLng = lng ?: _uiState.value.currentLng
 
-                val places = placeRepository.getNearbyPlaces(currentLat, currentLng)
+                val finalLat = currentLat.takeIf { it != 0.0 } ?: 37.5665
+                val finalLng = currentLng.takeIf { it != 0.0 } ?: 126.9780
+
+                val places = placeRepository.getNearbyPlaces(finalLat, finalLng)
 
                 _originalPlaces.value = places
 
