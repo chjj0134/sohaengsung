@@ -78,7 +78,7 @@ fun PlaceRecommendScreen(
 
     val coroutineScope = rememberCoroutineScope()
 
-    LaunchedEffect(true) {
+    LaunchedEffect(Unit) { // 키를 Unit으로 변경
         locationPermission.launchPermissionRequest()
     }
 
@@ -91,6 +91,8 @@ fun PlaceRecommendScreen(
         ) == PackageManager.PERMISSION_GRANTED
 
         val isInitialState = uiState.currentLat == 37.5665 && uiState.currentLng == 126.9780
+
+        viewModel.fetchUserLocation()
 
         if (hasPermission && isInitialState) {
             try {

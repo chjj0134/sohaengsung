@@ -111,6 +111,22 @@ class PlaceRecommendViewModel(
         }
     }
 
+    fun fetchUserLocation() {
+        // 이미 위치 정보가 업데이트된 경우 다시 시도하지 않음
+        val isInitialState = _uiState.value.currentLat == 37.5665 && _uiState.value.currentLng == 126.9780
+        if (!isInitialState) return
+
+        viewModelScope.launch {
+            // 주입된 LocationService를 사용
+            val location = locationService?.getCurrentLocation()
+
+            if (location != null) {
+                val (lat, lng) = location
+                updateLocation(lat, lng)
+            }
+        }
+    }
+
     fun onEvent(event: PlaceRecommendScreenEvent) {
         viewModelScope.launch {
             when (event) {
