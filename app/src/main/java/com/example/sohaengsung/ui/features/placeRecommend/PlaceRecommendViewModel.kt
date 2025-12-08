@@ -1,5 +1,6 @@
 package com.example.sohaengsung.ui.features.placeRecommend
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sohaengsung.data.model.Hashtag
@@ -111,6 +112,22 @@ class PlaceRecommendViewModel(
         }
     }
 
+    fun fetchUserLocation() {
+        // 이미 위치 정보가 업데이트된 경우 다시 시도하지 않음
+        val isInitialState = _uiState.value.currentLat == 37.5665 && _uiState.value.currentLng == 126.9780
+        if (!isInitialState) return
+
+        viewModelScope.launch {
+            // 주입된 LocationService를 사용
+            val location = locationService?.getCurrentLocation()
+
+            if (location != null) {
+                val (lat, lng) = location
+                updateLocation(lat, lng)
+            }
+        }
+    }
+
     fun onEvent(event: PlaceRecommendScreenEvent) {
         viewModelScope.launch {
             when (event) {
@@ -175,9 +192,6 @@ class PlaceRecommendViewModel(
                     _uiState.value = _uiState.value.copy(
                         place = filteredList
                     )
-
-                    // 필터링 후 현재 적용된 정렬 기준에 따라 다시 정렬해야 할 수도 있습니다.
-                    // (이전 질문에서 정의한 정렬 로직을 재사용하는 함수를 호출하는 것이 이상적입니다.)
                 }
 
                 // 북마크 아이콘 클릭 시 로직

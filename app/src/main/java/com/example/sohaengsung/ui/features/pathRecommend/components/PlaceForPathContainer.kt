@@ -1,5 +1,6 @@
 package com.example.sohaengsung.ui.features.pathRecommend.components
 
+import android.R.attr.onClick
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,6 +21,7 @@ import com.example.sohaengsung.ui.features.placeRecommend.PlaceRecommendViewMode
 @Composable
 fun PlaceForPathContainer(
     place: Place,
+    isChecked: Boolean,
     onCheckBoxClick: (Place) -> Unit,
 ) {
     Column(
@@ -41,10 +43,8 @@ fun PlaceForPathContainer(
 
             // 체크박스
             CheckBox(
-                initialChecked = false,
-                onClick = {
-                    onCheckBoxClick
-                }
+                isChecked = isChecked, // ✨ isChecked를 전달합니다.
+                onClick = { onCheckBoxClick(place) }
             )
 
             // 장소 이름, 해시태그

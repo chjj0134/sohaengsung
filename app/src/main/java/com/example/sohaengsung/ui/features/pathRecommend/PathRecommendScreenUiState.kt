@@ -13,11 +13,11 @@ data class PathRecommendScreenUiState(
 )
 
 sealed class PathRecommendScreenEvent {
-    object onCheckboxClick : PathRecommendScreenEvent()
-    object onDropDownClick : PathRecommendScreenEvent()
+    data class onCheckboxClick(val place: Place) : PathRecommendScreenEvent()
+    data class onDropDownClick(val sortCriteria: String) : PathRecommendScreenEvent()
     object onPathComposeClick : PathRecommendScreenEvent()
 
     sealed class Navigation : PathRecommendScreenEvent() {
-        object NavigateToPathCompose : Navigation()
+        data class NavigateToPathCompose(val placeIds: List<String>) : Navigation()
     }
 }

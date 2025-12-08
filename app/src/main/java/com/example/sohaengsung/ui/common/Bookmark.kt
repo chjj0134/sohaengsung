@@ -1,5 +1,6 @@
 package com.example.sohaengsung.ui.common
 
+import android.R.attr.checked
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
@@ -19,25 +20,23 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun Bookmark(
-    initialChecked: Boolean, // 초기 상태
-    onBookmarkToggle: (Boolean) -> Unit
+    isBookmarked: Boolean,
+    onBookmarkToggle: () -> Unit
 ) {
-    var checked by remember { mutableStateOf(initialChecked) }
     // 채워진 아이콘 or 빈 아이콘
-    val icon = if (checked) Icons.Filled.Bookmark else Icons.Filled.BookmarkBorder
+    val icon = if (isBookmarked) Icons.Filled.Bookmark else Icons.Filled.BookmarkBorder
 
     Box(
         modifier = Modifier
             .size(24.dp)
             .clickable {
-                checked = !checked
-                onBookmarkToggle(checked)
+                onBookmarkToggle()
             },
         contentAlignment = Alignment.Center
     ) {
         Icon(
             imageVector = icon,
-            contentDescription = if (checked) "북마크 해제" else "북마크",
+            contentDescription = if (isBookmarked) "북마크 해제" else "북마크",
             tint = MaterialTheme.colorScheme.tertiary,
             modifier = Modifier.size(24.dp)
         )

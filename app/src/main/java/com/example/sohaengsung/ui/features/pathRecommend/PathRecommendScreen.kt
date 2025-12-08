@@ -28,19 +28,18 @@ import com.example.sohaengsung.ui.common.Dropdown
 import com.example.sohaengsung.ui.common.CustomTopBar
 import com.example.sohaengsung.ui.features.pathRecommend.components.PlaceForPathContainer
 import com.example.sohaengsung.ui.features.placeRecommend.PlaceRecommendScreenEvent
+import com.example.sohaengsung.ui.features.placeRecommend.PlaceRecommendViewModel
 import com.example.sohaengsung.ui.theme.SohaengsungTheme
 
 @Composable
 fun PathRecommendScreen(
-    uid: String,
     onNavigate: (PathRecommendScreenEvent.Navigation) -> Unit,
+    viewModel: PathRecommendViewModel,
 ) {
-    val viewModel: PathRecommendViewModel = viewModel(
-        factory = PathRecommendViewModelFactory(uid))
-    val bookmarkPlaces by viewModel.bookmarkPlaces.collectAsState()
-
-    // val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
     val event by viewModel.events.collectAsState()
+
+    val selectedPlaceIds by viewModel.selectedPlaceIds.collectAsState()
 
     LaunchedEffect(event) {
         event?.let { navigationEvent ->
@@ -91,17 +90,24 @@ fun PathRecommendScreen(
                         containerColor = MaterialTheme.colorScheme.primary,
                         contentColor = MaterialTheme.colorScheme.onPrimary,
                         onItemSelected = {
-                                // 장소 추천에서 로직 가져다 복붙
+                                selectedCriteria ->
+                            viewModel.onEvent(
+                                PathRecommendScreenEvent.onDropDownClick(selectedCriteria)
+                            )
                         }
                     )
                 }
 
-                bookmarkPlaces.forEach { place ->
+                uiState.place.forEach { place ->
+                    val isChecked = selectedPlaceIds.contains(place.placeId)
+
                     PlaceForPathContainer(
                         place = place,
-                        onCheckBoxClick = { place ->
-                            viewModel.onEvent(PathRecommendScreenEvent.onCheckboxClick) }
-                        )
+                        isChecked = isChecked, //CheckBox의 상태를 전달
+                        onCheckBoxClick = {
+                            viewModel.onEvent(PathRecommendScreenEvent.onCheckboxClick(place))
+                        }
+                    )
                 }
 
             }

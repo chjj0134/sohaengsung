@@ -1,5 +1,6 @@
 package com.example.sohaengsung.ui.features.pathRecommend
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sohaengsung.data.model.Place
@@ -30,6 +31,9 @@ class PathRecommendViewModel(
     private val _events = MutableStateFlow<PathRecommendScreenEvent.Navigation?>(null)
     val events: StateFlow<PathRecommendScreenEvent.Navigation?> = _events.asStateFlow()
 
+    private val _selectedPlaceIds = MutableStateFlow<Set<String>>(emptySet())
+    val selectedPlaceIds: StateFlow<Set<String>> = _selectedPlaceIds.asStateFlow()
+
     init {
         observeBookmarkIds()
     }
@@ -46,7 +50,6 @@ class PathRecommendViewModel(
         }
     }
 
-    // placeId 리스트 → Place 객체 리스트로 변환
     private suspend fun loadPlaces(ids: List<String>) {
         // 지금은 UI dummy 예시 사용 (프론트 스크린 참고)
         val places = placeRepository.getPlaces(ids)
@@ -58,19 +61,66 @@ class PathRecommendViewModel(
         )
     }
 
+    private fun navigateToPathCompose() {
+        val selectedIds = _selectedPlaceIds.value
+
+        if (selectedIds.isEmpty()) {
+            Log.d("PathVM", "선택된 장소가 없습니다.")
+            return
+        }
+
+        val selectedPlaces = _uiState.value.place.filter { place ->
+            selectedIds.contains(place.placeId)
+        }
+
+        _events.value = PathRecommendScreenEvent.Navigation.NavigateToPathCompose(
+            placeIds = selectedPlaces.map { it.placeId }
+        )
+    }
+
     fun onEvent(event: PathRecommendScreenEvent) {
         viewModelScope.launch {
             when (event) {
-                PathRecommendScreenEvent.onDropDownClick -> {
-                    // 드롭다운 클릭 시 로직
+                is PathRecommendScreenEvent.onDropDownClick -> {
+                    val criteria = event.sortCriteria
+                    val currentPlaces = _uiState.value.place.toMutableList()
+
+                    val sortedPlaces = when (criteria) {
+                        "거리순" -> {
+                            // 별도 거리 계산 로직 (예: Haversine)이 필요함
+                            // 우선 placeId로 정렬
+                            currentPlaces.sortedBy { it.placeId }
+                        }
+                        "별점높은순" -> {
+                            currentPlaces.sortedByDescending { it.rating }
+                        }
+                        "리뷰많은순" -> {
+                            currentPlaces.sortedByDescending { it.reviewCount }
+                        }
+                        else -> currentPlaces // 그 외의 경우 현재 순서 유지
+                    }
+
+                    // 정렬된 리스트로 UI 상태 업데이트
+                    _uiState.value = _uiState.value.copy(
+                        place = sortedPlaces
+                    )
                 }
 
-                PathRecommendScreenEvent.onCheckboxClick -> {
-                    // 체크박스 아이콘 클릭 시 로직
+                is PathRecommendScreenEvent.onCheckboxClick -> {
+                    val place = event.place // Place 객체를 가정
+
+                    _selectedPlaceIds.value = if (_selectedPlaceIds.value.contains(place.placeId)) {
+                        // 이미 선택되어 있으면 제거
+                        _selectedPlaceIds.value.minus(place.placeId)
+                    } else {
+                        // 선택되어 있지 않으면 추가
+                        _selectedPlaceIds.value.plus(place.placeId)
+                    }.toSet()
                 }
 
-                PathRecommendScreenEvent.onPathComposeClick -> {
-                    _events.value = PathRecommendScreenEvent.Navigation.NavigateToPathCompose
+                is PathRecommendScreenEvent.onPathComposeClick -> {
+                    navigateToPathCompose()
+                    // _events.value = PathRecommendScreenEvent.Navigation.NavigateToPathCompose
                 }
 
                 is PathRecommendScreenEvent.Navigation -> {

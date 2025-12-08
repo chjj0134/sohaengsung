@@ -18,6 +18,7 @@ import com.example.sohaengsung.ui.common.CustomDivider
 import com.example.sohaengsung.ui.features.placeRecommend.PlaceRecommendViewModel
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -32,14 +33,21 @@ fun PlaceDetailSheet(
     onSheetDismiss: () -> Unit,
     viewModel: PlaceRecommendViewModel
 ) {
-    //장소 리뷰 로드
+    val bookmarkIds by viewModel.bookmarkIds.collectAsState()
+
+    val isBookmarked = bookmarkIds.contains(place.placeId)
+
+    val onBookmarkToggle: () -> Unit = {
+        viewModel.onEvent(PlaceRecommendScreenEvent.onBookmarkClick(place))
+    }
+
     LaunchedEffect(isSheetOpen, place.placeId) {
         if (isSheetOpen) {
             viewModel.loadReviews(place.placeId)
         }
     }
 
-    val reviewList = viewModel.reviews.collectAsState().value
+    val reviewList by viewModel.reviews.collectAsState()
 
     Column {
 
@@ -49,8 +57,11 @@ fun PlaceDetailSheet(
         ) {
 
             // 장소 상세 정보
-            PlaceDetailContainer(place = place,
-                viewModel = viewModel)
+            PlaceDetailContainer(
+                place = place,
+                isBookmarked = isBookmarked,
+                onBookmarkToggle = onBookmarkToggle
+            )
 
             Box(
                 modifier = Modifier.fillMaxSize(),

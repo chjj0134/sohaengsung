@@ -67,18 +67,17 @@ fun PlaceRecommendScreen(
     val uiState by viewModel.uiState.collectAsState()
     val event by viewModel.events.collectAsState()
 
+    val bookmarkIds by viewModel.bookmarkIds.collectAsState()
+
     val locationPermission = rememberPermissionState(
         permission = Manifest.permission.ACCESS_FINE_LOCATION
     )
 
     val context = LocalContext.current
-    val fusedClient = remember {
-        LocationServices.getFusedLocationProviderClient(context)
-    }
 
-    val coroutineScope = rememberCoroutineScope()
+    // val coroutineScope = rememberCoroutineScope()
 
-    LaunchedEffect(true) {
+    LaunchedEffect(Unit) { // 키를 Unit으로 변경
         locationPermission.launchPermissionRequest()
     }
 
@@ -90,24 +89,8 @@ fun PlaceRecommendScreen(
             Manifest.permission.ACCESS_FINE_LOCATION
         ) == PackageManager.PERMISSION_GRANTED
 
-        val isInitialState = uiState.currentLat == 37.5665 && uiState.currentLng == 126.9780
-
-        if (hasPermission && isInitialState) {
-            try {
-                fusedClient.lastLocation.addOnSuccessListener { location ->
-                    if (location != null) {
-                        viewModel.updateLocation(
-                            lat = location.latitude,
-                            lng = location.longitude
-                        )
-                    }
-                }
-            } catch (e: SecurityException) {
-                e.printStackTrace()
-            }
-        }
+        viewModel.fetchUserLocation()
     }
-
 
     LaunchedEffect(event) {
         event?.let { navigationEvent ->
@@ -192,13 +175,25 @@ fun PlaceRecommendScreen(
 
                 CustomContainer() {
                     uiState.place.forEach { place ->
+
+                        // ⭐ 1. 해당 장소가 북마크 목록에 포함되어 있는지 체크
+                        val isBookmarked = bookmarkIds.contains(place.placeId)
+
                         PlaceInfoContainer(
                             place = place,
                             onClick = {
-                                selectedPlace = place // 클릭된 장소 정보를 상태에 저장
-                                isSheetOpen = true // 바텀 시트 열기
+                                selectedPlace = place
+                                isSheetOpen = true
                             },
-                            viewModel = viewModel
+                            // ⭐ 2. PlaceInfoContainer에 북마크 상태를 전달합니다.
+                            isBookmarked = isBookmarked,
+                            // 3. onBookmarkToggle 이벤트 핸들러를 PlaceInfoContainer에 전달해야 합니다.
+                            //    (현재는 viewModel을 통째로 넘기고 있지만, 명시적으로 함수를 넘기는 것이 좋습니다.)
+                            onBookmarkToggle = {
+                                viewModel.onEvent(PlaceRecommendScreenEvent.onBookmarkClick(place))
+                            }
+
+                            // 기존: viewModel = viewModel // ⭐ 이렇게 ViewModel을 넘기는 대신
                         )
                         CustomDivider(MaterialTheme.colorScheme.secondary)
                     }
