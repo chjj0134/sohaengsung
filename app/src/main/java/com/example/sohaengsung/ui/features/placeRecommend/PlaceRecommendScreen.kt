@@ -90,7 +90,9 @@ fun PlaceRecommendScreen(
             Manifest.permission.ACCESS_FINE_LOCATION
         ) == PackageManager.PERMISSION_GRANTED
 
-        if (hasPermission) {
+        val isInitialState = uiState.currentLat == 37.5665 && uiState.currentLng == 126.9780
+
+        if (hasPermission && isInitialState) {
             try {
                 fusedClient.lastLocation.addOnSuccessListener { location ->
                     if (location != null) {
