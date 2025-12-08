@@ -24,7 +24,7 @@ import kotlin.collections.map
 fun HashtagListContainer(
     HashtagList01: List<Hashtag>,
     HashtagList02: List<Hashtag>,
-    viewModel: PlaceRecommendViewModel = viewModel(),
+    viewModel: PlaceRecommendViewModel
 ) {
     Column(
         modifier = Modifier

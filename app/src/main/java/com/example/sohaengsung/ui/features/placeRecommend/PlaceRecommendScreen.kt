@@ -58,8 +58,7 @@ import com.google.firebase.auth.FirebaseAuth
 @Composable
 fun PlaceRecommendScreen(
     onNavigate: (route: PlaceRecommendScreenEvent.Navigation) -> Unit,
-    viewModel: PlaceRecommendViewModel = viewModel(factory = PlaceRecommendViewModelFactory(
-        FirebaseAuth.getInstance().currentUser?.uid ?: "")),
+    viewModel: PlaceRecommendViewModel,
 ) {
 
     var isSheetOpen by remember { mutableStateOf(false) }
