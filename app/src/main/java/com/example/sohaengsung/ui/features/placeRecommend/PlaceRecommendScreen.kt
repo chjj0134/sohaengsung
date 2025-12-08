@@ -74,11 +74,8 @@ fun PlaceRecommendScreen(
     )
 
     val context = LocalContext.current
-    val fusedClient = remember {
-        LocationServices.getFusedLocationProviderClient(context)
-    }
 
-    val coroutineScope = rememberCoroutineScope()
+    // val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) { // 키를 Unit으로 변경
         locationPermission.launchPermissionRequest()
@@ -92,26 +89,8 @@ fun PlaceRecommendScreen(
             Manifest.permission.ACCESS_FINE_LOCATION
         ) == PackageManager.PERMISSION_GRANTED
 
-        val isInitialState = uiState.currentLat == 37.5665 && uiState.currentLng == 126.9780
-
         viewModel.fetchUserLocation()
-
-        if (hasPermission && isInitialState) {
-            try {
-                fusedClient.lastLocation.addOnSuccessListener { location ->
-                    if (location != null) {
-                        viewModel.updateLocation(
-                            lat = location.latitude,
-                            lng = location.longitude
-                        )
-                    }
-                }
-            } catch (e: SecurityException) {
-                e.printStackTrace()
-            }
-        }
     }
-
 
     LaunchedEffect(event) {
         event?.let { navigationEvent ->
