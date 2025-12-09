@@ -13,8 +13,13 @@ data class PathRecommendScreenUiState(
 )
 
 sealed class PathRecommendScreenEvent {
+    // 체크박스 클릭 시 로직: (완료)
     data class onCheckboxClick(val place: Place) : PathRecommendScreenEvent()
+
+    // 드롭다운 클릭 시 로직: (완료)
     data class onDropDownClick(val sortCriteria: String) : PathRecommendScreenEvent()
+
+    // 체크된 장소만 모아 다음 페이지로 넘겨 주도록 해 두었으나, 경로 추천 2번째 페이지 아직 데이터 연결 x 상태
     object onPathComposeClick : PathRecommendScreenEvent()
 
     sealed class Navigation : PathRecommendScreenEvent() {

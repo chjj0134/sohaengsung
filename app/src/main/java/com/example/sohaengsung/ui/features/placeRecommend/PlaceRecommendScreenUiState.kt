@@ -25,7 +25,7 @@ sealed class PlaceRecommendScreenEvent {
     data class onTypeFilterClick(val placeType: String) : PlaceRecommendScreenEvent()
     object onHashtagClick : PlaceRecommendScreenEvent()
 
-    // 북마크 로직 -> 로직 구현은 완료했으나, 화면에 북마크 상태 반영 안 됨
+    // 북마크 로직 -> (완료)
     data class onBookmarkClick(val place: Place) : PlaceRecommendScreenEvent()
 
     // 쿠폰 페이지로 이동 -> (완료)
