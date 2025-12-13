@@ -31,18 +31,7 @@ class SettingViewModel : ViewModel() {
                 isLoading = true,
                 errorMessage = null
             )
-                /*
-            // TODO: 실제 사용자 데이터 로드 (Repository에서 가져오기)
-            // 현재는 더미 데이터 사용
-            _uiState.value = _uiState.value.copy(
-                user = userExample.copy(
-                    nickname = "카공탐험가",
-                    level = 5
-                ),
-                isLoading = false
-            )
-        }
-    }*/
+
             val uid = FirebaseAuth.getInstance().currentUser?.uid
 
             if (uid == null) {
@@ -83,10 +72,6 @@ class SettingViewModel : ViewModel() {
 
                 SettingScreenEvent.onLevelClick -> {
                     _events.value = SettingScreenEvent.Navigation.NavigateToLevel
-                }
-
-                SettingScreenEvent.EditProfilePicture -> {
-                    // 정의
                 }
 
                 is SettingScreenEvent.Navigation -> {

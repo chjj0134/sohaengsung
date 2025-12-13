@@ -81,6 +81,7 @@ fun AppNavigation(
             )
         }
 
+        // 해시태그 관련 로직 제외 완료
         composable("place-recommend") {
             PlaceRecommendScreen(
                 viewModel = placeRecommendViewModel,
@@ -96,6 +97,7 @@ fun AppNavigation(
             )
         }
 
+        // 완료
         composable("path-recommend") {
             val uid = FirebaseAuth.getInstance().currentUser?.uid ?: ""
 
@@ -113,6 +115,7 @@ fun AppNavigation(
             )
         }
 
+        // 삭제 로직 구현 필요
         composable( "bookmark") { BookmarkedScreen() }
 
         composable("setting") { SettingScreen(

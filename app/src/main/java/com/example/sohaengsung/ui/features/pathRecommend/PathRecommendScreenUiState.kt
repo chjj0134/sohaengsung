@@ -5,11 +5,12 @@ import com.example.sohaengsung.data.model.Place
 import com.example.sohaengsung.ui.features.placeRecommend.PlaceRecommendScreenEvent.Navigation
 
 data class PathRecommendScreenUiState(
-    val place: List<Place> = listOf(),
+    val place: List<PlaceWithDistance> = listOf(),
     val hashtag: List<Hashtag> = listOf(),
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
     val selectedPlaceId: String? = null,
+    val currentLocation: Pair<Double, Double>? = Pair(37.5665, 126.9780)
 )
 
 sealed class PathRecommendScreenEvent {

@@ -22,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.sohaengsung.data.util.DistanceCalculator.formatDistance
 import com.example.sohaengsung.ui.common.BottomActionButtton
 import com.example.sohaengsung.ui.common.CustomDivider
 import com.example.sohaengsung.ui.common.Dropdown
@@ -30,6 +31,8 @@ import com.example.sohaengsung.ui.features.pathRecommend.components.PlaceForPath
 import com.example.sohaengsung.ui.features.placeRecommend.PlaceRecommendScreenEvent
 import com.example.sohaengsung.ui.features.placeRecommend.PlaceRecommendViewModel
 import com.example.sohaengsung.ui.theme.SohaengsungTheme
+import com.google.android.libraries.places.api.model.kotlin.place
+import com.google.android.play.integrity.internal.f
 
 @Composable
 fun PathRecommendScreen(
@@ -98,15 +101,20 @@ fun PathRecommendScreen(
                     )
                 }
 
-                uiState.place.forEach { place ->
+                uiState.place.forEach { placeWithDistance ->
+
+                    val place = placeWithDistance.place
+                    val distanceValue = placeWithDistance.distance
+
                     val isChecked = selectedPlaceIds.contains(place.placeId)
 
                     PlaceForPathContainer(
                         place = place,
-                        isChecked = isChecked, //CheckBox의 상태를 전달
+                        isChecked = isChecked,
                         onCheckBoxClick = {
                             viewModel.onEvent(PathRecommendScreenEvent.onCheckboxClick(place))
-                        }
+                        },
+                        distance = distanceValue
                     )
                 }
 
