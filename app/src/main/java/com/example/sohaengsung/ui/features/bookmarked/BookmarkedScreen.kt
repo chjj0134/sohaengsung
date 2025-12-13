@@ -21,9 +21,7 @@ import com.example.sohaengsung.ui.common.CustomDivider
 import com.example.sohaengsung.ui.common.CustomTopBar
 import com.example.sohaengsung.ui.common.Dropdown
 import com.example.sohaengsung.ui.features.bookmarked.components.BookmarkedItem
-import com.example.sohaengsung.ui.features.placeRecommend.PlaceRecommendScreenEvent
 import com.example.sohaengsung.ui.theme.SohaengsungTheme
-import com.google.android.libraries.places.api.model.kotlin.place
 
 @Composable
 fun BookmarkedScreen(
@@ -76,7 +74,12 @@ fun BookmarkedScreen(
                         containerColor = MaterialTheme.colorScheme.primary,
                         contentColor = MaterialTheme.colorScheme.onPrimary,
                         onItemSelected = {
-                                // 정렬 로직 place에서 가져다 복붙
+                            selectedCriteria ->
+                                viewModel.onEvent(
+                                    BookmarkScreenEvent.onDropDownClick(
+                                        selectedCriteria
+                                    )
+                                )
                         }
                     )
                 }

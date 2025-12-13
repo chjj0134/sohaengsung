@@ -52,22 +52,15 @@ fun ScoreContainer(
         ScoreItem(
             icon = Icons.Default.Edit,
             title = "리뷰",
-            detail = "작성, 수정제안, 피드백",
+            detail = "별점 입력 및 리뷰 작성",
             score = 15,
         )
 
         ScoreItem(
             icon = Icons.Default.Folder,
             title = "북마크",
-            detail = "공개그룹 생성, 장소 저장",
+            detail = "장소 저장",
             score = 3,
-        )
-
-        ScoreItem(
-            icon = Icons.Default.Add,
-            title = "장소 제안",
-            detail = "신규 장소 등록, 삭제, 수정",
-            score = 2,
         )
     }
 }
