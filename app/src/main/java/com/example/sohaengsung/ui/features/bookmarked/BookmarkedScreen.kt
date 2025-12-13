@@ -23,6 +23,7 @@ import com.example.sohaengsung.ui.common.Dropdown
 import com.example.sohaengsung.ui.features.bookmarked.components.BookmarkedItem
 import com.example.sohaengsung.ui.features.placeRecommend.PlaceRecommendScreenEvent
 import com.example.sohaengsung.ui.theme.SohaengsungTheme
+import com.google.android.libraries.places.api.model.kotlin.place
 
 @Composable
 fun BookmarkedScreen(
@@ -80,8 +81,15 @@ fun BookmarkedScreen(
                     )
                 }
 
-                uiState.bookmarkedPlaces.forEach { place ->
-                    BookmarkedItem(place = place)
+                uiState.bookmarkedPlaces.forEach { placeWithDistance ->
+                    val place = placeWithDistance.place
+
+                    BookmarkedItem(
+                        place = place,
+                        onDeleteClick = {
+                            viewModel.onEvent(BookmarkScreenEvent.onDeleteClick(placeWithDistance))
+                        }
+                    )
                 }
             }
         }
