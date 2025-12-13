@@ -52,29 +52,6 @@ class CouponViewModel : ViewModel() {
         }
     }
 
-    /*
-    private fun loadCouponData() {
-        viewModelScope.launch {
-            try {
-                _uiState.update { it.copy(isLoading = true, errorMessage = null) }
-
-                val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return@launch
-                val coupons = couponRepository.getUserCoupons(uid)
-
-                val coupon = coupons.firstOrNull()
-
-                if (coupon != null) {
-                    _uiState.update { it.copy(coupon = coupon, isLoading = false) }
-                } else {
-                    _uiState.update { it.copy(errorMessage = "쿠폰 정보가 없습니다.", isLoading = false) }
-                }
-
-            } catch (e: Exception) {
-                _uiState.update { it.copy(errorMessage = e.message, isLoading = false) }
-            }
-        }
-    }*/
-
     private fun observeCouponData() {
         val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return
 
@@ -86,7 +63,6 @@ class CouponViewModel : ViewModel() {
             }
         }
     }
-
 
 
     fun onEvent(event: CouponScreenEvent) {

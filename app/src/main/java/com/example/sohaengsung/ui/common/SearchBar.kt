@@ -39,17 +39,17 @@ fun SearchBar(
             .background(MaterialTheme.colorScheme.onPrimary),
 
         // 캘린더 아이콘
-        leadingIcon = {
-            Icon(
-                imageVector = Icons.Filled.CalendarMonth,
-                contentDescription = "행사 기간 선택",
-                tint = MaterialTheme.colorScheme.primary,
-                // 캘린더 아이콘 클릭 이벤트 처리
-                modifier = Modifier
-                    .clickable { onCalendarClick() }
-                    .size(30.dp)
-            )
-        },
+//        leadingIcon = {
+//            Icon(
+//                imageVector = Icons.Filled.CalendarMonth,
+//                contentDescription = "행사 기간 선택",
+//                tint = MaterialTheme.colorScheme.primary,
+//                // 캘린더 아이콘 클릭 이벤트 처리
+//                modifier = Modifier
+//                    .clickable { onCalendarClick() }
+//                    .size(30.dp)
+//            )
+//        },
 
         // 검색 아이콘
         trailingIcon = {
