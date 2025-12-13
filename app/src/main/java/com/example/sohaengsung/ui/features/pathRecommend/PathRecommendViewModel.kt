@@ -1,17 +1,24 @@
 package com.example.sohaengsung.ui.features.pathRecommend
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sohaengsung.data.model.Place
 import com.example.sohaengsung.data.repository.BookmarkRepository
 import com.example.sohaengsung.data.repository.PlaceRepository
-import com.example.sohaengsung.ui.features.placeRecommend.PlaceRecommendScreenEvent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+
+import kotlin.math.*
+
+// UI 전용 모델 정의
+data class PlaceWithDistance(
+    val place: Place,
+    val distance: Double = 0.0
+)
 
 class PathRecommendViewModel(
     private val bookmarkRepository: BookmarkRepository,
@@ -22,8 +29,8 @@ class PathRecommendViewModel(
     private val _bookmarkIds = MutableStateFlow<List<String>>(emptyList())
     val bookmarkIds = _bookmarkIds.asStateFlow()
 
-    private val _bookmarkPlaces = MutableStateFlow<List<Place>>(emptyList())
-    val bookmarkPlaces = _bookmarkPlaces.asStateFlow()
+    // 내부적으로만 관리하는 원본 장소 리스트
+    private val _originalPlaces = MutableStateFlow<List<Place>>(emptyList())
 
     private val _uiState = MutableStateFlow(PathRecommendScreenUiState())
     val uiState: StateFlow<PathRecommendScreenUiState> = _uiState.asStateFlow()
@@ -38,44 +45,56 @@ class PathRecommendViewModel(
         observeBookmarkIds()
     }
 
-    //  Firestore 북마크 자동 감지
     private fun observeBookmarkIds() {
         viewModelScope.launch {
             bookmarkRepository.observeBookmarks(uid).collectLatest { ids ->
                 _bookmarkIds.value = ids
-
-                // placeId → Place 변환 (지금은 dummy, 나중에 DB 연동)
                 loadPlaces(ids)
             }
         }
     }
 
     private suspend fun loadPlaces(ids: List<String>) {
-        // 지금은 UI dummy 예시 사용 (프론트 스크린 참고)
         val places = placeRepository.getPlaces(ids)
-        _bookmarkPlaces.value = places
+        _originalPlaces.value = places
 
-        _uiState.value = _uiState.value.copy(
-            place = places,
-            isLoading = false
-        )
+        // Place -> PlaceWithDistance 변환
+        val placesWithDistance = places.map { PlaceWithDistance(it) }
+
+        _uiState.update { state ->
+            state.copy(
+                place = placesWithDistance, // 이제 UiState의 place는 List<PlaceWithDistance>여야 합니다.
+                isLoading = false
+            )
+        }
+
+        // 위치 정보가 이미 있다면 계산 수행
+        _uiState.value.currentLocation?.let { calculateDistance(it) }
     }
 
-    private fun navigateToPathCompose() {
-        val selectedIds = _selectedPlaceIds.value
+    /**
+     * 현재 위치 정보를 받아 거리 계산 후 UI State 업데이트
+     */
+    fun calculateDistance(currentLocation: Pair<Double, Double>) {
+        val (currentLat, currentLng) = currentLocation
 
-        if (selectedIds.isEmpty()) {
-            Log.d("PathVM", "선택된 장소가 없습니다.")
-            return
+        val updatedList = _uiState.value.place.map { item ->
+            val dist = computeHaversineDistance(
+                currentLat, currentLng,
+                item.place.latitude, item.place.longitude
+            )
+            item.copy(distance = dist)
         }
 
-        val selectedPlaces = _uiState.value.place.filter { place ->
-            selectedIds.contains(place.placeId)
-        }
+        _uiState.update { it.copy(place = updatedList, currentLocation = currentLocation) }
+    }
 
-        _events.value = PathRecommendScreenEvent.Navigation.NavigateToPathCompose(
-            placeIds = selectedPlaces.map { it.placeId }
-        )
+    private fun computeHaversineDistance(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
+        val r = 6371e3 // 미터 단위
+        val dLat = Math.toRadians(lat2 - lat1)
+        val dLon = Math.toRadians(lon2 - lon1)
+        val a = sin(dLat / 2).pow(2) + cos(Math.toRadians(lat1)) * cos(Math.toRadians(lat2)) * sin(dLon / 2).pow(2)
+        return r * 2 * atan2(sqrt(a), sqrt(1 - a))
     }
 
     fun onEvent(event: PathRecommendScreenEvent) {
@@ -83,54 +102,39 @@ class PathRecommendViewModel(
             when (event) {
                 is PathRecommendScreenEvent.onDropDownClick -> {
                     val criteria = event.sortCriteria
-                    val currentPlaces = _uiState.value.place.toMutableList()
+                    val currentList = _uiState.value.place
 
-                    val sortedPlaces = when (criteria) {
-                        "거리순" -> {
-                            // 별도 거리 계산 로직 (예: Haversine)이 필요함
-                            // 우선 placeId로 정렬
-                            currentPlaces.sortedBy { it.placeId }
-                        }
-                        "별점높은순" -> {
-                            currentPlaces.sortedByDescending { it.rating }
-                        }
-                        "리뷰많은순" -> {
-                            currentPlaces.sortedByDescending { it.reviewCount }
-                        }
-                        else -> currentPlaces // 그 외의 경우 현재 순서 유지
+                    val sortedList = when (criteria) {
+                        "거리순" -> currentList.sortedBy { it.distance }
+                        "별점높은순" -> currentList.sortedByDescending { it.place.rating }
+                        "리뷰많은순" -> currentList.sortedByDescending { it.place.reviewCount }
+                        else -> currentList
                     }
 
-                    // 정렬된 리스트로 UI 상태 업데이트
-                    _uiState.value = _uiState.value.copy(
-                        place = sortedPlaces
-                    )
+                    _uiState.update { it.copy(place = sortedList) }
                 }
 
                 is PathRecommendScreenEvent.onCheckboxClick -> {
-                    val place = event.place // Place 객체를 가정
-
-                    _selectedPlaceIds.value = if (_selectedPlaceIds.value.contains(place.placeId)) {
-                        // 이미 선택되어 있으면 제거
-                        _selectedPlaceIds.value.minus(place.placeId)
-                    } else {
-                        // 선택되어 있지 않으면 추가
-                        _selectedPlaceIds.value.plus(place.placeId)
-                    }.toSet()
+                    val placeId = event.place.placeId
+                    _selectedPlaceIds.update { current ->
+                        if (current.contains(placeId)) current - placeId else current + placeId
+                    }
                 }
 
-                is PathRecommendScreenEvent.onPathComposeClick -> {
-                    navigateToPathCompose()
-                    // _events.value = PathRecommendScreenEvent.Navigation.NavigateToPathCompose
-                }
-
-                is PathRecommendScreenEvent.Navigation -> {
-                    /* do nothing */
-                }
+                is PathRecommendScreenEvent.onPathComposeClick -> navigateToPathCompose()
+                else -> { /* 처리 */ }
             }
         }
     }
 
-    fun clearEvent() {
-        _events.value = null
+    private fun navigateToPathCompose() {
+        val selectedIds = _selectedPlaceIds.value
+        if (selectedIds.isEmpty()) return
+
+        _events.value = PathRecommendScreenEvent.Navigation.NavigateToPathCompose(
+            placeIds = selectedIds.toList()
+        )
     }
+
+    fun clearEvent() { _events.value = null }
 }
