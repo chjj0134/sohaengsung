@@ -1,5 +1,6 @@
 package com.example.sohaengsung.ui.features.bookmarked
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sohaengsung.data.repository.UserRepository
@@ -12,6 +13,7 @@ import kotlinx.coroutines.launch
 import com.example.sohaengsung.data.repository.BookmarkRepository
 import com.example.sohaengsung.data.repository.PlaceRepository
 import com.example.sohaengsung.data.model.Place
+import com.example.sohaengsung.ui.features.pathRecommend.PlaceWithDistance
 
 class BookmarkedViewModel : ViewModel() {
 
@@ -67,14 +69,15 @@ class BookmarkedViewModel : ViewModel() {
             val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return@launch
 
             try {
-                // placeId 리스트 가져오기
                 val ids = bookmarkRepository.getBookmarksOnce(uid)
 
-                // placeId → Place 객체 리스트 변환
-                val places = placeRepository.getPlaces(ids)
+                val rawPlaces = placeRepository.getPlaces(ids)
 
-                // UI 업데이트
-                _uiState.update { it.copy(bookmarkedPlaces = places) }
+                val placesWithDistance = rawPlaces.map { place ->
+                    PlaceWithDistance(place = place, distance = 0.0)
+                }
+
+                _uiState.update { it.copy(bookmarkedPlaces = placesWithDistance) }
 
             } catch (e: Exception) {
                 _uiState.update { it.copy(errorMessage = e.message ?: "북마크 로드 실패") }
@@ -82,11 +85,30 @@ class BookmarkedViewModel : ViewModel() {
         }
     }
 
+    private suspend fun deleteBookmark(placeId: String) {
+        val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return
+
+        try {
+            // 서버(Repository)에서 삭제
+            bookmarkRepository.removeBookmark(uid, placeId)
+
+            _uiState.update { state ->
+                val updatedList = state.bookmarkedPlaces.filter {
+                    it.place.placeId != placeId
+                }
+                state.copy(bookmarkedPlaces = updatedList)
+            }
+        } catch (e: Exception) {
+            _uiState.update { it.copy(errorMessage = "삭제 실패: ${e.message}") }
+        }
+    }
+
     fun onEvent(event: BookmarkScreenEvent) {
         viewModelScope.launch {
             when (event) {
-                BookmarkScreenEvent.onDeleteClick -> {
-                    // TODO: 북마크 삭제
+                is BookmarkScreenEvent.onDeleteClick -> {
+                    val targetId = event.placeWithDistance.place.placeId
+                    deleteBookmark(targetId)
                 }
 
                 is BookmarkScreenEvent.Navigation -> {
