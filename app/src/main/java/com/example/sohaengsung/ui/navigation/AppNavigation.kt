@@ -50,7 +50,7 @@ fun AppNavigation(
         }
     }
 
-    NavHost(navController = navController, startDestination = "login") {
+    NavHost(navController = navController, startDestination = "event") {
 
         composable("login") {
             LogInScreen(
@@ -89,13 +89,8 @@ fun AppNavigation(
                     val route = when (navigationEvent) {
                         PlaceRecommendScreenEvent.Navigation.NavigateToReview
                             -> ScreenRoute.REVIEW
-<<<<<<< HEAD
-
-                        else -> {}
-=======
                         PlaceRecommendScreenEvent.Navigation.NavigateToCoupon
                             -> ScreenRoute.COUPON
->>>>>>> 1d37c6a0326b574bbf3a6c7013588cf45286694e
                     }
                     navController.navigate(route)
                 }
