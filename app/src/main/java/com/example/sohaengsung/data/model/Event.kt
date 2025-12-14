@@ -10,5 +10,6 @@ data class Event(
     val endDate: Timestamp? = null,
     val seasonInfo: String = "날짜 미정",
     val imageUrl: String = "",
-    val externalLink: String = ""
+    val externalLink: String = "",
+    val countdown: String = "" // D-20, D-3, 진행중 등
 )
