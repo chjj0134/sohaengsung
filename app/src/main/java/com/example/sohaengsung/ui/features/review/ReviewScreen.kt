@@ -130,7 +130,7 @@ fun ReviewScreen(
                         .height(200.dp),
                     placeholder = {
                         Text(
-                            text = "자유롭게 리뷰를 작성해주세요",
+                            text = "자유롭게 리뷰를 작성해 주세요",
                             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
                         )
                     },
