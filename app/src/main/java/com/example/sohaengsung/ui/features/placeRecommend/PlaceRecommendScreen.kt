@@ -58,8 +58,7 @@ import com.google.firebase.auth.FirebaseAuth
 @Composable
 fun PlaceRecommendScreen(
     onNavigate: (route: PlaceRecommendScreenEvent.Navigation) -> Unit,
-    viewModel: PlaceRecommendViewModel = viewModel(factory = PlaceRecommendViewModelFactory(
-        FirebaseAuth.getInstance().currentUser?.uid ?: "")),
+    viewModel: PlaceRecommendViewModel,
 ) {
 
     var isSheetOpen by remember { mutableStateOf(false) }
@@ -68,18 +67,17 @@ fun PlaceRecommendScreen(
     val uiState by viewModel.uiState.collectAsState()
     val event by viewModel.events.collectAsState()
 
+    val bookmarkIds by viewModel.bookmarkIds.collectAsState()
+
     val locationPermission = rememberPermissionState(
         permission = Manifest.permission.ACCESS_FINE_LOCATION
     )
 
     val context = LocalContext.current
-    val fusedClient = remember {
-        LocationServices.getFusedLocationProviderClient(context)
-    }
 
-    val coroutineScope = rememberCoroutineScope()
+    // val coroutineScope = rememberCoroutineScope()
 
-    LaunchedEffect(true) {
+    LaunchedEffect(Unit) { // 키를 Unit으로 변경
         locationPermission.launchPermissionRequest()
     }
 
@@ -91,22 +89,8 @@ fun PlaceRecommendScreen(
             Manifest.permission.ACCESS_FINE_LOCATION
         ) == PackageManager.PERMISSION_GRANTED
 
-        if (hasPermission) {
-            try {
-                fusedClient.lastLocation.addOnSuccessListener { location ->
-                    if (location != null) {
-                        viewModel.updateLocation(
-                            lat = location.latitude,
-                            lng = location.longitude
-                        )
-                    }
-                }
-            } catch (e: SecurityException) {
-                e.printStackTrace()
-            }
-        }
+        viewModel.fetchUserLocation()
     }
-
 
     LaunchedEffect(event) {
         event?.let { navigationEvent ->
@@ -126,7 +110,8 @@ fun PlaceRecommendScreen(
                     .padding(innerPadding)
                     .verticalScroll(rememberScrollState())
             ) {
-                // 지도 컴포넌트 임시 영역
+
+                // 지도 컴포넌트 영역
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -160,17 +145,29 @@ fun PlaceRecommendScreen(
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             Dropdown(
-                                label = "유형별",
-                                items = listOf("카페", "스터디", "도서관", "야외"),
+                                label = "전체",
+                                items = listOf("전체", "카페", "서점", "편집샵", "갤러리"),
                                 containerColor = MaterialTheme.colorScheme.primary,
-                                contentColor = MaterialTheme.colorScheme.onPrimary
+                                contentColor = MaterialTheme.colorScheme.onPrimary,
+                                onItemSelected = {
+                                        selectedCriteria ->
+                                    viewModel.onEvent(
+                                        PlaceRecommendScreenEvent.onTypeFilterClick(selectedCriteria)
+                                    )
+                                }
                             )
 
                             Dropdown(
                                 label = "거리순",
-                                items = listOf("별점높은순", "리뷰많은순"),
+                                items = listOf("거리순", "별점높은순", "리뷰많은순"),
                                 containerColor = MaterialTheme.colorScheme.primary,
-                                contentColor = MaterialTheme.colorScheme.onPrimary
+                                contentColor = MaterialTheme.colorScheme.onPrimary,
+                                onItemSelected = {
+                                        selectedCriteria ->
+                                    viewModel.onEvent(
+                                        PlaceRecommendScreenEvent.onDropDownClick(selectedCriteria)
+                                    )
+                                }
                             )
                         }
                     }
@@ -178,13 +175,25 @@ fun PlaceRecommendScreen(
 
                 CustomContainer() {
                     uiState.place.forEach { place ->
+
+                        // ⭐ 1. 해당 장소가 북마크 목록에 포함되어 있는지 체크
+                        val isBookmarked = bookmarkIds.contains(place.placeId)
+
                         PlaceInfoContainer(
                             place = place,
                             onClick = {
-                                selectedPlace = place // 클릭된 장소 정보를 상태에 저장
-                                isSheetOpen = true // 바텀 시트 열기
+                                selectedPlace = place
+                                isSheetOpen = true
                             },
-                            viewModel = viewModel
+                            // ⭐ 2. PlaceInfoContainer에 북마크 상태를 전달합니다.
+                            isBookmarked = isBookmarked,
+                            // 3. onBookmarkToggle 이벤트 핸들러를 PlaceInfoContainer에 전달해야 합니다.
+                            //    (현재는 viewModel을 통째로 넘기고 있지만, 명시적으로 함수를 넘기는 것이 좋습니다.)
+                            onBookmarkToggle = {
+                                viewModel.onEvent(PlaceRecommendScreenEvent.onBookmarkClick(place))
+                            }
+
+                            // 기존: viewModel = viewModel // ⭐ 이렇게 ViewModel을 넘기는 대신
                         )
                         CustomDivider(MaterialTheme.colorScheme.secondary)
                     }
@@ -202,43 +211,6 @@ fun PlaceRecommendScreen(
                         },
                         place = selectedPlace!!, // 널 검사 후 저장된 place 객체를 전달
                         viewModel = viewModel
-                    )
-                }
-            }
-
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.BottomEnd
-            ) {
-                Row(
-                    modifier = Modifier.padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-
-                    // 쿠폰 확인 버튼
-                    BottomActionButtton(
-                        onClickAction = {
-                            viewModel.onEvent(
-                                PlaceRecommendScreenEvent.onCouponClick
-                            )
-                        },
-                        icon = Icons.Filled.Redeem,
-                        text = "쿠폰 확인",
-                        modifier = Modifier.padding(horizontal = 8.dp)
-                    )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    // 리뷰 작성 버튼
-                    BottomActionButtton(
-                        onClickAction = {
-                            viewModel.onEvent(
-                                PlaceRecommendScreenEvent.onReviewClick
-                            )
-                        },
-                        icon = Icons.Filled.Create,
-                        text = "리뷰 작성",
-                        modifier = Modifier.padding(horizontal = 8.dp)
                     )
                 }
             }

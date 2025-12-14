@@ -1,12 +1,30 @@
 package com.example.sohaengsung.ui.features.placeRecommend.components
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Create
+import androidx.compose.material.icons.filled.Redeem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sohaengsung.data.model.Place
 import com.example.sohaengsung.ui.common.CustomDivider
 import com.example.sohaengsung.ui.features.placeRecommend.PlaceRecommendViewModel
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import com.example.sohaengsung.ui.common.BottomActionButtton
+import com.example.sohaengsung.ui.features.placeRecommend.PlaceRecommendScreenEvent
+
 
 @Composable
 fun PlaceDetailSheet(
@@ -15,6 +33,21 @@ fun PlaceDetailSheet(
     onSheetDismiss: () -> Unit,
     viewModel: PlaceRecommendViewModel
 ) {
+    val bookmarkIds by viewModel.bookmarkIds.collectAsState()
+
+    val isBookmarked = bookmarkIds.contains(place.placeId)
+
+    val onBookmarkToggle: () -> Unit = {
+        viewModel.onEvent(PlaceRecommendScreenEvent.onBookmarkClick(place))
+    }
+
+    LaunchedEffect(isSheetOpen, place.placeId) {
+        if (isSheetOpen) {
+            viewModel.loadReviews(place.placeId)
+        }
+    }
+
+    val reviewList by viewModel.reviews.collectAsState()
 
     Column {
 
@@ -24,14 +57,57 @@ fun PlaceDetailSheet(
         ) {
 
             // 장소 상세 정보
-            PlaceDetailContainer(place = place,
-                viewModel = viewModel)
+            PlaceDetailContainer(
+                place = place,
+                isBookmarked = isBookmarked,
+                onBookmarkToggle = onBookmarkToggle
+            )
+
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.BottomEnd
+            ) {
+                Row(
+                    modifier = Modifier.padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+
+                    // 쿠폰 확인 버튼
+                    BottomActionButtton(
+                        onClickAction = {
+                            viewModel.onEvent(
+                                PlaceRecommendScreenEvent.onCouponClick
+                            )
+                        },
+                        icon = Icons.Filled.Redeem,
+                        text = "쿠폰 확인",
+                        modifier = Modifier.padding(horizontal = 8.dp)
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    // 리뷰 작성 버튼
+                    BottomActionButtton(
+                        onClickAction = {
+                            viewModel.onEvent(
+                                PlaceRecommendScreenEvent.onReviewClick
+                            )
+                        },
+                        icon = Icons.Filled.Create,
+                        text = "리뷰 작성",
+                        modifier = Modifier.padding(horizontal = 8.dp)
+                    )
+                }
+            }
 
             // 디바이더
             CustomDivider(MaterialTheme.colorScheme.secondary)
 
             // 임시 리뷰 컨테이너
-            ReviewContainer()
+            reviewList.forEach { review ->
+                ReviewContainer(review = review)
+                CustomDivider(MaterialTheme.colorScheme.secondary)
+            }
         }
     }
 }

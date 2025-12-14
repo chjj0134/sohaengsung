@@ -22,24 +22,27 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.sohaengsung.data.util.DistanceCalculator.formatDistance
 import com.example.sohaengsung.ui.common.BottomActionButtton
 import com.example.sohaengsung.ui.common.CustomDivider
 import com.example.sohaengsung.ui.common.Dropdown
 import com.example.sohaengsung.ui.common.CustomTopBar
 import com.example.sohaengsung.ui.features.pathRecommend.components.PlaceForPathContainer
+import com.example.sohaengsung.ui.features.placeRecommend.PlaceRecommendScreenEvent
+import com.example.sohaengsung.ui.features.placeRecommend.PlaceRecommendViewModel
 import com.example.sohaengsung.ui.theme.SohaengsungTheme
+import com.google.android.libraries.places.api.model.kotlin.place
+import com.google.android.play.integrity.internal.f
 
 @Composable
 fun PathRecommendScreen(
-    uid: String = "dummy-user-id",
-    onNavigate: (route: PathRecommendScreenEvent.Navigation) -> Unit,
+    onNavigate: (PathRecommendScreenEvent.Navigation) -> Unit,
+    viewModel: PathRecommendViewModel,
 ) {
-    val viewModel: PathRecommendViewModel = viewModel(
-        factory = PathRecommendViewModelFactory(uid))
-    val bookmarkPlaces by viewModel.bookmarkPlaces.collectAsState()
-
-    // val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
     val event by viewModel.events.collectAsState()
+
+    val selectedPlaceIds by viewModel.selectedPlaceIds.collectAsState()
 
     LaunchedEffect(event) {
         event?.let { navigationEvent ->
@@ -86,18 +89,33 @@ fun PathRecommendScreen(
                 ) {
                     Dropdown(
                         label = "거리순",
-                        items = listOf("별점높은순", "리뷰많은순"),
+                        items = listOf("거리순", "별점높은순", "리뷰많은순"),
                         containerColor = MaterialTheme.colorScheme.primary,
                         contentColor = MaterialTheme.colorScheme.onPrimary,
+                        onItemSelected = {
+                                selectedCriteria ->
+                            viewModel.onEvent(
+                                PathRecommendScreenEvent.onDropDownClick(selectedCriteria)
+                            )
+                        }
                     )
                 }
 
-                bookmarkPlaces.forEach { place ->
+                uiState.place.forEach { placeWithDistance ->
+
+                    val place = placeWithDistance.place
+                    val distanceValue = placeWithDistance.distance
+
+                    val isChecked = selectedPlaceIds.contains(place.placeId)
+
                     PlaceForPathContainer(
                         place = place,
-                        onCheckBoxClick = { place ->
-                            viewModel.onEvent(PathRecommendScreenEvent.onCheckboxClick) }
-                        )
+                        isChecked = isChecked,
+                        onCheckBoxClick = {
+                            viewModel.onEvent(PathRecommendScreenEvent.onCheckboxClick(place))
+                        },
+                        distance = distanceValue
+                    )
                 }
 
             }

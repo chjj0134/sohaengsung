@@ -59,7 +59,7 @@ fun SettingScreen(
                         viewModel.onEvent(SettingScreenEvent.onLevelClick)
                     },
                     onProfileEditClick = {
-                        viewModel.onEvent(SettingScreenEvent.EditProfilePicture)
+                        // 없앰
                     }
                 )
 

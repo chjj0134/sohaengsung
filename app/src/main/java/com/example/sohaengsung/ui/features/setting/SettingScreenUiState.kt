@@ -14,7 +14,6 @@ sealed class SettingScreenEvent {
     object onTermsClick : SettingScreenEvent()
     object onNoticeClick : SettingScreenEvent()
     object onLevelClick : SettingScreenEvent()
-    object EditProfilePicture : SettingScreenEvent()
 
     sealed class Navigation : SettingScreenEvent() {
         object NavigateToAccountManagement : Navigation()

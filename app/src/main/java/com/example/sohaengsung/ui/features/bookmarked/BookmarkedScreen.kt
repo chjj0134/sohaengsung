@@ -16,20 +16,21 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sohaengsung.ui.common.CustomDivider
 import com.example.sohaengsung.ui.common.CustomTopBar
 import com.example.sohaengsung.ui.common.Dropdown
+import com.example.sohaengsung.ui.features.bookmarked.components.BookmarkedItem
 import com.example.sohaengsung.ui.theme.SohaengsungTheme
 
 @Composable
 fun BookmarkedScreen(
     uid: String = "dummy-user-id"
 ) {
-    // TODO: 리포지토리 연결 후 주석만 풀어 주세요!
-    // val viewModel: BookmarkedViewModel = viewModel(
-    //    factory = BookmarkedRecommendViewModelFactory(uid))
 
-    // val bookmarkPlaces by viewModel.bookmarkPlaces.collectAsState()
+    val viewModel: BookmarkedViewModel = viewModel()
+    val uiState by viewModel.uiState.collectAsState()
+
 
     SohaengsungTheme {
         Scaffold(
@@ -61,7 +62,7 @@ fun BookmarkedScreen(
                 }
 
                 // 드롭다운
-                Row (
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 20.dp, vertical = 20.dp),
@@ -69,16 +70,31 @@ fun BookmarkedScreen(
                 ) {
                     Dropdown(
                         label = "거리순",
-                        items = listOf("별점높은순", "리뷰많은순"),
+                        items = listOf("거리순", "별점높은순", "리뷰많은순"),
                         containerColor = MaterialTheme.colorScheme.primary,
-                        contentColor = MaterialTheme.colorScheme.onPrimary
+                        contentColor = MaterialTheme.colorScheme.onPrimary,
+                        onItemSelected = {
+                            selectedCriteria ->
+                                viewModel.onEvent(
+                                    BookmarkScreenEvent.onDropDownClick(
+                                        selectedCriteria
+                                    )
+                                )
+                        }
                     )
                 }
 
-                // TODO: 리포지토리 연결 후 주석만 풀어 주세요!
-                // bookmarkPlaces.forEach { place ->
-                //    BookmarkedItem(place = place)
+                uiState.bookmarkedPlaces.forEach { placeWithDistance ->
+                    val place = placeWithDistance.place
+
+                    BookmarkedItem(
+                        place = place,
+                        onDeleteClick = {
+                            viewModel.onEvent(BookmarkScreenEvent.onDeleteClick(placeWithDistance))
+                        }
+                    )
                 }
             }
         }
     }
+}

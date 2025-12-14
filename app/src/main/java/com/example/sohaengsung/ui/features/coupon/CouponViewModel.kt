@@ -7,6 +7,7 @@ import com.example.sohaengsung.data.repository.CouponRepository
 import com.example.sohaengsung.data.repository.UserRepository
 import com.example.sohaengsung.ui.dummy.userExample
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.ListenerRegistration
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -24,9 +25,11 @@ class CouponViewModel : ViewModel() {
     private val _events = MutableStateFlow<CouponScreenEvent.Navigation?>(null)
     val events: StateFlow<CouponScreenEvent.Navigation?> = _events.asStateFlow()
 
+    private var couponListener: ListenerRegistration? = null
+
     init {
         loadUserData()
-        loadCouponData()
+        observeCouponData()
     }
 
     private fun loadUserData() {
@@ -49,27 +52,18 @@ class CouponViewModel : ViewModel() {
         }
     }
 
-    private fun loadCouponData() {
-        viewModelScope.launch {
-            try {
-                _uiState.update { it.copy(isLoading = true, errorMessage = null) }
+    private fun observeCouponData() {
+        val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return
 
-                val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return@launch
-                val coupons = couponRepository.getUserCoupons(uid)
-
-                val coupon = coupons.firstOrNull()
-
-                if (coupon != null) {
-                    _uiState.update { it.copy(coupon = coupon, isLoading = false) }
-                } else {
-                    _uiState.update { it.copy(errorMessage = "쿠폰 정보가 없습니다.", isLoading = false) }
-                }
-
-            } catch (e: Exception) {
-                _uiState.update { it.copy(errorMessage = e.message, isLoading = false) }
+        couponListener = couponRepository.listenUserCoupon(uid) { stampCount ->
+            _uiState.update { state ->
+                state.copy(
+                    coupon = state.coupon.copy(stampCount = stampCount)
+                )
             }
         }
     }
+
 
     fun onEvent(event: CouponScreenEvent) {
         viewModelScope.launch {

@@ -17,66 +17,83 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sohaengsung.data.model.Place
 import com.example.sohaengsung.ui.common.Bookmark
 import com.example.sohaengsung.ui.features.placeRecommend.PlaceRecommendViewModel
+import coil.compose.AsyncImage
+import com.example.sohaengsung.ui.features.placeRecommend.PlaceRecommendScreenEvent
 
 @Composable
 fun PlaceInfoContainer(
     place: Place,
     onClick: () -> Unit,
-    viewModel: PlaceRecommendViewModel
+    isBookmarked: Boolean,
+    onBookmarkToggle: (Place) -> Unit
 ) {
-    val bookmarkIds by viewModel.bookmarkIds.collectAsState()
-    val isBookmarked = bookmarkIds.contains(place.placeId)
-
-    Column (
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick),
+        verticalArrangement = Arrangement.spacedBy(3.dp)
+    ) {
+        // 장소 이름 및 북마크
+        Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .clickable(onClick = onClick),
-            verticalArrangement = Arrangement.spacedBy(3.dp)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            // 장소 이름 및 북마크
-            Row(
+            Text(
+                text = place.name,
+                style = MaterialTheme.typography.titleSmall
+            )
+
+            Bookmark(
+                isBookmarked = isBookmarked,
+                onBookmarkToggle = {
+                    onBookmarkToggle(place)
+                }
+            )
+        }
+
+        // 장소 해시태그
+        Text(
+            // PlaceExample.hashtags의 모든 아이템에 "#"와 공백을 붙여 하나의 문자열로 결합
+            text = place.hashtags.joinToString(separator = " ") { hashtag ->
+                "#$hashtag"
+            },
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.primary
+        )
+
+        // 별점, 리뷰 개수
+        Text(
+            text = "⭐️ ${place.rating} (리뷰 ${place.reviewCount}개)",
+            style = MaterialTheme.typography.labelSmall
+        )
+
+
+        val firstPhoto = place.photoUrls.firstOrNull()
+
+        if (firstPhoto != null) {
+            AsyncImage(
+                model = firstPhoto,
+                contentDescription = "${place.name} photo",
                 modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = place.name,
-                    style = MaterialTheme.typography.titleSmall
-                )
-
-                Bookmark(
-                    initialChecked = isBookmarked,
-                    onBookmarkToggle = {  viewModel.toggleBookmark(place)}
-                )
-            }
-
-            // 장소 해시태그
-            Text(
-                // PlaceExample.hashtags의 모든 아이템에 "#"와 공백을 붙여 하나의 문자열로 결합
-                text = place.hashtags.joinToString(separator = " ") { hashtag ->
-                    "#$hashtag"
-                },
-                style = MaterialTheme.typography.labelLarge,
-                color = MaterialTheme.colorScheme.primary
+                    .fillMaxWidth()
+                    .padding(4.dp)
+                    .height(150.dp)
             )
-
-            // 별점, 리뷰 개수
-            Text(
-                text = "⭐️ ${place.rating} (리뷰 ${place.reviewCount}개)",
-                style = MaterialTheme.typography.labelSmall
-            )
-
-            // 임시 사진 영역
+        } else {
+            // 사진 없을 때 기존 박스 유지
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(4.dp)
                     .height(150.dp)
-                    .background(MaterialTheme.colorScheme.secondary),
+                    .background(MaterialTheme.colorScheme.secondary)
             )
         }
     }
+}

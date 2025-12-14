@@ -18,6 +18,7 @@ import com.example.sohaengsung.ui.common.DeleteButton
 @Composable
 fun BookmarkedItem(
     place: Place,
+    onDeleteClick: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -56,11 +57,9 @@ fun BookmarkedItem(
                 )
             }
 
-            // 삭제 버튼
-            // TODO: 연결 후 주석만 풀어 주세요!
-            // DeleteButton {
-            //    onDeleteClick()
-            //}
+             DeleteButton {
+                 onDeleteClick()
+            }
         }
     }
 }

@@ -12,17 +12,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.sohaengsung.ui.common.ProfilePic
 import com.example.sohaengsung.ui.common.StarRating
-import com.example.sohaengsung.ui.dummy.reviewExample
-import com.example.sohaengsung.ui.dummy.userExample
+import com.example.sohaengsung.data.model.GoogleReview
 
-@Preview(showBackground = true)
+//@Preview(showBackground = true)
 @Composable
 fun ReviewContainer(
     // review: Review
+    review: GoogleReview
 ) {
     Column(
         modifier = Modifier
@@ -37,11 +36,14 @@ fun ReviewContainer(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // 예시 프로필 사진
-                ProfilePic(userExample, 24)
+                // 예시 프로필 사진 → 실제 리뷰 데이터 적용
+                ProfilePic(
+                    imageUrl = review.profilePhotoUrl,
+                    size = 24
+                )
 
                 Text(
-                    text = "${userExample.nickname}",
+                    text = review.author ?: "",
                     style = MaterialTheme.typography.labelLarge
                 )
             }
@@ -57,14 +59,14 @@ fun ReviewContainer(
                         .size(24.dp)
                 )
 
-                // 예시 별점
+                // 예시 별점 → 실제 리뷰 데이터 적용
                 StarRating(
-                    rating = reviewExample[1].rating,
+                    rating = review.rating.toDouble(),
                     size = 20
                 )
 
                 Text(
-                    text = "${reviewExample[1].createdAt}",
+                    text = review.time ?: "",
                     style = MaterialTheme.typography.labelLarge
                 )
             }
@@ -74,18 +76,12 @@ fun ReviewContainer(
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                reviewExample[1].tags.map { tag ->
-                    Text(
-                        text = "#${tag}", // 해시태그 이름 앞에 # 붙이기
-                        color = MaterialTheme.colorScheme.primary,
-                        style = MaterialTheme.typography.titleSmall
-                    )
-                }
+                // 현재는 전달되는 태그가 없으므로 빈 상태 유지
             }
 
             // 리뷰 본문
             Text(
-                text = "${reviewExample[1].content}",
+                text = review.content ?: "",
                 style = MaterialTheme.typography.bodyMedium
             )
         }

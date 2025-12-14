@@ -1,5 +1,6 @@
 package com.example.sohaengsung.ui.common
 
+import android.R.attr.checked
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
@@ -19,25 +20,23 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun CheckBox(
-    initialChecked: Boolean, // 초기 상태
+    isChecked: Boolean, // 초기 상태
     onClick: () -> Unit
 ) {
-    var checked by remember { mutableStateOf(initialChecked) }
     // 채워진 아이콘 or 빈 아이콘
-    val icon = if (checked) Icons.Filled.CheckBox else Icons.Filled.CheckBoxOutlineBlank
+    val icon = if (isChecked) Icons.Filled.CheckBox else Icons.Filled.CheckBoxOutlineBlank
 
     Box(
         modifier = Modifier
             .size(24.dp)
             .clickable {
-                checked = !checked
-                onClick
+                onClick()
             },
         contentAlignment = Alignment.Center
     ) {
         Icon(
             imageVector = icon,
-            contentDescription = if (checked) "북마크 해제" else "북마크",
+            contentDescription = if (isChecked) "체크 해제" else "체크",
             tint = MaterialTheme.colorScheme.tertiary,
             modifier = Modifier.size(24.dp)
         )

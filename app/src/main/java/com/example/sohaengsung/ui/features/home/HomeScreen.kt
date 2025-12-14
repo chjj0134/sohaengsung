@@ -1,5 +1,6 @@
 package com.example.sohaengsung.ui.features.home
 
+import HomeScreenViewModel
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -128,12 +129,3 @@ fun HomeScreen(
         }
     }
 }
-
-//@Preview(showBackground = true)
-//@Composable
-//fun HomeScreenPreview() {
-//    SohaengsungTheme {
-//        HomeScreen()
-//    }
-//}
-

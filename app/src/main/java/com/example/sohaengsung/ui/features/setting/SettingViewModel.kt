@@ -4,10 +4,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sohaengsung.ui.dummy.userExample
 import com.example.sohaengsung.ui.features.home.HomeScreenEvent
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import com.example.sohaengsung.data.model.User
+import com.example.sohaengsung.data.repository.UserRepository
 
 class SettingViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(SettingScreenUiState())
@@ -15,6 +18,8 @@ class SettingViewModel : ViewModel() {
 
     private val _events = MutableStateFlow<SettingScreenEvent?>(null)
     val events: StateFlow<SettingScreenEvent?> = _events.asStateFlow()
+
+    private val userRepository = UserRepository()
 
     init {
         loadUserData()
@@ -26,14 +31,21 @@ class SettingViewModel : ViewModel() {
                 isLoading = true,
                 errorMessage = null
             )
-            
-            // TODO: 실제 사용자 데이터 로드 (Repository에서 가져오기)
-            // 현재는 더미 데이터 사용
+
+            val uid = FirebaseAuth.getInstance().currentUser?.uid
+
+            if (uid == null) {
+                _uiState.value = _uiState.value.copy(
+                    errorMessage = "로그인된 사용자 없음",
+                    isLoading = false
+                )
+                return@launch
+            }
+
+            val userData = userRepository.getUser(uid)
+
             _uiState.value = _uiState.value.copy(
-                user = userExample.copy(
-                    nickname = "카공탐험가",
-                    level = 5
-                ),
+                user = userData ?: User(uid = uid),
                 isLoading = false
             )
         }
@@ -60,10 +72,6 @@ class SettingViewModel : ViewModel() {
 
                 SettingScreenEvent.onLevelClick -> {
                     _events.value = SettingScreenEvent.Navigation.NavigateToLevel
-                }
-
-                SettingScreenEvent.EditProfilePicture -> {
-                    // 정의
                 }
 
                 is SettingScreenEvent.Navigation -> {

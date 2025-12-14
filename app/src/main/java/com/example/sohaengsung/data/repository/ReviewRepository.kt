@@ -2,48 +2,65 @@ package com.example.sohaengsung.data.repository
 
 import com.example.sohaengsung.data.model.Review
 import com.google.firebase.Timestamp
-import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 class ReviewRepository {
 
-    private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
+    private val db = FirebaseFirestore.getInstance()
+    private val couponRepo = CouponRepository()
+    private val userRepo = UserRepository()
+
+    private val repoScope = CoroutineScope(Dispatchers.IO)
 
     fun addReview(
         review: Review,
         onComplete: (Boolean) -> Unit
     ) {
-        val reviewRef = db.collection("users")
-            .document(review.userId)
-            .collection("reviews")
-            .document()
+        repoScope.launch {
+            try {
+                val reviewRef = db.collection("users")
+                    .document(review.userId)
+                    .collection("reviews")
+                    .document()
 
-        val newReview = review.copy(
-            reviewId = reviewRef.id,
-            createdAt = Timestamp.now()
-        )
+                val newReview = review.copy(
+                    reviewId = reviewRef.id,
+                    createdAt = Timestamp.now(),
+                    source = "USER"
+                )
 
-        db.runBatch { batch ->
-            batch.set(reviewRef, newReview)
+                reviewRef.set(newReview).await()
 
-            val userRef = db.collection("users").document(review.userId)
-            batch.update(
-                userRef,
-                "activityScore",
-                FieldValue.increment(15)
-            )
+                val placeReviewRef = db.collection("places")
+                    .document(review.placeId)
+                    .collection("reviews")
+                    .document(newReview.reviewId)
 
-            val couponRef = userRef
-                .collection("coupons")
-                .document(review.placeId)
+                placeReviewRef.set(newReview).await()
 
-            batch.update(
-                couponRef,
-                "stampCount",
-                FieldValue.increment(1)
-            )
+                userRepo.addActivityScore(review.userId, 15)
+                couponRepo.addStamp(review.userId, 3)
+
+                onComplete(true)
+            } catch (e: Exception) {
+                onComplete(false)
+            }
         }
-            .addOnSuccessListener { onComplete(true) }
-            .addOnFailureListener { onComplete(false) }
+    }
+
+    suspend fun getReviewsByPlace(placeId: String): List<Review> {
+        val snapshot = db.collection("places")
+            .document(placeId)
+            .collection("reviews")
+            .get()
+            .await()
+
+        return snapshot.documents.mapNotNull {
+            it.toObject(Review::class.java)
+        }
     }
 }

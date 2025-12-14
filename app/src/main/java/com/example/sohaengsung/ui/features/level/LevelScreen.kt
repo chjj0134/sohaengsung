@@ -98,7 +98,7 @@ fun LevelScreen(
                     ) {
                         // 레벨 업 로직 아직 없는 관계로 하드 코딩
                         Text(
-                            text = "앞으로 리뷰 1번 더 작성하면 레벨 업!",
+                            text = "앞으로 리뷰 ${uiState.remainingReviews}번 더 작성하면 레벨 업!",
                             modifier = Modifier
                                 .padding(horizontal = 16.dp, vertical = 4.dp)
                                 .fillMaxWidth(),
@@ -107,7 +107,7 @@ fun LevelScreen(
                         )
                     }
 
-                    ScoreContainer(20)
+                    ScoreContainer(uiState.user.activityScore)
                 }
             }
         }

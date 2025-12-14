@@ -61,23 +61,24 @@ fun EditableProfilePic(
         }
 
         // 편집 아이콘 (오른쪽 하단에 붙이기)
-        Box(
-            modifier = Modifier
-                .size(editIconSize)
-                .align(Alignment.BottomEnd)
-                .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.surface)
-                .border(1.dp, Color.Gray, CircleShape)
-                .clickable { onEditClick() },
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                imageVector = Icons.Default.Edit,
-                contentDescription = "프로필 사진 편집",
-                modifier = Modifier.size(editIconSize * 0.6f),
-                tint = Color.Gray
-            )
-        }
+        // 편집 기능 없앰
+//        Box(
+//            modifier = Modifier
+//                .size(editIconSize)
+//                .align(Alignment.BottomEnd)
+//                .clip(CircleShape)
+//                .background(MaterialTheme.colorScheme.surface)
+//                .border(1.dp, Color.Gray, CircleShape)
+//                .clickable { onEditClick() },
+//            contentAlignment = Alignment.Center
+//        ) {
+//            Icon(
+//                imageVector = Icons.Default.Edit,
+//                contentDescription = "프로필 사진 편집",
+//                modifier = Modifier.size(editIconSize * 0.6f),
+//                tint = Color.Gray
+//            )
+//        }
     }
 }
 

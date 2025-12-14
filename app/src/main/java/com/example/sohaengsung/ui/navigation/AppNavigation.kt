@@ -20,19 +20,24 @@ import com.example.sohaengsung.ui.features.map.MapScreen
 import com.example.sohaengsung.ui.features.mapPathRecommend.MapPathRecommendScreen
 import com.example.sohaengsung.ui.features.pathRecommend.PathRecommendScreen
 import com.example.sohaengsung.ui.features.pathRecommend.PathRecommendScreenEvent
+import com.example.sohaengsung.ui.features.pathRecommend.PathRecommendViewModel
 import com.example.sohaengsung.ui.features.placeRecommend.PlaceRecommendScreen
 import com.example.sohaengsung.ui.features.placeRecommend.PlaceRecommendScreenEvent
+import com.example.sohaengsung.ui.features.placeRecommend.PlaceRecommendViewModel
 import com.example.sohaengsung.ui.features.review.ReviewScreen
 import com.example.sohaengsung.ui.features.review.ReviewScreenEvent
 import com.example.sohaengsung.ui.features.setting.SettingScreen
 import com.example.sohaengsung.ui.features.setting.SettingScreenEvent
 import com.example.sohaengsung.ui.navigation.ScreenRoute
+import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun AppNavigation(
     startGoogleLogin: () -> Unit,
     startKakaoLogin: () -> Unit,
-    loginSuccess: Boolean
+    loginSuccess: Boolean,
+    placeRecommendViewModel: PlaceRecommendViewModel,
+    pathRecommendViewModel: PathRecommendViewModel
 ) {
     val navController = rememberNavController()
 
@@ -76,8 +81,10 @@ fun AppNavigation(
             )
         }
 
+        // 해시태그 관련 로직 제외 완료
         composable("place-recommend") {
             PlaceRecommendScreen(
+                viewModel = placeRecommendViewModel,
                 onNavigate = { navigationEvent ->
                     val route = when (navigationEvent) {
                         PlaceRecommendScreenEvent.Navigation.NavigateToReview
@@ -95,18 +102,25 @@ fun AppNavigation(
             )
         }
 
+        // 완료
         composable("path-recommend") {
+            val uid = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+
             PathRecommendScreen(
+                viewModel = pathRecommendViewModel,
                 onNavigate = { navigationEvent ->
                     val route = when (navigationEvent) {
-                        PathRecommendScreenEvent.Navigation.NavigateToPathCompose
-                            -> ScreenRoute.MAP_PATH_RECOMMEND
+                        is PathRecommendScreenEvent.Navigation.NavigateToPathCompose -> {
+                            val idString = navigationEvent.placeIds.joinToString(separator = ",")
+                            "${ScreenRoute.MAP_PATH_RECOMMEND}/$idString"
+                        }
                     }
                     navController.navigate(route)
                 }
             )
         }
 
+        // 삭제 로직 구현 필요
         composable( "bookmark") { BookmarkedScreen() }
 
         composable("setting") { SettingScreen(
