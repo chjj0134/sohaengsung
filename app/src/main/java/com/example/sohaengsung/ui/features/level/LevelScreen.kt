@@ -1,5 +1,6 @@
 package com.example.sohaengsung.ui.features.level
 
+import android.R.id.message
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -44,6 +45,12 @@ fun LevelScreen(
     val uiState by viewModel.uiState.collectAsState()
     val event by viewModel.events.collectAsState()
 
+    val message = if (uiState.nextScoreNeeded <= 0) {
+        "최고 레벨에 도달하셨습니다!"
+    } else {
+        "앞으로 리뷰 ${uiState.remainingReviews}번 더 작성하면 레벨 업!"
+    }
+
     LaunchedEffect(event) {
         event?.let { navigationEvent ->
             onNavigate(navigationEvent as LevelScreenEvent.Navigation)
@@ -76,7 +83,6 @@ fun LevelScreen(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         LevelOrbitAnimation(
-                            //uiState.user
                             uiState.user
                         )
 
@@ -96,18 +102,18 @@ fun LevelScreen(
                             ),
 
                     ) {
-                        // 레벨 업 로직 아직 없는 관계로 하드 코딩
                         Text(
-                            text = "앞으로 리뷰 ${uiState.remainingReviews}번 더 작성하면 레벨 업!",
+                            text = message,
                             modifier = Modifier
-                                .padding(horizontal = 16.dp, vertical = 4.dp)
+                                .padding(horizontal = 16.dp, vertical = 8.dp)
                                 .fillMaxWidth(),
                             textAlign = TextAlign.Center,
-
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSecondary
                         )
                     }
 
-                    ScoreContainer(uiState.user.activityScore)
+                    ScoreContainer(uiState.user)
                 }
             }
         }
