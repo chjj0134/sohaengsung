@@ -9,6 +9,7 @@ import com.example.sohaengsung.data.model.PlaceDetail
 import com.example.sohaengsung.data.model.GoogleReview
 import com.example.sohaengsung.data.repository.BookmarkRepository
 import com.example.sohaengsung.data.repository.PlaceRepository
+import com.example.sohaengsung.data.repository.ReviewRepository
 import com.example.sohaengsung.data.util.LocationService
 import com.example.sohaengsung.ui.features.pathRecommend.PathRecommendScreenEvent
 import com.google.android.libraries.places.api.model.kotlin.place
@@ -24,6 +25,7 @@ class PlaceRecommendViewModel(
 ) : ViewModel() {
 
     private val bookmarkRepository = BookmarkRepository()
+    private val reviewRepository = ReviewRepository()
     private val _bookmarkIds = MutableStateFlow<List<String>>(emptyList())
     val bookmarkIds = _bookmarkIds.asStateFlow()
 
@@ -62,12 +64,14 @@ class PlaceRecommendViewModel(
                 val finalLat = currentLat.takeIf { it != 0.0 } ?: 37.5665
                 val finalLng = currentLng.takeIf { it != 0.0 } ?: 126.9780
 
-                val places = placeRepository.getNearbyPlaces(finalLat, finalLng)
+                val places = placeRepository.getAllPlaces()
 
                 _originalPlaces.value = places
 
                 _uiState.value = _uiState.value.copy(
                     place = places,
+                    currentLat = finalLat,
+                    currentLng = finalLng,
                     isLoading = false
                 )
 
@@ -104,8 +108,23 @@ class PlaceRecommendViewModel(
     fun loadReviews(placeId: String) {
         viewModelScope.launch {
             try {
-                val list = placeRepository.getPlaceReviews(placeId)
-                _reviews.value = list
+                val googleReviews = emptyList<GoogleReview>()
+
+                val userReviews = reviewRepository.getReviewsByPlace(placeId)
+
+                placeRepository.updateRating(placeId, userReviews)
+
+                val convertedUserReviews = userReviews.map {
+                    GoogleReview(
+                        author = it.userId,
+                        rating = it.rating.toInt(),
+                        time = it.createdAt?.toDate()?.toString() ?: "",
+                        content = it.content,
+                        profilePhotoUrl = null
+                    )
+                }
+
+                _reviews.value = convertedUserReviews
             } catch (e: Exception) {
                 _reviews.value = emptyList()   // 실패 시 빈 리스트
             }

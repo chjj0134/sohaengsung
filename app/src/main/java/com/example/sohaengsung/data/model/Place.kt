@@ -26,8 +26,7 @@ data class PlaceDetail(
     //구글 상세 정보
     val phone: String? = null,
     val website: String? = null,
-    val openingHours: List<String> = emptyList(),
-    val reviews: List<GoogleReview> = emptyList()
+    val openingHours: List<String> = emptyList()
 )
 
 //구글 리뷰 구조

@@ -9,5 +9,6 @@ data class Review(
     val rating: Double = 0.0,
     val content: String = "",
     val tags: List<String> = emptyList(),
-    val createdAt: Timestamp? = null
+    val createdAt: Timestamp? = null,
+    val source: String = "USER"
 )

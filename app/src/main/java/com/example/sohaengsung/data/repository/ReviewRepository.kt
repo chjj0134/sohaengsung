@@ -6,6 +6,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 class ReviewRepository {
 
@@ -19,38 +20,47 @@ class ReviewRepository {
         review: Review,
         onComplete: (Boolean) -> Unit
     ) {
-        val reviewRef = db.collection("users")
-            .document(review.userId)
-            .collection("reviews")
-            .document()
+        repoScope.launch {
+            try {
+                val reviewRef = db.collection("users")
+                    .document(review.userId)
+                    .collection("reviews")
+                    .document()
 
-        val newReview = review.copy(
-            reviewId = reviewRef.id,
-            createdAt = Timestamp.now()
-        )
+                val newReview = review.copy(
+                    reviewId = reviewRef.id,
+                    createdAt = Timestamp.now(),
+                    source = "USER"
+                )
 
-        reviewRef.set(newReview)
-            .addOnSuccessListener {
+                reviewRef.set(newReview).await()
 
-                repoScope.launch {
+                val placeReviewRef = db.collection("places")
+                    .document(review.placeId)
+                    .collection("reviews")
+                    .document(newReview.reviewId)
 
-                    try {
-                        // 활동 점수 +15
-                        userRepo.addActivityScore(review.userId, 15)
+                placeReviewRef.set(newReview).await()
 
-                        // 스탬프 3개 증가
-                        couponRepo.addStamp(review.userId, 3)
+                userRepo.addActivityScore(review.userId, 15)
+                couponRepo.addStamp(review.userId, 3)
 
-                        onComplete(true)
-
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                        onComplete(false)
-                    }
-                }
-            }
-            .addOnFailureListener {
+                onComplete(true)
+            } catch (e: Exception) {
                 onComplete(false)
             }
+        }
+    }
+
+    suspend fun getReviewsByPlace(placeId: String): List<Review> {
+        val snapshot = db.collection("places")
+            .document(placeId)
+            .collection("reviews")
+            .get()
+            .await()
+
+        return snapshot.documents.mapNotNull {
+            it.toObject(Review::class.java)
+        }
     }
 }
