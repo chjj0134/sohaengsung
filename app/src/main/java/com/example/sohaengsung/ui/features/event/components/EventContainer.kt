@@ -17,30 +17,34 @@ import com.example.sohaengsung.data.model.Event
 @Composable
 fun EventContainer(
     contentText: String,
-    event: Event
+    events: List<Event>
 ) {
     Column (
         modifier = Modifier
-            .padding(16.dp)
+            .padding(horizontal = 16.dp, vertical = 8.dp)
             .fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         Text(
             text = contentText,
-            style = MaterialTheme.typography.titleMedium
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.padding(bottom = 8.dp)
         )
 
         Row (
             modifier = Modifier
                 .fillMaxWidth()
-                .horizontalScroll(rememberScrollState())
+                .horizontalScroll(rememberScrollState()),
+            horizontalArrangement = Arrangement.spacedBy(0.dp)
         ) {
-            EventCard(
-                event = event,
-                onCardClick = {
-                    // 외부 링크로 이동
-                }
-            )
+            events.forEach { event ->
+                EventCard(
+                    event = event,
+                    onCardClick = {
+                        // EventCard 내부에서 처리
+                    }
+                )
+            }
         }
     }
 }

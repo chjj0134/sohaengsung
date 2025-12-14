@@ -50,7 +50,7 @@ fun AppNavigation(
         }
     }
 
-    NavHost(navController = navController, startDestination = "login") {
+    NavHost(navController = navController, startDestination = "event") {
 
         composable("login") {
             LogInScreen(

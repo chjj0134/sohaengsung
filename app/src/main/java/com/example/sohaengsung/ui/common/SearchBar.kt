@@ -33,10 +33,8 @@ fun SearchBar(
         placeholder = { Text("search event") },
         shape = RoundedCornerShape(30.dp),
         modifier = Modifier
-            .fillMaxSize()
-            .clip(CircleShape)
-            .padding(vertical = 4.dp)
-            .background(MaterialTheme.colorScheme.onPrimary),
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
 
         // 캘린더 아이콘
 //        leadingIcon = {

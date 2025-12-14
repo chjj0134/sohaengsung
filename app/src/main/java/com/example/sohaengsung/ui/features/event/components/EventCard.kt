@@ -1,5 +1,7 @@
 package com.example.sohaengsung.ui.features.event.components
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -19,9 +21,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import coil.compose.SubcomposeAsyncImage
 import com.example.sohaengsung.data.model.Event
 
 @Composable
@@ -29,45 +34,99 @@ fun EventCard(
     event: Event,
     onCardClick: (Event) -> Unit
 ) {
+    val context = LocalContext.current
+    
     Card(
         modifier = Modifier
-            .width(320.dp) // 화면 전체 너비의 80%
-            .height(300.dp) // 화면 전체 너비의 80%
-            .padding(16.dp)
-            .background(MaterialTheme.colorScheme.onPrimary)
+            .width(280.dp)
+            .height(380.dp)
+            .padding(horizontal = 8.dp, vertical = 8.dp)
             .clickable {
+                // 외부 링크로 이동
+                if (event.externalLink.isNotEmpty()) {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(event.externalLink))
+                    context.startActivity(intent)
+                }
                 onCardClick(event)
             },
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
-        Column {
+        Column(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            // 이미지 영역
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight(0.6f)
-                    .background(MaterialTheme.colorScheme.primary)
             ) {
-                // 사진 대체 임시 placeholder
-                Text(
-                    text = "이미지 Placeholder",
-                    modifier = Modifier.align(Alignment.Center),
-                    textAlign = TextAlign.Center
-                )
+                if (event.imageUrl.isNotEmpty()) {
+                    SubcomposeAsyncImage(
+                        model = event.imageUrl,
+                        contentDescription = event.title,
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop,
+                        loading = {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .background(MaterialTheme.colorScheme.surfaceVariant),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = "로딩 중...",
+                                    textAlign = TextAlign.Center,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    style = MaterialTheme.typography.bodySmall
+                                )
+                            }
+                        },
+                        error = {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .background(MaterialTheme.colorScheme.primaryContainer),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = "이미지 로드 실패",
+                                    textAlign = TextAlign.Center,
+                                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                    style = MaterialTheme.typography.bodySmall
+                                )
+                            }
+                        }
+                    )
+                } else {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(MaterialTheme.colorScheme.primary),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "이미지 없음",
+                            textAlign = TextAlign.Center,
+                            color = MaterialTheme.colorScheme.onPrimary
+                        )
+                    }
+                }
             }
 
-
+            // 정보 영역
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 12.dp)
             ) {
-
                 // 해시태그 목록
-                Row() {
-                event.tags.map { tag ->
+                Row(
+                    modifier = Modifier.padding(bottom = 8.dp)
+                ) {
+                    event.tags.forEach { tag ->
                         Text(
-                            text = "#${tag} ", // 해시태그 이름 앞에 # 붙이기
+                            text = "#${tag} ",
                             color = MaterialTheme.colorScheme.primary,
                             style = MaterialTheme.typography.bodySmall,
                         )
@@ -76,8 +135,8 @@ fun EventCard(
 
                 // 행사명
                 Text(
-                    text = event.title,
-                    maxLines = 1,
+                    text = "행사명: ${event.title}",
+                    maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(bottom = 4.dp)
@@ -90,9 +149,11 @@ fun EventCard(
                     modifier = Modifier.padding(bottom = 4.dp)
                 )
 
+                // D-Day 또는 진행중
                 Text(
-                    text = "D-20", // D-Day 계산 로직 대신 하드코딩된 값으로 대체
-                    style = MaterialTheme.typography.bodySmall
+                    text = event.countdown.ifEmpty { "D-20" },
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.primary
                 )
             }
         }
