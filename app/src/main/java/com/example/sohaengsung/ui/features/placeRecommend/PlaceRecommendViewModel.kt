@@ -144,22 +144,31 @@ class PlaceRecommendViewModel(
         }
     }
 
+    private fun filterPlaces(
+        type: String,
+        tags: Set<String>
+    ): List<Place> {
+        val originalList = _originalPlaces.value
 
-   /*fun fetchUserLocation() {
-        // 이미 위치 정보가 업데이트된 경우 다시 시도하지 않음
-        val isInitialState = _uiState.value.currentLat == 37.5459 && _uiState.value.currentLng == 126.9649
-        if (!isInitialState) return
+        return originalList.filter { place ->
+            val typeMatch = if (type == "전체") true
+            else place.category == mapTypeToCategory(type)
 
-        viewModelScope.launch {
-            // 주입된 LocationService를 사용
-            val location = locationService?.getCurrentLocation()
+            val tagsMatch = if (tags.isEmpty()) true
+            else tags.all { tag -> place.hashtags?.contains(tag) == true }
 
-            if (location != null) {
-                val (lat, lng) = location
-                updateLocation(lat, lng)
-            }
+            typeMatch && tagsMatch
         }
-    }GPS 없으므로 위치 정보 업데이트 필요 없음*/
+    }
+
+    // 카테고리 매핑
+    private fun mapTypeToCategory(type: String): String = when(type) {
+        "카페" -> "cafe"
+        "서점" -> "bookstore"
+        "편집샵" -> "select_shop"
+        "갤러리" -> "gallery"
+        else -> ""
+    }
 
     fun fetchUserLocation() {
         return
@@ -174,8 +183,6 @@ class PlaceRecommendViewModel(
 
                     val sortedPlaces = when (criteria) {
                         "거리순" -> {
-                            // 별도 거리 계산 로직 (예: Haversine)이 필요함
-                            // 우선 placeId로 정렬
                             currentPlaces.sortedBy { it.placeId }
                         }
                         "별점높은순" -> {
@@ -193,44 +200,6 @@ class PlaceRecommendViewModel(
                     )
                 }
 
-                is PlaceRecommendScreenEvent.onTypeFilterClick -> {
-                    val selectedType = event.placeType
-                    val originalList = _originalPlaces.value
-
-                    val filteredList = when (selectedType) {
-                        "전체" -> {
-                            // '전체'를 선택하면 원본 목록 그대로 사용
-                            originalList
-                        }
-                        "카페" -> {
-                            originalList.filter { place ->
-                                place.category == "cafe"
-                            }
-                        }
-                        "서점" -> {
-                            originalList.filter { place ->
-                                place.category == "bookstore"
-                            }
-                        }
-                        "편집샵" -> {
-                            originalList.filter { place ->
-                                place.category == "select_shop"
-                            }
-                        }
-                        "갤러리" -> {
-                            originalList.filter { place ->
-                                place.category == "gallery"
-                            }
-                        }
-                        else -> originalList
-                    }
-
-                    // 필터링된 리스트로 UI 상태 업데이트
-                    _uiState.value = _uiState.value.copy(
-                        place = filteredList
-                    )
-                }
-
                 // 북마크 아이콘 클릭 시 로직
                 is PlaceRecommendScreenEvent.onBookmarkClick -> {
                     val place = event.place
@@ -239,17 +208,42 @@ class PlaceRecommendViewModel(
                     placeRepository.addUserPlace(place)
                 }
 
-                is PlaceRecommendScreenEvent.onHashtagClick -> {
-                    //해시태그 클릭시 로직
-                    val selectedTag = event.hashtag.name
-                    val originalList = _originalPlaces.value
-
-                    val filteredPlaces = originalList.filter { place ->
-                        place.hashtags?.contains(selectedTag) == true
-                    }
+                is PlaceRecommendScreenEvent.onTypeFilterClick -> {
+                    val newType = event.placeType
+                    val currentTags = _uiState.value.selectedHashtags
 
                     _uiState.value = _uiState.value.copy(
-                        place = filteredPlaces
+                        selectedType = newType,
+                        place = filterPlaces(newType, currentTags)
+                    )
+                }
+
+                is PlaceRecommendScreenEvent.onResetFilters -> {
+                    val originalPlaces = _originalPlaces.value
+                    val originalHashtags = _uiState.value.hashtag.sortedBy { it.name }
+
+                    _uiState.value = _uiState.value.copy(
+                        selectedType = "전체",
+                        selectedHashtags = emptySet(),
+                        place = originalPlaces,
+                        hashtag = originalHashtags
+                    )
+                }
+
+                is PlaceRecommendScreenEvent.onHashtagClick -> {
+                    val clickedTagName = event.hashtag.name
+                    val currentType = _uiState.value.selectedType
+                    val currentTags = _uiState.value.selectedHashtags
+
+                    val newTags = if (currentTags.contains(clickedTagName)) currentTags - clickedTagName
+                    else currentTags + clickedTagName
+
+                    val sortedHashtags = _uiState.value.hashtag.sortedByDescending { newTags.contains(it.name) }
+
+                    _uiState.value = _uiState.value.copy(
+                        selectedHashtags = newTags,
+                        hashtag = sortedHashtags,
+                        place = filterPlaces(currentType, newTags) // 유형과 새 태그들을 모두 적용
                     )
                 }
 

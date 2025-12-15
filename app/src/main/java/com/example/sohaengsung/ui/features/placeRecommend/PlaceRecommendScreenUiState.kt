@@ -8,6 +8,8 @@ import com.example.sohaengsung.ui.features.pathRecommend.PathRecommendScreenEven
 data class PlaceRecommendScreenUiState(
     val place: List<Place> = listOf(),
     val hashtag: List<Hashtag> = listOf(),
+    val selectedHashtags: Set<String> = emptySet(),
+    val selectedType: String = "전체",
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
     val selectedPlaceId: String? = null,
@@ -23,8 +25,10 @@ sealed class PlaceRecommendScreenEvent {
 
     // 필터링 드롭다운 로직 -> (완료)
     data class onTypeFilterClick(val placeType: String) : PlaceRecommendScreenEvent()
+
     data class onHashtagClick(val hashtag: Hashtag) : PlaceRecommendScreenEvent()
 
+    object onResetFilters : PlaceRecommendScreenEvent()
     // 북마크 로직 -> (완료)
     data class onBookmarkClick(val place: Place) : PlaceRecommendScreenEvent()
 
