@@ -123,7 +123,12 @@ fun PlaceRecommendScreen(
                 {
                     MapScreen(
                         latitude = uiState.currentLat,
-                        longitude = uiState.currentLng
+                        longitude = uiState.currentLng,
+                        places = uiState.place,
+                        onMarkerClick = { clickedPlace ->
+                            selectedPlace = clickedPlace
+                            isSheetOpen = true
+                        }
                     )
 
                     Column (
