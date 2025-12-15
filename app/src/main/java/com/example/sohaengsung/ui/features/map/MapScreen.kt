@@ -15,8 +15,8 @@ import com.google.maps.android.compose.rememberCameraPositionState
 @SuppressLint("MissingPermission")
 @Composable
 fun MapScreen(
-    latitude: Double = 37.5665,
-    longitude: Double = 126.9780,
+    latitude: Double = 37.5459,
+    longitude: Double = 126.9649,
     zoom: Float = 15f
 ) {
     val targetLocation = remember(latitude, longitude) {

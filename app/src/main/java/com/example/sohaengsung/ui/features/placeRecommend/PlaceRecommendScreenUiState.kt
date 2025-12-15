@@ -11,8 +11,8 @@ data class PlaceRecommendScreenUiState(
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
     val selectedPlaceId: String? = null,
-    val currentLat: Double = 37.5665,
-    val currentLng: Double = 126.9780
+    val currentLat: Double = 37.5459,
+    val currentLng: Double = 126.9649
 )
 
 sealed class PlaceRecommendScreenEvent {
@@ -23,7 +23,7 @@ sealed class PlaceRecommendScreenEvent {
 
     // 필터링 드롭다운 로직 -> (완료)
     data class onTypeFilterClick(val placeType: String) : PlaceRecommendScreenEvent()
-    object onHashtagClick : PlaceRecommendScreenEvent()
+    data class onHashtagClick(val hashtag: Hashtag) : PlaceRecommendScreenEvent()
 
     // 북마크 로직 -> (완료)
     data class onBookmarkClick(val place: Place) : PlaceRecommendScreenEvent()

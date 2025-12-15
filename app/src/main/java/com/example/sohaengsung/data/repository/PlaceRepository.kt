@@ -1,7 +1,8 @@
 package com.example.sohaengsung.data.repository
 
+import com.example.sohaengsung.data.model.GoogleReview
+import com.example.sohaengsung.data.model.Hashtag
 import com.example.sohaengsung.data.model.Place
-import com.example.sohaengsung.data.model.Review
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 
@@ -29,17 +30,18 @@ class PlaceRepository {
         placeCollection.document(place.placeId).set(place).await()
     }
 
-    suspend fun updateRating(placeId: String, reviews: List<Review>) {
-        if (reviews.isEmpty()) return
+    suspend fun getPlaceReviews(placeId: String): List<GoogleReview> {
+        val place = getPlace(placeId)
+        return place?.details?.reviews ?: emptyList()
+    }
 
-        val avgRating = reviews.map { it.rating }.average()
-        val count = reviews.size
+    suspend fun getPlaceHashtags(placeId: String): List<Hashtag> {
+        val doc = placeCollection.document(placeId).get().await()
 
-        placeCollection.document(placeId).update(
-            mapOf(
-                "rating" to avgRating,
-                "reviewCount" to count
-            )
-        ).await()
+        val rawTags = doc.get("hashtags") as? List<String> ?: emptyList()
+
+        return rawTags.map { tag ->
+            Hashtag(name = tag)
+        }
     }
 }

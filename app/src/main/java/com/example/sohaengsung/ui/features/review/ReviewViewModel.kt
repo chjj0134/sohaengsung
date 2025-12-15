@@ -79,17 +79,13 @@ class ReviewViewModel(
                 tags = tags
             )
 
-            reviewRepository.addReview(
-                review = review,
-                onComplete = { success ->
-                    if (success) {
-                        _uiState.value = _uiState.value.copy(isLoading = false)
-                        _events.value = ReviewScreenEvent.Navigation.NavigateBack
-                    } else {
-                        _uiState.value = _uiState.value.copy(isLoading = false)
-                    }
-                }
-            )
+            try {
+                reviewRepository.addReview(review)
+                _uiState.value = _uiState.value.copy(isLoading = false)
+                _events.value = ReviewScreenEvent.Navigation.NavigateBack
+            } catch (e: Exception) {
+                _uiState.value = _uiState.value.copy(isLoading = false)
+            }
         }
     }
 

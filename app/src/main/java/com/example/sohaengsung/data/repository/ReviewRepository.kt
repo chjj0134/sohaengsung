@@ -1,61 +1,54 @@
 package com.example.sohaengsung.data.repository
 
+import com.example.sohaengsung.data.model.GoogleReview
 import com.example.sohaengsung.data.model.Review
-import com.google.firebase.Timestamp
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
 class ReviewRepository {
 
     private val db = FirebaseFirestore.getInstance()
-    private val couponRepo = CouponRepository()
-    private val userRepo = UserRepository()
 
-    private val repoScope = CoroutineScope(Dispatchers.IO)
+    suspend fun addReview(review: Review) {
+        val userReviewRef = db
+            .collection("users")
+            .document(review.userId)
+            .collection("reviews")
+            .document()
 
-    fun addReview(
-        review: Review,
-        onComplete: (Boolean) -> Unit
-    ) {
-        repoScope.launch {
-            try {
-                val reviewRef = db.collection("users")
-                    .document(review.userId)
-                    .collection("reviews")
-                    .document()
+        userReviewRef.set(review).await()
 
-                val newReview = review.copy(
-                    reviewId = reviewRef.id,
-                    createdAt = Timestamp.now(),
-                    source = "USER"
-                )
+        val placeRef = db.collection("places").document(review.placeId)
+        val placeSnapshot = placeRef.get().await()
 
-                reviewRef.set(newReview).await()
+        val currentRating = placeSnapshot.getDouble("rating") ?: 0.0
+        val currentCount = placeSnapshot.getLong("reviewCount")?.toInt() ?: 0
 
-                val placeReviewRef = db.collection("places")
-                    .document(review.placeId)
-                    .collection("reviews")
-                    .document(newReview.reviewId)
+        val newCount = currentCount + 1
+        val newRating =
+            ((currentRating * currentCount) + review.rating) / newCount
 
-                placeReviewRef.set(newReview).await()
+        val googleReview = GoogleReview(
+            author = review.userId,
+            rating = review.rating.toInt(),
+            time = review.createdAt?.toDate()?.toString() ?: "",
+            content = review.content,
+            profilePhotoUrl = null
+        )
 
-                userRepo.addActivityScore(review.userId, 15)
-                couponRepo.addStamp(review.userId, 3)
-
-                onComplete(true)
-            } catch (e: Exception) {
-                onComplete(false)
-            }
-        }
+        placeRef.update(
+            mapOf(
+                "details.reviews" to FieldValue.arrayUnion(googleReview),
+                "rating" to newRating,
+                "reviewCount" to newCount
+            )
+        ).await()
     }
 
     suspend fun getReviewsByPlace(placeId: String): List<Review> {
-        val snapshot = db.collection("places")
-            .document(placeId)
-            .collection("reviews")
+        val snapshot = db.collectionGroup("reviews")
+            .whereEqualTo("placeId", placeId)
             .get()
             .await()
 

@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
 
 class PlaceRecommendViewModel(
     private val placeRepository: PlaceRepository = PlaceRepository(),
-    private val locationService: LocationService? = null,
+    private val locationService: LocationService? = null, // GPS 사용 안함으로 삭제 가능
     private val uid: String
 ) : ViewModel() {
 
@@ -43,6 +43,10 @@ class PlaceRecommendViewModel(
     private var isPlaceDataLoaded = false
 
     init {
+        _uiState.value = _uiState.value.copy(
+            currentLat = 37.5459,
+            currentLng = 126.9649
+        ) // 좌표 고정 (숙명여대정문)
         loadPlaceData()
         loadHashtagData()
         observeBookmarks()
@@ -61,9 +65,10 @@ class PlaceRecommendViewModel(
                 val currentLat = lat ?: _uiState.value.currentLat
                 val currentLng = lng ?: _uiState.value.currentLng
 
-                val finalLat = currentLat.takeIf { it != 0.0 } ?: 37.5665
-                val finalLng = currentLng.takeIf { it != 0.0 } ?: 126.9780
-
+                /*val finalLat = currentLat.takeIf { it != 0.0 } ?: 37.5459
+                val finalLng = currentLng.takeIf { it != 0.0 } ?: 126.9649*/
+                val finalLat = 37.5459
+                val finalLng = 126.9649
                 val places = placeRepository.getAllPlaces()
 
                 _originalPlaces.value = places
@@ -96,44 +101,53 @@ class PlaceRecommendViewModel(
 
     private fun loadHashtagData() {
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(
-                isLoading = true,
-                errorMessage = null
-            )
+            try {
+                _uiState.value = _uiState.value.copy(
+                    isLoading = true,
+                    errorMessage = null
+                )
+                // TODO: 실제 해시태그 데이터 로드 (Repository에서 가져오기)
+                val places = placeRepository.getAllPlaces()
 
-            // TODO: 실제 해시태그 데이터 로드 (Repository에서 가져오기)
+                val hashtags = places
+                    .flatMap { place ->
+                        place.hashtags ?: emptyList()
+                    }
+                    .distinct()
+                    .map { tag ->
+                        Hashtag(name = tag)
+                    }
+
+                _uiState.value = _uiState.value.copy(
+                    hashtag = hashtags,
+                    isLoading = false
+                )
+
+            } catch (e: Exception) {
+                _uiState.value = _uiState.value.copy(
+                    hashtag = emptyList(),
+                    errorMessage = e.message,
+                    isLoading = false
+                )
+            }
         }
     }
 
     fun loadReviews(placeId: String) {
         viewModelScope.launch {
             try {
-                val googleReviews = emptyList<GoogleReview>()
-
-                val userReviews = reviewRepository.getReviewsByPlace(placeId)
-
-                placeRepository.updateRating(placeId, userReviews)
-
-                val convertedUserReviews = userReviews.map {
-                    GoogleReview(
-                        author = it.userId,
-                        rating = it.rating.toInt(),
-                        time = it.createdAt?.toDate()?.toString() ?: "",
-                        content = it.content,
-                        profilePhotoUrl = null
-                    )
-                }
-
-                _reviews.value = convertedUserReviews
+                val googleReviews = placeRepository.getPlaceReviews(placeId)
+                _reviews.value = googleReviews
             } catch (e: Exception) {
-                _reviews.value = emptyList()   // 실패 시 빈 리스트
+                _reviews.value = emptyList()
             }
         }
     }
 
-    fun fetchUserLocation() {
+
+   /*fun fetchUserLocation() {
         // 이미 위치 정보가 업데이트된 경우 다시 시도하지 않음
-        val isInitialState = _uiState.value.currentLat == 37.5665 && _uiState.value.currentLng == 126.9780
+        val isInitialState = _uiState.value.currentLat == 37.5459 && _uiState.value.currentLng == 126.9649
         if (!isInitialState) return
 
         viewModelScope.launch {
@@ -145,6 +159,10 @@ class PlaceRecommendViewModel(
                 updateLocation(lat, lng)
             }
         }
+    }GPS 없으므로 위치 정보 업데이트 필요 없음*/
+
+    fun fetchUserLocation() {
+        return
     }
 
     fun onEvent(event: PlaceRecommendScreenEvent) {
@@ -221,8 +239,18 @@ class PlaceRecommendViewModel(
                     placeRepository.addUserPlace(place)
                 }
 
-                PlaceRecommendScreenEvent.onHashtagClick -> {
-                    // 해시태그 클릭 시 로직
+                is PlaceRecommendScreenEvent.onHashtagClick -> {
+                    //해시태그 클릭시 로직
+                    val selectedTag = event.hashtag.name
+                    val originalList = _originalPlaces.value
+
+                    val filteredPlaces = originalList.filter { place ->
+                        place.hashtags?.contains(selectedTag) == true
+                    }
+
+                    _uiState.value = _uiState.value.copy(
+                        place = filteredPlaces
+                    )
                 }
 
                 PlaceRecommendScreenEvent.onCouponClick -> {
@@ -244,7 +272,7 @@ class PlaceRecommendViewModel(
         _events.value = null
     }
 
-    //GPS Update
+    /*GPS Update 삭제
     fun updateLocation(lat: Double, lng: Double) {
         _uiState.value = _uiState.value.copy(
             currentLat = lat,
@@ -252,7 +280,7 @@ class PlaceRecommendViewModel(
 
         )
         loadPlaceData(lat, lng)
-    }
+    }*/
 
     fun setSelectedPlace(placeId: String) {
         _uiState.value = _uiState.value.copy(selectedPlaceId = placeId)

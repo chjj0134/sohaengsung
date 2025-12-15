@@ -49,7 +49,7 @@ fun HashtagListContainer(
                     modifier = Modifier
                         .clickable {
                             viewModel.onEvent(
-                                PlaceRecommendScreenEvent.onHashtagClick
+                                PlaceRecommendScreenEvent.onHashtagClick(hashtagData)
                             )
                         }
                 )
@@ -73,7 +73,7 @@ fun HashtagListContainer(
                     modifier = Modifier
                         .clickable {
                             viewModel.onEvent(
-                                PlaceRecommendScreenEvent.onHashtagClick
+                                PlaceRecommendScreenEvent.onHashtagClick(hashtagData)
                             )
                         }
                 )
