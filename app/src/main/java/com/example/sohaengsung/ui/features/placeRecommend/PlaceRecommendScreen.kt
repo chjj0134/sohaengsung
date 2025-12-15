@@ -40,6 +40,7 @@ import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.android.gms.location.LocationServices
 import android.Manifest
+import android.R.attr.label
 import android.content.pm.PackageManager
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -49,6 +50,7 @@ import androidx.compose.material.icons.filled.Redeem
 import androidx.compose.ui.Alignment
 import androidx.core.content.ContextCompat
 import com.example.sohaengsung.ui.common.BottomActionButtton
+import com.example.sohaengsung.ui.common.EmptyPlaceHolder
 import com.example.sohaengsung.ui.features.pathRecommend.PathRecommendScreenEvent
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.firebase.auth.FirebaseAuth
@@ -134,7 +136,7 @@ fun PlaceRecommendScreen(
                         // 해시태그 영역
                         HashtagListContainer(
                             uiState.hashtag,
-                            uiState.hashtag,
+                             uiState.selectedHashtags,
                             viewModel
                         )
 
@@ -145,7 +147,7 @@ fun PlaceRecommendScreen(
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             Dropdown(
-                                label = "전체",
+                                label = uiState.selectedType,
                                 items = listOf("전체", "카페", "서점", "편집샵", "갤러리"),
                                 containerColor = MaterialTheme.colorScheme.primary,
                                 contentColor = MaterialTheme.colorScheme.onPrimary,
@@ -173,34 +175,38 @@ fun PlaceRecommendScreen(
                     }
                 }
 
-                CustomContainer() {
-                    uiState.place.forEach { place ->
+                CustomContainer {
 
-                        // ⭐ 1. 해당 장소가 북마크 목록에 포함되어 있는지 체크
-                        val isBookmarked = bookmarkIds.contains(place.placeId)
+                    // 장소가 있을 때
+                    if (uiState.place.isNotEmpty()) {
+                        uiState.place.forEach { place ->
+                            val isBookmarked = bookmarkIds.contains(place.placeId)
 
-                        PlaceInfoContainer(
-                            place = place,
-                            onClick = {
-                                selectedPlace = place
-                                isSheetOpen = true
-                            },
-                            // ⭐ 2. PlaceInfoContainer에 북마크 상태를 전달합니다.
-                            isBookmarked = isBookmarked,
-                            // 3. onBookmarkToggle 이벤트 핸들러를 PlaceInfoContainer에 전달해야 합니다.
-                            //    (현재는 viewModel을 통째로 넘기고 있지만, 명시적으로 함수를 넘기는 것이 좋습니다.)
-                            onBookmarkToggle = {
-                                viewModel.onEvent(PlaceRecommendScreenEvent.onBookmarkClick(place))
+                            PlaceInfoContainer(
+                                place = place,
+                                onClick = {
+                                    selectedPlace = place
+                                    isSheetOpen = true
+                                },
+                                isBookmarked = isBookmarked,
+                                onBookmarkToggle = {
+                                    viewModel.onEvent(PlaceRecommendScreenEvent.onBookmarkClick(place))
+                                }
+                            )
+                            CustomDivider(MaterialTheme.colorScheme.secondary)
+                        }
+                    }
+                    // 장소가 하나도 없을 때 (필터링 결과가 없을 때)
+                    else {
+                        EmptyPlaceHolder(
+                            message = "검색 결과가 존재하지 않습니다.\n다른 해시태그를 선택해 보세요.",
+                            onResetFilters = {
+                                viewModel.onEvent(PlaceRecommendScreenEvent.onResetFilters)
                             }
-
-                            // 기존: viewModel = viewModel // ⭐ 이렇게 ViewModel을 넘기는 대신
                         )
-                        CustomDivider(MaterialTheme.colorScheme.secondary)
                     }
                 }
 
-                /// 바텀 시트 호출 및 데이터 전달
-                // selectedPlace가 null이 아닐 때만 시트를 표시
                 // TODO: 내 경로 추천 화면이 잘 열리지 않아 배치가 제대로 됐는지 확인 안 됨; 열리면 꼭 재확인
                 if (selectedPlace != null) {
                     PlaceDetailSheet(
