@@ -29,7 +29,7 @@ val recentUpdatedEvents = listOf(
         seasonInfo = "2025.11.14-2026.03.14",
         imageUrl = "https://og-data.s3.amazonaws.com/media/exhibitions/image/14588/ei_14588.jpg",
         externalLink = "https://www.museum.go.kr/MUSEUM/contents/M0202010000.do?menuId=current&schM=view&act=current&exhiSpThemId=3126913&listType=list",
-        countdown = "진행중"
+        countdown = "진행 중"
     )
 )
 
@@ -42,7 +42,7 @@ val winterEvents = listOf(
         seasonInfo = "2025.12.12~12.31",
         imageUrl = "https://www.stolantern.com/img/mm02_01_01.jpg",
         externalLink = "https://www.stolantern.com/bbs/page.php?hid=m02_01",
-        countdown = "진행중"
+        countdown = "진행 중"
     ),
     Event(
         eventId = "winter_2",
@@ -51,7 +51,7 @@ val winterEvents = listOf(
         seasonInfo = "2025.11.27-2025.12.25",
         imageUrl = "https://oopy.lazyrockets.com/api/v2/notion/image?src=attachment%3A326128e6-3f42-43ff-ade1-66c57396418c%3Aimage.png&blockId=2b7085a2-3ce2-800c-a316-e8d19a2ec86b",
         externalLink = "https://www.marketchango.com/",
-        countdown = "진행중"
+        countdown = "진행 중"
     ),
     Event(
         eventId = "winter_3",
@@ -60,7 +60,7 @@ val winterEvents = listOf(
         seasonInfo = "2025.12.12~12.31",
         imageUrl = "https://www.seoulcl.kr/wysiwyg/PEG/se2_17641336876801.jpg", // HTTP를 HTTPS로 변경
         externalLink = "http://www.seoulcl.kr/main/page.html?pid=1",
-        countdown = "진행중"
+        countdown = "진행 중"
     )
 )
 

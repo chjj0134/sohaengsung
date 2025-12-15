@@ -1,5 +1,6 @@
 package com.example.sohaengsung.ui.features.event
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,6 +13,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.sohaengsung.data.model.Event
@@ -64,7 +66,9 @@ fun EventScreen() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 16.dp)
-                    .verticalScroll(rememberScrollState())
+                    .verticalScroll(rememberScrollState()),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 // 검색 바
                 SearchBar(
@@ -79,13 +83,13 @@ fun EventScreen() {
 
                 // 최근 업데이트된 행사 컨테이너
                 EventContainer(
-                    contentText = "최근 업데이트된 행사",
+                    contentText = "⏰ 최근 업데이트된 행사",
                     events = filteredRecentEvents
                 )
 
                 // 겨울 감성에 딱 맞는 행사 컨테이너
                 EventContainer(
-                    contentText = "겨울 감성에 딱 맞는 행사",
+                    contentText = "🧣 겨울 감성에 딱 맞는 행사",
                     events = filteredWinterEvents
                 )
             }

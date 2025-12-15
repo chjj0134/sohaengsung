@@ -86,11 +86,20 @@ fun LevelScreen(
                             uiState.user
                         )
 
-                        Text(
-                            "${uiState.user.nickname} 님은\n현재 레벨 ${uiState.user.level}입니다!",
-                            style = MaterialTheme.typography.titleLarge,
-                            textAlign = TextAlign.Center,
-                        )
+                        Column (
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                "${uiState.user.nickname} 님은 현재",
+                                style = MaterialTheme.typography.titleMedium,
+                                textAlign = TextAlign.Center,
+                            )
+                            Text(
+                                "Lv.${uiState.user.level}입니다!",
+                                style = MaterialTheme.typography.titleLarge,
+                                textAlign = TextAlign.Center,
+                            )
+                        }
                     }
 
                     Box(
@@ -105,7 +114,7 @@ fun LevelScreen(
                         Text(
                             text = message,
                             modifier = Modifier
-                                .padding(horizontal = 16.dp, vertical = 8.dp)
+                                .padding(horizontal = 32.dp, vertical = 8.dp)
                                 .fillMaxWidth(),
                             textAlign = TextAlign.Center,
                             style = MaterialTheme.typography.bodyMedium,

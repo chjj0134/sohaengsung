@@ -64,11 +64,20 @@ fun CouponScreen(
                 150
             )
 
-            Text(
-                "${uiState.user.nickname} 님,\n벌써 ${uiState.coupon.stampCount}번째 스탬프예요!",
-                style = MaterialTheme.typography.titleLarge,
-                textAlign = TextAlign.Center,
-            )
+            Column (
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    "${uiState.user.nickname} 님,",
+                    style = MaterialTheme.typography.titleLarge,
+                    textAlign = TextAlign.Center,
+                )
+                Text(
+                    "벌써 ${uiState.coupon.stampCount}번째 스탬프예요!",
+                    style = MaterialTheme.typography.titleMedium,
+                    textAlign = TextAlign.Center,
+                )
+            }
         }
 
         // 쿠폰 컨테이너
