@@ -1,9 +1,12 @@
 package com.example.sohaengsung.ui.features.event.components
 
+import android.R.attr.fontWeight
+import android.R.attr.maxLines
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,8 +24,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -35,11 +41,18 @@ fun EventCard(
     onCardClick: (Event) -> Unit
 ) {
     val context = LocalContext.current
+
+    val textGradientBrush = Brush.horizontalGradient(
+        listOf(
+            MaterialTheme.colorScheme.primary.copy(alpha = 0.2f),   // 시작 색상
+            MaterialTheme.colorScheme.tertiary.copy(alpha = 0.2f) // 끝 색상
+        )
+    )
     
     Card(
         modifier = Modifier
             .width(280.dp)
-            .height(380.dp)
+            .height(330.dp)
             .padding(horizontal = 8.dp, vertical = 8.dp)
             .clickable {
                 // 외부 링크로 이동
@@ -50,10 +63,15 @@ fun EventCard(
                 onCardClick(event)
             },
         shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
     ) {
         Column(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Transparent)
         ) {
             // 이미지 영역
             Box(
@@ -117,44 +135,63 @@ fun EventCard(
             // 정보 영역
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 12.dp)
+                    .fillMaxSize()
+                    .background(brush = textGradientBrush)
+                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                verticalArrangement = Arrangement.SpaceBetween
             ) {
-                // 해시태그 목록
-                Row(
-                    modifier = Modifier.padding(bottom = 8.dp)
+                Column (
+                    Modifier
+                    .background(Color.Transparent)
                 ) {
-                    event.tags.forEach { tag ->
-                        Text(
-                            text = "#${tag} ",
-                            color = MaterialTheme.colorScheme.primary,
-                            style = MaterialTheme.typography.bodySmall,
-                        )
+
+                    // 해시태그 목록
+                    Row (
+                    ) {
+                        event.tags.forEach { tag ->
+                            Text(
+                                text = "#${tag} ",
+                                color = MaterialTheme.colorScheme.primary,
+                                style = MaterialTheme.typography.bodySmall.copy(
+                                    fontWeight = FontWeight.Bold,
+                                ),
+                            )
+                        }
                     }
+
+                    // 행사명
+                    Text(
+                        text = event.title,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis,
+                        style = MaterialTheme.typography.titleSmall,
+                        // modifier = Modifier.padding(bottom = 4.dp)
+                    )
+
                 }
 
-                // 행사명
-                Text(
-                    text = "행사명: ${event.title}",
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.padding(bottom = 4.dp)
-                )
+                Column (
+                    Modifier
+                        .background(Color.Transparent),
+                    verticalArrangement = Arrangement.spacedBy(2.dp)
+                ) {
 
-                // 기간
-                Text(
-                    text = "기간: ${event.seasonInfo}",
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.padding(bottom = 4.dp)
-                )
+                    // 기간
+                    Text(
+                        text = "기간: ${event.seasonInfo}",
+                        style = MaterialTheme.typography.bodySmall,
+                        // modifier = Modifier.padding(bottom = 4.dp)
+                    )
 
-                // D-Day 또는 진행중
-                Text(
-                    text = event.countdown.ifEmpty { "D-20" },
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.primary
-                )
+                    // D-Day 또는 진행 중
+                    Text(
+                        text = event.countdown.ifEmpty { "D-20" },
+                        style = MaterialTheme.typography.bodySmall.copy(
+                            fontWeight = FontWeight.Bold,
+                        ),
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
             }
         }
     }

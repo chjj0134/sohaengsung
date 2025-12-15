@@ -1,16 +1,10 @@
 package com.example.sohaengsung.ui.common
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -18,7 +12,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -33,21 +26,8 @@ fun SearchBar(
         placeholder = { Text("search event") },
         shape = RoundedCornerShape(30.dp),
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 4.dp),
-
-        // 캘린더 아이콘
-//        leadingIcon = {
-//            Icon(
-//                imageVector = Icons.Filled.CalendarMonth,
-//                contentDescription = "행사 기간 선택",
-//                tint = MaterialTheme.colorScheme.primary,
-//                // 캘린더 아이콘 클릭 이벤트 처리
-//                modifier = Modifier
-//                    .clickable { onCalendarClick() }
-//                    .size(30.dp)
-//            )
-//        },
+            .width(320.dp)
+            .padding(vertical = 16.dp),
 
         // 검색 아이콘
         trailingIcon = {

@@ -36,7 +36,7 @@ fun LevelOrbitAnimation(
         contentAlignment = Alignment.Center
     ) {
         // 1. 프로필 이미지 (가운데)
-        ProfilePic(user, 24) // 사용자의 프로필 컴포넌트
+        ProfilePic(user, 52) // 사용자의 프로필 컴포넌트
 
         // 2. 5개의 궤도 (회색/투명)
         OrbitRings(totalOrbits, maxRadius)
