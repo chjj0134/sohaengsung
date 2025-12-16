@@ -2,8 +2,6 @@ package com.example.sohaengsung.ui.screens
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.input.key.Key.Companion.Home
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -32,13 +30,13 @@ import com.example.sohaengsung.ui.features.review.ReviewScreenEvent
 import com.example.sohaengsung.ui.features.setting.SettingScreen
 import com.example.sohaengsung.ui.features.setting.SettingScreenEvent
 import com.example.sohaengsung.ui.navigation.ScreenRoute
-import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun AppNavigation(
     startGoogleLogin: () -> Unit,
     startKakaoLogin: () -> Unit,
     loginSuccess: Boolean,
+    loggedInUid: String?,
     placeRecommendViewModel: PlaceRecommendViewModel,
     pathRecommendViewModel: PathRecommendViewModel
 ) {
@@ -53,7 +51,7 @@ fun AppNavigation(
         }
     }
 
-    NavHost(navController = navController, startDestination = "home") {
+    NavHost(navController = navController, startDestination = "login") {
 
         composable("login") {
             LogInScreen(
@@ -109,8 +107,6 @@ fun AppNavigation(
 
         // 완료
         composable("path-recommend") {
-            val uid = FirebaseAuth.getInstance().currentUser?.uid ?: ""
-
             PathRecommendScreen(
                 viewModel = pathRecommendViewModel,
                 onNavigate = { navigationEvent ->
@@ -140,6 +136,7 @@ fun AppNavigation(
 
         composable("setting") {
             SettingScreen(
+                uid = loggedInUid ?: "guest",
                 onNavigate = { navigationEvent ->
                     val route = when (navigationEvent) {
                         SettingScreenEvent.Navigation.NavigateToLevel

@@ -24,98 +24,101 @@ import com.example.sohaengsung.ui.theme.SohaengsungTheme
 
 @Composable
 fun SettingScreen(
+    uid: String,
     onNavigate: (route: SettingScreenEvent.Navigation) -> Unit,
-    viewModel: SettingViewModel = viewModel(),
 ) {
+    val viewModel: SettingViewModel = androidx.lifecycle.viewmodel.compose.viewModel(
+        key = uid,
+        factory = SettingViewModelFactory(uid)
+    )
+
     val uiState by viewModel.uiState.collectAsState()
     val event by viewModel.events.collectAsState()
 
     LaunchedEffect(event) {
-        event?.let { navigationEvent ->
-            onNavigate(navigationEvent as SettingScreenEvent.Navigation)
+        event?.let {
+            onNavigate(it)
             viewModel.clearEvent()
         }
     }
 
     SohaengsungTheme {
 
-            Column(
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.logo),
+                contentDescription = "로고",
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp)
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.logo),
-                    contentDescription = "로고",
-                    modifier = Modifier
-                        .width(100.dp)
-                        .height(80.dp)
-                )
+                    .width(100.dp)
+                    .height(80.dp)
+            )
 
-                // 프로필 섹션
-                ProfileSettingContainer(
-                    user = uiState.user,
-                    onLevelDetailClick = {
-                        viewModel.onEvent(SettingScreenEvent.onLevelClick)
-                    },
-                    onProfileEditClick = {
-                        // 없앰
+            ProfileSettingContainer(
+                user = uiState.user,
+                onLevelDetailClick = {
+                    viewModel.onEvent(SettingScreenEvent.onLevelClick)
+                },
+                onProfileEditClick = {
+                    // 없앰
+                }
+            )
+
+            CustomDivider(
+                color = Color(0xFFE0E0E0),
+                modifier = Modifier.padding(vertical = 8.dp)
+            )
+
+            Column(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                SettingMenuItem(
+                    text = "계정 관리",
+                    onClick = {
+                        viewModel.onEvent(SettingScreenEvent.onAccountManagementClick)
                     }
                 )
 
-                // 구분선
                 CustomDivider(
-                    color = Color(0xFFE0E0E0), // 연한 회색
-                    modifier = Modifier.padding(vertical = 8.dp)
+                    color = Color(0xFFE0E0E0),
+                    modifier = Modifier.padding(horizontal = 20.dp)
                 )
 
-                // 메뉴 리스트
-                Column(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    SettingMenuItem(
-                        text = "계정 관리",
-                        onClick = {
-                            viewModel.onEvent(SettingScreenEvent.onAccountManagementClick)
-                        }
-                    )
+                SettingMenuItem(
+                    text = "테마 변경",
+                    onClick = {
+                        viewModel.onEvent(SettingScreenEvent.onThemeChangeClick)
+                    }
+                )
 
-                    CustomDivider(
-                        color = Color(0xFFE0E0E0),
-                        modifier = Modifier.padding(horizontal = 20.dp)
-                    )
+                CustomDivider(
+                    color = Color(0xFFE0E0E0),
+                    modifier = Modifier.padding(horizontal = 20.dp)
+                )
 
-                    SettingMenuItem(
-                        text = "테마 변경",
-                        onClick = {
-                            viewModel.onEvent(SettingScreenEvent.onThemeChangeClick)
-                        }
-                    )
+                SettingMenuItem(
+                    text = "약관 확인",
+                    onClick = {
+                        viewModel.onEvent(SettingScreenEvent.onTermsClick)
+                    }
+                )
 
-                    CustomDivider(
-                        color = Color(0xFFE0E0E0),
-                        modifier = Modifier.padding(horizontal = 20.dp)
-                    )
+                CustomDivider(
+                    color = Color(0xFFE0E0E0),
+                    modifier = Modifier.padding(horizontal = 20.dp)
+                )
 
-                    SettingMenuItem(
-                        text = "약관 확인",
-                        onClick = {
-                            viewModel.onEvent(SettingScreenEvent.onTermsClick)
-                        }
-                    )
-
-                    CustomDivider(
-                        color = Color(0xFFE0E0E0),
-                        modifier = Modifier.padding(horizontal = 20.dp)
-                    )
-
-                    SettingMenuItem(
-                        text = "공지사항",
-                        onClick = {
-                            viewModel.onEvent(SettingScreenEvent.onNoticeClick)
-                        }
-                    )
-                }
+                SettingMenuItem(
+                    text = "공지사항",
+                    onClick = {
+                        viewModel.onEvent(SettingScreenEvent.onNoticeClick)
+                    }
+                )
             }
         }
     }
+}
+

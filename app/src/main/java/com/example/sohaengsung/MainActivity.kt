@@ -32,12 +32,12 @@ import kotlinx.coroutines.withContext
 class MainActivity : ComponentActivity() {
 
     private lateinit var auth: FirebaseAuth
-
     private lateinit var googleSignInClient: GoogleSignInClient
 
     private val userRepository = UserRepository()
 
     private var loginSuccess by mutableStateOf(false)
+    private var loggedInUid by mutableStateOf<String?>(null)
 
     private val googleSignInLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -45,61 +45,38 @@ class MainActivity : ComponentActivity() {
 
             try {
                 val account = task.getResult(ApiException::class.java) ?: return@registerForActivityResult
-
                 val credential = GoogleAuthProvider.getCredential(account.idToken, null)
 
                 auth.signInWithCredential(credential)
                     .addOnSuccessListener { authResult ->
                         val firebaseUser = authResult.user ?: return@addOnSuccessListener
 
-                        val uid = firebaseUser.uid
-                        val nickname = firebaseUser.displayName
-                        val profilePic = firebaseUser.photoUrl?.toString()
-
                         saveUserToFirestore(
-                            uid = uid,
-                            nickname = nickname,
-                            profilePic = profilePic
+                            uid = firebaseUser.uid,
+                            nickname = firebaseUser.displayName,
+                            profilePic = firebaseUser.photoUrl?.toString()
                         )
-                    }
-                    .addOnFailureListener {
-                        // TODO: 필요하면 에러 처리 UI 연동
                     }
 
             } catch (_: ApiException) {
-                // TODO: 필요하면 에러 처리
             }
         }
 
     private fun startKakaoLogin() {
-        val context = this
-
-        UserApiClient.instance.loginWithKakaoTalk(context) { token, error ->
-            if (error != null || token == null) {
-
-                UserApiClient.instance.loginWithKakaoAccount(context) { token2, error2 ->
-                    if (error2 == null && token2 != null) {
-                        onKakaoLoginSuccess()
-                    }
-                }
-            } else {
-                onKakaoLoginSuccess()
-            }
+        UserApiClient.instance.loginWithKakaoAccount(this) { _, error ->
+            if (error != null) return@loginWithKakaoAccount
+            fetchKakaoUser()
         }
     }
 
-    private fun onKakaoLoginSuccess() {
+    private fun fetchKakaoUser() {
         UserApiClient.instance.me { user, error ->
             if (error != null || user == null) return@me
 
-            val uid = user.id.toString()
-            val nickname = user.kakaoAccount?.profile?.nickname
-            val profilePic = user.kakaoAccount?.profile?.profileImageUrl
-
             saveUserToFirestore(
-                uid = uid,
-                nickname = nickname,
-                profilePic = profilePic
+                uid = "kakao_${user.id}",
+                nickname = user.kakaoAccount?.profile?.nickname,
+                profilePic = user.kakaoAccount?.profile?.profileImageUrl
             )
         }
     }
@@ -112,13 +89,14 @@ class MainActivity : ComponentActivity() {
         CoroutineScope(Dispatchers.IO).launch {
             val user = User(
                 uid = uid,
-                nickname = nickname ?: "Guest",   // 닉네임 없으면 Guest
+                nickname = nickname ?: "Guest",
                 profilePic = profilePic
             )
 
             userRepository.createUserIfNotExists(user)
 
             withContext(Dispatchers.Main) {
+                loggedInUid = uid
                 loginSuccess = true
             }
         }
@@ -127,12 +105,9 @@ class MainActivity : ComponentActivity() {
     private val placeRepository = PlaceRepository()
     private val locationService: LocationService? = null
 
-    private val currentFirebaseUser = FirebaseAuth.getInstance().currentUser
-    private val userId: String = currentFirebaseUser?.uid ?: "guest"
-
     private val placeRecommendViewModel: PlaceRecommendViewModel by viewModels {
         PlaceRecommendViewModelFactory(
-            uid = userId,
+            uid = FirebaseAuth.getInstance().currentUser?.uid ?: "guest",
             placeRepository = placeRepository,
             locationService = locationService
         )
@@ -140,10 +115,9 @@ class MainActivity : ComponentActivity() {
 
     private val pathRecommendViewModel: PathRecommendViewModel by viewModels {
         PathRecommendViewModelFactory(
-            uid = userId,
+            uid = FirebaseAuth.getInstance().currentUser?.uid ?: "guest"
         )
     }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -167,8 +141,9 @@ class MainActivity : ComponentActivity() {
                         startKakaoLogin()
                     },
                     loginSuccess = loginSuccess,
-                    placeRecommendViewModel,
-                    pathRecommendViewModel
+                    loggedInUid = loggedInUid,
+                    placeRecommendViewModel = placeRecommendViewModel,
+                    pathRecommendViewModel = pathRecommendViewModel
                 )
             }
         }
