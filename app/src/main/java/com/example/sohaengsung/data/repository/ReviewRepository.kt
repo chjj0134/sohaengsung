@@ -9,6 +9,7 @@ import kotlinx.coroutines.tasks.await
 class ReviewRepository {
 
     private val db = FirebaseFirestore.getInstance()
+    private val userRepository = UserRepository()
 
     suspend fun addReview(review: Review) {
         val userReviewRef = db
@@ -44,6 +45,12 @@ class ReviewRepository {
                 "reviewCount" to newCount
             )
         ).await()
+
+        // 🔥 리뷰 작성 시 활동 점수 증가
+        userRepository.addActivityScore(
+            uid = review.userId,
+            scoreToAdd = 3
+        )
     }
 
     suspend fun getReviewsByPlace(placeId: String): List<Review> {

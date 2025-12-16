@@ -9,6 +9,7 @@ import kotlinx.coroutines.tasks.await
 class BookmarkRepository {
 
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
+    private val userRepository = UserRepository()
 
     private fun bookmarkCollection(uid: String) =
         db.collection("users")
@@ -18,6 +19,12 @@ class BookmarkRepository {
     suspend fun addBookmark(uid: String, placeId: String) {
         val data = mapOf("placeId" to placeId)
         bookmarkCollection(uid).document(placeId).set(data).await()
+
+        // 🔥 북마크 추가 시 활동 점수 증가
+        userRepository.addActivityScore(
+            uid = uid,
+            scoreToAdd = 1
+        )
     }
 
     suspend fun removeBookmark(uid: String, placeId: String) {
@@ -56,6 +63,4 @@ class BookmarkRepository {
             addBookmark(uid, placeId)
         }
     }
-
-
 }
