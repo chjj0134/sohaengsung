@@ -22,7 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.sohaengsung.data.util.DistanceCalculator.formatDistance
+import com.example.sohaengsung.ui.features.mapPathRecommend.components.DistanceCalculator.formatDistance
 import com.example.sohaengsung.ui.common.BottomActionButtton
 import com.example.sohaengsung.ui.common.CustomDivider
 import com.example.sohaengsung.ui.common.Dropdown

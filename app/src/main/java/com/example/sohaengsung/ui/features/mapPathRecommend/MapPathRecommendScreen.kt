@@ -28,11 +28,13 @@ import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun MapPathRecommendScreen(
+    placeIds: List<String> = emptyList(),
     uid: String? = null,
     viewModel: MapPathRecommendViewModel = viewModel(
         factory = MapPathRecommendViewModelFactory(
             uid = uid ?: FirebaseAuth.getInstance().currentUser?.uid ?: "dummy-user-id",
-            context = LocalContext.current
+            context = LocalContext.current,
+            placeIds = if (placeIds.isNotEmpty()) placeIds else null
         )
     )
 ) {

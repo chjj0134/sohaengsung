@@ -5,10 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.sohaengsung.data.model.Place
 import com.example.sohaengsung.data.repository.BookmarkRepository
 import com.example.sohaengsung.data.repository.PlaceRepository
-import com.example.sohaengsung.data.util.DistanceCalculator
+import com.example.sohaengsung.ui.features.mapPathRecommend.components.DistanceCalculator
 import com.example.sohaengsung.data.util.LocationService
-import com.example.sohaengsung.ui.dummy.placeExample
-import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,7 +17,8 @@ class MapPathRecommendViewModel(
     private val bookmarkRepository: BookmarkRepository,
     private val placeRepository: PlaceRepository,
     private val locationService: LocationService,
-    private val uid: String
+    private val uid: String,
+    private val placeIds: List<String>? = null
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(MapPathRecommendScreenUiState())
@@ -34,56 +33,25 @@ class MapPathRecommendViewModel(
             try {
                 _uiState.update { it.copy(isLoading = true, errorMessage = null) }
 
-                // TODO: 더미 데이터 사용 (테스트용)
-                // 실제 데이터 사용 시 아래 주석을 해제하고 더미 데이터 부분을 제거
-                
-                // ========== 더미 데이터 사용 시작 ==========
-                // 1. 더미 현재 위치 (서울 중심: 명동)
-                val currentLocation = Pair(37.5665, 126.9780)
-                
-                // 2. 더미 북마크된 장소 (placeExample에서 가져오기)
-                val places = placeExample.take(3) // 최대 3개만 사용
-                
-                if (places.isEmpty()) {
-                    _uiState.update {
-                        it.copy(
-                            currentLocation = currentLocation,
-                            isLoading = false,
-                            errorMessage = "북마크된 장소가 없습니다."
-                        )
-                    }
-                    return@launch
-                }
-                // ========== 더미 데이터 사용 끝 ==========
-                
-                /* 실제 데이터 사용 코드 (주석 처리됨)
                 // 1. 현재 위치 가져오기
-                val currentLocation = locationService.getCurrentLocation()
-                if (currentLocation == null) {
-                    _uiState.update {
-                        it.copy(
-                            isLoading = false,
-                            errorMessage = "현재 위치를 가져올 수 없습니다."
-                        )
-                    }
-                    return@launch
-                }
-
-                // 2. 북마크된 장소 ID 리스트 가져오기
-                val bookmarkIds = bookmarkRepository.getBookmarksOnce(uid)
-                if (bookmarkIds.isEmpty()) {
+                val currentLocation = locationService.getCurrentLocation() ?: Pair(37.5665, 126.9780) // 기본값: 서울 중심
+                
+                // 2. placeIds가 있으면 해당 장소들을 사용, 없으면 북마크된 장소 사용
+                val targetPlaceIds = placeIds ?: bookmarkRepository.getBookmarksOnce(uid)
+                
+                if (targetPlaceIds.isEmpty()) {
                     _uiState.update {
                         it.copy(
                             currentLocation = currentLocation,
                             isLoading = false,
-                            errorMessage = "북마크된 장소가 없습니다."
+                            errorMessage = "선택된 장소가 없습니다."
                         )
                     }
                     return@launch
                 }
 
                 // 3. Place 객체 리스트로 변환
-                val places = placeRepository.getPlaces(bookmarkIds)
+                val places = placeRepository.getPlaces(targetPlaceIds)
                 if (places.isEmpty()) {
                     _uiState.update {
                         it.copy(
@@ -94,7 +62,6 @@ class MapPathRecommendViewModel(
                     }
                     return@launch
                 }
-                */
 
                 // 4. 거리 기반으로 정렬 (최대 3개)
                 val sortedPlaces = sortPlacesByDistance(currentLocation, places)
