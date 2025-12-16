@@ -21,14 +21,14 @@ fun ScoreContainer(
     user: com.example.sohaengsung.data.model.User
 ) {
 
-    val SCORE_PER_BOOKMARK = 3
-    val SCORE_PER_REVIEW = 15
+    val SCORE_PER_BOOKMARK = 1
+    val SCORE_PER_REVIEW = 3
 
-    val bookmarkCount = user.bookmarkedPlaces.size
+    val bookmarkCount = user.bookmarkCount
+    val reviewCount = user.reviewCount
+
     val totalBookmarkScore = bookmarkCount * SCORE_PER_BOOKMARK
-
-    val totalReviewScore = (user.activityScore - totalBookmarkScore).coerceAtLeast(0)
-    val estimatedReviewCount = totalReviewScore / SCORE_PER_REVIEW
+    val totalReviewScore = reviewCount * SCORE_PER_REVIEW
 
     Column(
         modifier = Modifier
@@ -58,7 +58,7 @@ fun ScoreContainer(
         ScoreItem(
             icon = Icons.Default.Edit,
             title = "리뷰",
-            detail = "별점 입력 및 리뷰 작성 (${estimatedReviewCount}회)",
+            detail = "별점 입력 및 리뷰 작성 (${reviewCount}회)",
             score = totalReviewScore,
         )
 

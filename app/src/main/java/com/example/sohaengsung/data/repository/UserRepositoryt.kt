@@ -82,4 +82,31 @@ class UserRepository {
                 if (user != null) onChange(user)
             }
     }
+
+    suspend fun addReviewActivity(uid: String) {
+        val userRef = users.document(uid)
+
+        userRef.update(
+            mapOf(
+                "activityScore" to FieldValue.increment(3),
+                "reviewCount" to FieldValue.increment(1)
+            )
+        ).await()
+
+        updateLevelIfNeeded(uid)
+    }
+
+    suspend fun addBookmarkActivity(uid: String) {
+        val userRef = users.document(uid)
+
+        userRef.update(
+            mapOf(
+                "activityScore" to FieldValue.increment(1),
+                "bookmarkCount" to FieldValue.increment(1)
+            )
+        ).await()
+
+        updateLevelIfNeeded(uid)
+    }
+
 }

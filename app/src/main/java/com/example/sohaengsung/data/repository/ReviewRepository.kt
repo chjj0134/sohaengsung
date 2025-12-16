@@ -12,6 +12,8 @@ class ReviewRepository {
     private val userRepository = UserRepository()
 
     suspend fun addReview(review: Review) {
+
+        // 1️⃣ 유저 리뷰 저장
         val userReviewRef = db
             .collection("users")
             .document(review.userId)
@@ -20,6 +22,7 @@ class ReviewRepository {
 
         userReviewRef.set(review).await()
 
+        // 2️⃣ 장소 평점 / 리뷰 수 갱신
         val placeRef = db.collection("places").document(review.placeId)
         val placeSnapshot = placeRef.get().await()
 
@@ -46,10 +49,9 @@ class ReviewRepository {
             )
         ).await()
 
-        // 🔥 리뷰 작성 시 활동 점수 증가
-        userRepository.addActivityScore(
-            uid = review.userId,
-            scoreToAdd = 3
+        // 🔥 3️⃣ 리뷰 활동 반영 (점수 + 횟수 + 레벨)
+        userRepository.addReviewActivity(
+            uid = review.userId
         )
     }
 

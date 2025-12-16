@@ -7,5 +7,7 @@ data class User(
     val profilePic: String? = null,
     val bookmarkedPlaces: List<String> = emptyList(),
     val level: Int = 1,
-    val activityScore: Int = 0
+    val activityScore: Int = 0,
+    val reviewCount: Int = 0,
+    val bookmarkCount: Int = 0
 )
