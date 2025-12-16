@@ -50,7 +50,7 @@ fun AppNavigation(
         }
     }
 
-    NavHost(navController = navController, startDestination = "login") {
+    NavHost(navController = navController, startDestination = "home") {
 
         composable("login") {
             LogInScreen(
@@ -164,8 +164,14 @@ fun AppNavigation(
 
         composable("map") { MapScreen() }
 
-        composable("map-path-recommend") {
-            MapPathRecommendScreen()
+        composable("map-path-recommend/{placeIds}") { backStackEntry ->
+            val placeIdsString = backStackEntry.arguments?.getString("placeIds") ?: ""
+            val placeIds = if (placeIdsString.isNotBlank()) {
+                placeIdsString.split(",").filter { it.isNotBlank() }
+            } else {
+                emptyList()
+            }
+            MapPathRecommendScreen(placeIds = placeIds)
         }
 
         composable(ScreenRoute.REVIEW) {

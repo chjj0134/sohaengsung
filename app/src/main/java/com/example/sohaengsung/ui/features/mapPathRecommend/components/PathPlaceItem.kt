@@ -16,7 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.sohaengsung.data.util.DistanceCalculator
+import com.example.sohaengsung.ui.features.mapPathRecommend.components.DistanceCalculator
 import com.example.sohaengsung.ui.features.mapPathRecommend.PlaceWithOrder
 import com.example.sohaengsung.ui.theme.DividerGray
 

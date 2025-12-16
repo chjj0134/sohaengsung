@@ -1,4 +1,4 @@
-package com.example.sohaengsung.data.util
+package com.example.sohaengsung.ui.features.mapPathRecommend.components
 
 import kotlin.math.*
 
