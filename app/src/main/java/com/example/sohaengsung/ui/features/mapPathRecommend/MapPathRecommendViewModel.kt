@@ -34,7 +34,7 @@ class MapPathRecommendViewModel(
                 _uiState.update { it.copy(isLoading = true, errorMessage = null) }
 
                 // 1. 현재 위치 가져오기
-                val currentLocation = locationService.getCurrentLocation() ?: Pair(37.5665, 126.9780) // 기본값: 서울 중심
+                val currentLocation = locationService.getCurrentLocation() ?: DEFAULT_LOCATION
                 
                 // 2. placeIds가 있으면 해당 장소들을 사용, 없으면 북마크된 장소 사용
                 val targetPlaceIds = placeIds ?: bookmarkRepository.getBookmarksOnce(uid)
