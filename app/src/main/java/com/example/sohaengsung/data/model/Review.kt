@@ -5,6 +5,7 @@ import com.google.firebase.Timestamp
 data class Review(
     val reviewId: String = "",
     val userId: String = "",
+    val userNickname: String = "",
     val placeId: String = "",
     val rating: Double = 0.0,
     val content: String = "",

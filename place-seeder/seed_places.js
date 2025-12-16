@@ -153,8 +153,21 @@ const DEFAULT_TAGS = {
     gallery: ["전시", "조용한"],
 };
 
+// 사진 랜덤 선택
 function finalizeTags(tags, category) {
     return tags.length > 0 ? tags : (DEFAULT_TAGS[category] || []);
+}
+
+function pickRandomPhotos(photos = [], min = 1, max = 3) {
+    if (!photos.length) return [];
+
+    const shuffled = [...photos].sort(() => 0.5 - Math.random());
+    const count = Math.min(
+        photos.length,
+        Math.floor(Math.random() * (max - min + 1)) + min
+    );
+
+    return shuffled.slice(0, count);
 }
 
 
@@ -209,6 +222,7 @@ function buildPhotoUrl(photoRef) {
 
 // Firestore 저장
 async function savePlace(place, category) {
+    
     const ref = db.collection("places").doc(place.place_id);
 
     const reviews =
@@ -223,10 +237,12 @@ async function savePlace(place, category) {
     const rawTags = extractHashtagsFromReviews(reviews);
     const hashtags = finalizeTags(rawTags, category);
 
-    const photoUrls =
-        place.photos?.[0]?.photo_reference
-            ? [buildPhotoUrl(place.photos[0].photo_reference)]
-            : [];
+    const selectedPhotos = pickRandomPhotos(place.photos, 1, 3);
+
+    const photoUrls = selectedPhotos
+        .map(p => p.photo_reference)
+        .filter(Boolean)
+        .map(buildPhotoUrl)
 
     await ref.set({
         placeId: place.place_id,

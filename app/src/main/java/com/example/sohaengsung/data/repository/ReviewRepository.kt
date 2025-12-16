@@ -30,7 +30,7 @@ class ReviewRepository {
             ((currentRating * currentCount) + review.rating) / newCount
 
         val googleReview = GoogleReview(
-            author = review.userId,
+            author = review.userNickname,
             rating = review.rating.toInt(),
             time = review.createdAt?.toDate()?.toString() ?: "",
             content = review.content,

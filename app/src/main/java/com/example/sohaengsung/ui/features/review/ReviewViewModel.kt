@@ -72,10 +72,16 @@ class ReviewViewModel(
                 _uiState.value.selectedAtmosphereTag,
                 _uiState.value.selectedConvenienceTag
             )
+            val firebaseUser = FirebaseAuth.getInstance().currentUser
+
+            val nickname =
+                firebaseUser?.displayName
+                    ?: "익명 사용자"
 
             val review = Review(
                 reviewId = "",
                 userId = uid,
+                userNickname = nickname,
                 placeId = placeId,
                 rating = _uiState.value.rating.toDouble(),
                 content = _uiState.value.reviewText,
