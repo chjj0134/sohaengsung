@@ -16,7 +16,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.math.*
 
-
 class BookmarkedViewModel : ViewModel() {
 
     private val userRepository = UserRepository()
@@ -38,21 +37,16 @@ class BookmarkedViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 _uiState.update { it.copy(isLoading = true, errorMessage = null) }
-
                 val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return@launch
                 val user = userRepository.getUser(uid)
 
                 if (user != null) {
                     _uiState.update { it.copy(user = user, isLoading = false) }
                 } else {
-                    _uiState.update {
-                        it.copy(errorMessage = "사용자 정보가 없습니다.", isLoading = false)
-                    }
+                    _uiState.update { it.copy(errorMessage = "사용자 정보가 없습니다.", isLoading = false) }
                 }
             } catch (e: Exception) {
-                _uiState.update {
-                    it.copy(errorMessage = e.message ?: "알 수 없는 오류", isLoading = false)
-                }
+                _uiState.update { it.copy(errorMessage = e.message ?: "알 수 없는 오류", isLoading = false) }
             }
         }
     }
@@ -62,32 +56,41 @@ class BookmarkedViewModel : ViewModel() {
             val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return@launch
 
             try {
-                // 1. 북마크된 ID 리스트 가져오기
+                _uiState.update { it.copy(isLoading = true) }
+
                 val ids = bookmarkRepository.getBookmarksOnce(uid)
 
-                // 2. ID를 이용해 장소 상세 정보 가져오기
                 val rawPlaces = placeRepository.getPlaces(ids)
 
-                // 3. PlaceWithDistance 모델로 변환
+                val location = _uiState.value.currentLocation ?: Pair(37.5459, 126.9649)
+
                 val placesWithDistance = rawPlaces.map { place ->
-                    PlaceWithDistance(place = place, distance = 0.0)
+                    val dist = computeHaversineDistance(
+                        location.first, location.second,
+                        place.latitude, place.longitude
+                    )
+                    PlaceWithDistance(place = place, distance = dist)
                 }
 
-                _uiState.update { it.copy(bookmarkedPlaces = placesWithDistance) }
+                // 5. 기본 정렬: 거리순(오름차순) 적용
+                val sortedPlaces = placesWithDistance.sortedBy { it.distance }
 
-                // 4. 초기 거리 계산 (서울시청 기준 초기화 예시)
-                calculateDistances(37.5665, 126.9780)
+                _uiState.update {
+                    it.copy(
+                        bookmarkedPlaces = sortedPlaces,
+                        isLoading = false
+                    )
+                }
 
             } catch (e: Exception) {
-                _uiState.update { it.copy(errorMessage = e.message ?: "북마크 로드 실패") }
+                _uiState.update { it.copy(errorMessage = e.message ?: "북마크 로드 실패", isLoading = false) }
             }
         }
     }
 
-    /**
-     * 현재 위치를 기준으로 모든 장소와의 거리를 계산합니다.
-     */
-    fun calculateDistances(lat: Double, lng: Double) {
+    fun updateCurrentLocation(lat: Double, lng: Double) {
+        val newLocation = Pair(lat, lng)
+
         _uiState.update { state ->
             val updatedList = state.bookmarkedPlaces.map { item ->
                 val dist = computeHaversineDistance(
@@ -96,15 +99,16 @@ class BookmarkedViewModel : ViewModel() {
                 )
                 item.copy(distance = dist)
             }
-            state.copy(bookmarkedPlaces = updatedList)
+
+            state.copy(
+                currentLocation = newLocation,
+                bookmarkedPlaces = updatedList.sortedBy { it.distance }
+            )
         }
     }
 
-    /**
-     * 하버사인 공식을 이용한 직선 거리 계산 (단위: m)
-     */
     private fun computeHaversineDistance(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
-        val r = 6371e3 // 지구 반지름 (meters)
+        val r = 6371e3
         val dLat = Math.toRadians(lat2 - lat1)
         val dLon = Math.toRadians(lon2 - lon1)
         val a = sin(dLat / 2).pow(2) +
@@ -119,12 +123,10 @@ class BookmarkedViewModel : ViewModel() {
 
         try {
             bookmarkRepository.removeBookmark(uid, placeId)
-
             _uiState.update { state ->
                 val updatedList = state.bookmarkedPlaces.filter { it.place.placeId != placeId }
                 state.copy(bookmarkedPlaces = updatedList)
             }
-            Log.d("BookmarkVM", "삭제 성공: $placeId")
         } catch (e: Exception) {
             _uiState.update { it.copy(errorMessage = "삭제 실패: ${e.message}") }
         }
@@ -143,16 +145,14 @@ class BookmarkedViewModel : ViewModel() {
                         "리뷰많은순" -> currentList.sortedByDescending { it.place.reviewCount }
                         else -> currentList
                     }
-
                     _uiState.update { it.copy(bookmarkedPlaces = sortedList) }
                 }
 
                 is BookmarkScreenEvent.onDeleteClick -> {
-                    val targetId = event.placeWithDistance.place.placeId
-                    deleteBookmark(targetId)
+                    deleteBookmark(event.placeWithDistance.place.placeId)
                 }
 
-                is BookmarkScreenEvent.Navigation -> { /* logic */ }
+                is BookmarkScreenEvent.Navigation -> { /* 내비게이션 로직 */ }
             }
         }
     }

@@ -18,28 +18,30 @@ import androidx.compose.ui.unit.sp
 import com.example.sohaengsung.ui.common.ProfilePic
 import com.example.sohaengsung.ui.common.StarRating
 import com.example.sohaengsung.data.model.GoogleReview
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 
 fun getRelativeTime(timeString: String?): String {
-    if (timeString == null) return ""
+    if (timeString.isNullOrBlank()) return ""
 
-    // 만약 구글 리뷰처럼 이미 날짜 형식 문자열이라면 그대로 반환
-    if (timeString.contains("-") || timeString.contains(":")) return timeString
+    val targetFormat = SimpleDateFormat("yyyy년 MM월 dd일", Locale.KOREA)
 
     return try {
-        val timeMillis = timeString.toLong()
-        val now = System.currentTimeMillis()
-        val diff = now - timeMillis
-
-        when {
-            diff < 60_000 -> "방금 전"
-            diff < 3600_000 -> "${diff / 60_000}분 전"
-            diff < 86400_000 -> "${diff / 3600_000}시간 전"
-            diff < 2592000_000 -> "${diff / 86400_000}일 전"
-            else -> java.text.SimpleDateFormat("yyyy.MM.dd", java.util.Locale.KOREA).format(java.util.Date(timeMillis))
+        if (timeString.all { it.isDigit() }) {
+            // 1. 숫자로만 된 경우 (Long Timestamp)
+            targetFormat.format(Date(timeString.toLong()))
+        } else {
+            // 2. "Tue Dec 16..." 같은 시스템 문자열 형식인 경우
+            // 이 형식은 기본 EEE MMM dd HH:mm:ss zzz yyyy 포맷을 사용합니다.
+            val sourceFormat = SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH)
+            val parsedDate = sourceFormat.parse(timeString)
+            parsedDate?.let { targetFormat.format(it) } ?: timeString
         }
     } catch (e: Exception) {
-        timeString // 숫자가 아니면 원본 반환
+        // 변환 실패 시 원본 혹은 날짜 부분만 대략적으로 반환 시도
+        timeString.take(10) // 최소한의 정보만 출력
     }
 }
 

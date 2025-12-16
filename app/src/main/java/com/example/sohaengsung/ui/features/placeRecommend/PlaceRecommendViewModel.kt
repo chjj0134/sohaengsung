@@ -262,16 +262,6 @@ class PlaceRecommendViewModel(
         _events.value = null
     }
 
-    /*GPS Update 삭제
-    fun updateLocation(lat: Double, lng: Double) {
-        _uiState.value = _uiState.value.copy(
-            currentLat = lat,
-            currentLng = lng
-
-        )
-        loadPlaceData(lat, lng)
-    }*/
-
     fun setSelectedPlace(placeId: String) {
         _uiState.value = _uiState.value.copy(selectedPlaceId = placeId)
         loadReviews(placeId)

@@ -57,7 +57,7 @@ fun PlaceForPathContainer(
             ) {
                 Text(
                     text = place.name,
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.titleSmall
                 )
 
                 Text(
@@ -65,15 +65,14 @@ fun PlaceForPathContainer(
                     text = place.hashtags.joinToString(separator = " ") { hashtag ->
                         "#$hashtag"
                     },
-                    style = MaterialTheme.typography.labelLarge,
+                    style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.primary
                 )
             }
 
-            // 임시 거리
             Text(
                 formatDistance(distance),
-                style = MaterialTheme.typography.labelSmall,
+                style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.primary
             )
         }

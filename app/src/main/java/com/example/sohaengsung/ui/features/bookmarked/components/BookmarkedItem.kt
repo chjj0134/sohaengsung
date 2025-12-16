@@ -44,7 +44,7 @@ fun BookmarkedItem(
             ) {
                 Text(
                     text = place.name,
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.titleSmall
                 )
 
                 Text(
@@ -52,7 +52,7 @@ fun BookmarkedItem(
                     text = place.hashtags.joinToString(separator = " ") { hashtag ->
                         "#$hashtag"
                     },
-                    style = MaterialTheme.typography.labelLarge,
+                    style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.primary
                 )
             }
