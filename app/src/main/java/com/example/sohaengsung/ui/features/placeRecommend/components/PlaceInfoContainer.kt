@@ -30,6 +30,7 @@ import com.example.sohaengsung.ui.features.placeRecommend.PlaceRecommendViewMode
 import coil.compose.AsyncImage
 import com.example.sohaengsung.ui.features.placeRecommend.PlaceRecommendScreenEvent
 
+
 @Composable
 fun PlaceInfoContainer(
     place: Place,
@@ -80,9 +81,11 @@ fun PlaceInfoContainer(
                 color = MaterialTheme.colorScheme.primary
             )
 
+            val formattedRating = String.format("%.1f", place.rating)
+
             // 별점, 리뷰 개수
             Text(
-                text = "⭐️ ${place.rating} (리뷰 ${place.reviewCount}개)",
+                text = "⭐ $formattedRating (리뷰 ${place.reviewCount}개)",
                 style = MaterialTheme.typography.bodyMedium
             )
         }
