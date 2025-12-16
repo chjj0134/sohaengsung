@@ -14,10 +14,12 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -67,6 +69,25 @@ fun ReviewScreen(
     )
     val convenienceTags = listOf("콘센트", "노트북", "와이파이", "주차장")
 
+    if (uiState.showSuccessModal) {
+        AlertDialog(
+            onDismissRequest = { /* 바깥 클릭 시 무시하거나 처리 */ },
+            title = { Text(text = "알림") },
+            text = { Text(text = "등록이 완료되었어요!") },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        // 뒤로 가기 이벤트
+                        viewModel.onConfirmSuccess()
+                    }
+                ) {
+                    Text("확인")
+                }
+            },
+            shape = RoundedCornerShape(16.dp)
+        )
+    }
+
     SohaengsungTheme {
         Scaffold(
             topBar = {
@@ -104,7 +125,7 @@ fun ReviewScreen(
                     StarRating(
                         rating = uiState.rating,
                         onRatingClick = { rating ->
-                            viewModel.updateRating(rating)
+                            viewModel.onEvent(ReviewScreenEvent.OnRatingClick(rating))
                         }
                     )
                 }
@@ -123,7 +144,7 @@ fun ReviewScreen(
                 TextField(
                     value = uiState.reviewText,
                     onValueChange = { text ->
-                        viewModel.updateReviewText(text)
+                        viewModel.onEvent(ReviewScreenEvent.OnReviewTextChange(text))
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -165,7 +186,7 @@ fun ReviewScreen(
                         items = themeTags,
                         selectedItem = uiState.selectedThemeTag,
                         onItemClick = { tag ->
-                            viewModel.toggleThemeTag(tag)
+                            viewModel.onEvent(ReviewScreenEvent.OnTagSelect(ReviewScreenEvent.TagType.THEME, tag))
                         },
                         modifier = Modifier.weight(1f)
                     )
@@ -175,7 +196,7 @@ fun ReviewScreen(
                         items = atmosphereTags,
                         selectedItem = uiState.selectedAtmosphereTag,
                         onItemClick = { tag ->
-                            viewModel.toggleAtmosphereTag(tag)
+                            viewModel.onEvent(ReviewScreenEvent.OnTagSelect(ReviewScreenEvent.TagType.ATMOSPHERE, tag))
                         },
                         modifier = Modifier.weight(1f)
                     )
@@ -185,7 +206,7 @@ fun ReviewScreen(
                         items = convenienceTags,
                         selectedItem = uiState.selectedConvenienceTag,
                         onItemClick = { tag ->
-                            viewModel.toggleConvenienceTag(tag)
+                            viewModel.onEvent(ReviewScreenEvent.OnTagSelect(ReviewScreenEvent.TagType.CONVENIENCE, tag))
                         },
                         modifier = Modifier.weight(1f)
                     )
@@ -196,7 +217,7 @@ fun ReviewScreen(
                 // 리뷰 등록 버튼
                 Button(
                     onClick = {
-                        viewModel.submitReview()
+                        viewModel.onEvent(ReviewScreenEvent.OnSubmitReview)
                     },
                     modifier = Modifier
                         .fillMaxWidth()

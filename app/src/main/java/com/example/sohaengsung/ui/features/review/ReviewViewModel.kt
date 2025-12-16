@@ -53,17 +53,20 @@ class ReviewViewModel(
 
     fun submitReview() {
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isLoading = true)
+            android.util.Log.d("ReviewDebug", "제출 시도 - placeId: $placeId, uid: ${FirebaseAuth.getInstance().currentUser?.uid}")
 
-            // TODO: 실제 리뷰 제출 로직 구현
-            // 예: repository.submitReview(...)
+            _uiState.value = _uiState.value.copy(isLoading = true)
 
             val uid = FirebaseAuth.getInstance().currentUser?.uid
             if (uid == null) {
-                _uiState.value = _uiState.value.copy(isLoading = false)
+                _uiState.value = _uiState.value.copy(
+                    isLoading = false,
+                    errorMessage = "로그인이 필요합니다."
+                )
                 return@launch
             }
 
+            // 선택된 태그들을 하나의 리스트로 합침
             val tags = listOfNotNull(
                 _uiState.value.selectedThemeTag,
                 _uiState.value.selectedAtmosphereTag,
@@ -76,21 +79,64 @@ class ReviewViewModel(
                 placeId = placeId,
                 rating = _uiState.value.rating.toDouble(),
                 content = _uiState.value.reviewText,
-                tags = tags
+                tags = tags,
+                createdAt = com.google.firebase.Timestamp.now()
             )
 
             try {
                 reviewRepository.addReview(review)
-                _uiState.value = _uiState.value.copy(isLoading = false)
-                _events.value = ReviewScreenEvent.Navigation.NavigateBack
+
+                _uiState.value = _uiState.value.copy(
+                    isLoading = false,
+                    showSuccessModal = true // 성공 모달 표시
+                )
             } catch (e: Exception) {
-                _uiState.value = _uiState.value.copy(isLoading = false)
+                _uiState.value = _uiState.value.copy(
+                    isLoading = false,
+                    errorMessage = "리뷰 등록에 실패했습니다: ${e.message}"
+                )
             }
         }
     }
 
+    fun onConfirmSuccess() {
+        _uiState.value = _uiState.value.copy(showSuccessModal = false)
+        _events.value = ReviewScreenEvent.Navigation.NavigateBack
+    }
+
     fun onBackClick() {
         _events.value = ReviewScreenEvent.Navigation.NavigateBack
+    }
+
+    fun onEvent(event: ReviewScreenEvent) {
+        when (event) {
+            is ReviewScreenEvent.OnRatingClick -> {
+                val newRating = if (_uiState.value.rating == event.rating) 0 else event.rating
+                _uiState.value = _uiState.value.copy(rating = newRating)
+            }
+
+            is ReviewScreenEvent.OnReviewTextChange -> {
+                _uiState.value = _uiState.value.copy(reviewText = event.text)
+            }
+
+            is ReviewScreenEvent.OnTagSelect -> {
+                when (event.tagType) {
+                    ReviewScreenEvent.TagType.THEME -> toggleThemeTag(event.tag)
+                    ReviewScreenEvent.TagType.ATMOSPHERE -> toggleAtmosphereTag(event.tag)
+                    ReviewScreenEvent.TagType.CONVENIENCE -> toggleConvenienceTag(event.tag)
+                }
+            }
+
+            ReviewScreenEvent.OnSubmitReview -> {
+                submitReview()
+            }
+
+            ReviewScreenEvent.OnBackClick -> {
+                _events.value = ReviewScreenEvent.Navigation.NavigateBack
+            }
+
+            else -> { /* Navigation 이벤트 등 처리 */ }
+        }
     }
 
     fun clearEvent() {

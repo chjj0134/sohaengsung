@@ -74,7 +74,7 @@ fun PlaceDetailSheet(
                     BottomActionButtton(
                         onClickAction = {
                             viewModel.onEvent(
-                                PlaceRecommendScreenEvent.onReviewClick
+                                PlaceRecommendScreenEvent.onReviewClick(place.placeId)
                             )
                         },
                         icon = Icons.Filled.Create,
