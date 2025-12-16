@@ -42,7 +42,7 @@ fun BottomActionButtton(
             modifier = Modifier
                 .size(64.dp)
                 .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.secondary)
+                .background(MaterialTheme.colorScheme.onPrimary)
                 .padding(10.dp),
             contentAlignment = Alignment.Center
         ) {
@@ -50,7 +50,7 @@ fun BottomActionButtton(
             Icon(
                 imageVector = icon,
                 contentDescription = text,
-                tint = MaterialTheme.colorScheme.primary,
+                tint = MaterialTheme.colorScheme.tertiary,
                 modifier = Modifier.size(38.dp)
             )
         }

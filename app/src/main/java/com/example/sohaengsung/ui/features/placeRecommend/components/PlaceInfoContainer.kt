@@ -34,44 +34,52 @@ fun PlaceInfoContainer(
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .padding(bottom = 4.dp)
             .clickable(onClick = onClick),
-        verticalArrangement = Arrangement.spacedBy(3.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        // 장소 이름 및 북마크
-        Row(
+        Column(
             modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            .fillMaxWidth()
+            .padding(bottom = 4.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
+            // 장소 이름 및 북마크
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = place.name,
+                    style = MaterialTheme.typography.titleMedium
+                )
+
+                Bookmark(
+                    isBookmarked = isBookmarked,
+                    onBookmarkToggle = {
+                        onBookmarkToggle(place)
+                    }
+                )
+            }
+
+            // 장소 해시태그
             Text(
-                text = place.name,
-                style = MaterialTheme.typography.titleSmall
+                // PlaceExample.hashtags의 모든 아이템에 "#"와 공백을 붙여 하나의 문자열로 결합
+                text = place.hashtags.joinToString(separator = " ") { hashtag ->
+                    "#$hashtag"
+                },
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.primary
             )
 
-            Bookmark(
-                isBookmarked = isBookmarked,
-                onBookmarkToggle = {
-                    onBookmarkToggle(place)
-                }
+            // 별점, 리뷰 개수
+            Text(
+                text = "⭐️ ${place.rating} (리뷰 ${place.reviewCount}개)",
+                style = MaterialTheme.typography.bodyMedium
             )
         }
-
-        // 장소 해시태그
-        Text(
-            // PlaceExample.hashtags의 모든 아이템에 "#"와 공백을 붙여 하나의 문자열로 결합
-            text = place.hashtags.joinToString(separator = " ") { hashtag ->
-                "#$hashtag"
-            },
-            style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.primary
-        )
-
-        // 별점, 리뷰 개수
-        Text(
-            text = "⭐️ ${place.rating} (리뷰 ${place.reviewCount}개)",
-            style = MaterialTheme.typography.labelSmall
-        )
 
 
         val firstPhoto = place.photoUrls.firstOrNull()

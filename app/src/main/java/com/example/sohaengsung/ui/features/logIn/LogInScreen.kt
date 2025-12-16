@@ -77,14 +77,14 @@ fun LogInScreen(
                     )
                 }
 
-                Text(
-                    "회원가입",
-                    modifier = Modifier.clickable { /* 나중에 구현 */ },
-                    style = MaterialTheme.typography.labelLarge.copy(
-                        textDecoration = TextDecoration.Underline
-                    ),
-                    color = MaterialTheme.colorScheme.primary
-                )
+//                Text(
+//                    "회원가입",
+//                    modifier = Modifier.clickable { /* 나중에 구현 */ },
+//                    style = MaterialTheme.typography.labelLarge.copy(
+//                        textDecoration = TextDecoration.Underline
+//                    ),
+//                    color = MaterialTheme.colorScheme.primary
+//                )
             }
         }
     }

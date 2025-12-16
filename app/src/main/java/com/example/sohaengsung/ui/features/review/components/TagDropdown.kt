@@ -27,6 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.sohaengsung.ui.theme.SohaengsungTheme
@@ -43,7 +44,6 @@ fun TagDropdown(
     val displayText = selectedItem ?: label
 
     Box(
-        modifier = modifier,
         contentAlignment = Alignment.TopStart
     ) {
         Surface(
@@ -51,7 +51,7 @@ fun TagDropdown(
             color = if (selectedItem != null) {
                 MaterialTheme.colorScheme.primary
             } else {
-                MaterialTheme.colorScheme.surface
+                MaterialTheme.colorScheme.secondary
             },
             tonalElevation = 1.dp,
             border = BorderStroke(
@@ -73,6 +73,8 @@ fun TagDropdown(
                 Text(
                     text = displayText,
                     style = MaterialTheme.typography.labelLarge,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                     color = if (selectedItem != null) {
                         MaterialTheme.colorScheme.onPrimary
                     } else {

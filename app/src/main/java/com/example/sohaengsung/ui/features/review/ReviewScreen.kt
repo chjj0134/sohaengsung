@@ -53,19 +53,19 @@ fun ReviewScreen(
     }
 
     // 태그 더미 데이터
-    val themeTags = listOf("카페", "책", "갤러리", "음식점", "소품")
+    val themeTags = listOf("카페", "서점", "편집샵", "갤러리")
     val atmosphereTags = listOf(
-        "카공하기좋은",
+        "카공하기 좋은",
         "아늑한",
         "대화하기 좋은",
         "조용한",
         "레트로",
-        "특색있는",
+        "특색 있는",
         "집중하기 좋은",
-        "단체모임하기 좋은",
+        "단체 모임",
         "뷰가 좋은"
     )
-    val convenienceTags = listOf("콘센트좌석", "노트북", "와이파이 제공", "주차장")
+    val convenienceTags = listOf("콘센트", "노트북", "와이파이", "주차장")
 
     SohaengsungTheme {
         Scaffold(
@@ -77,7 +77,7 @@ fun ReviewScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding)
-                    .padding(horizontal = 16.dp)
+                    .padding(horizontal = 32.dp)
                     .verticalScroll(rememberScrollState())
             ) {
                 Spacer(modifier = Modifier.height(8.dp))
@@ -88,7 +88,7 @@ fun ReviewScreen(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "방문한 장소의 후기를 작성해 주세요",
+                        text = "방문한 장소의 후기를 작성해 주세요!",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                     )
@@ -130,7 +130,7 @@ fun ReviewScreen(
                         .height(200.dp),
                     placeholder = {
                         Text(
-                            text = "자유롭게 리뷰를 작성해 주세요",
+                            text = "자유롭게 리뷰를 작성해 주세요!",
                             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
                         )
                     },
@@ -158,8 +158,7 @@ fun ReviewScreen(
 
                 // 태그 드롭다운들
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     TagDropdown(
                         label = "장소 테마",

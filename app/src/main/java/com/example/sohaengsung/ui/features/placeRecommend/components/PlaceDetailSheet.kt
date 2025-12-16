@@ -12,7 +12,6 @@ import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Redeem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sohaengsung.data.model.Place
 import com.example.sohaengsung.ui.common.CustomDivider
 import com.example.sohaengsung.ui.features.placeRecommend.PlaceRecommendViewModel
@@ -68,23 +67,8 @@ fun PlaceDetailSheet(
                 contentAlignment = Alignment.BottomEnd
             ) {
                 Row(
-                    modifier = Modifier.padding(16.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-
-                    // 쿠폰 확인 버튼
-                    BottomActionButtton(
-                        onClickAction = {
-                            viewModel.onEvent(
-                                PlaceRecommendScreenEvent.onCouponClick
-                            )
-                        },
-                        icon = Icons.Filled.Redeem,
-                        text = "쿠폰 확인",
-                        modifier = Modifier.padding(horizontal = 8.dp)
-                    )
-
-                    Spacer(modifier = Modifier.height(16.dp))
 
                     // 리뷰 작성 버튼
                     BottomActionButtton(
