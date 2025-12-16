@@ -23,14 +23,47 @@ import com.example.sohaengsung.ui.common.Dropdown
 import com.example.sohaengsung.ui.features.bookmarked.components.BookmarkedItem
 import com.example.sohaengsung.ui.theme.SohaengsungTheme
 
+import android.Manifest
+import android.content.pm.PackageManager
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.app.ActivityCompat
+import com.google.android.gms.location.LocationServices
+
 @Composable
 fun BookmarkedScreen(
-    uid: String = "dummy-user-id"
+    onNavigate: (route: BookmarkScreenEvent.Navigation) -> Unit,
+    viewModel: BookmarkedViewModel = viewModel()
 ) {
-
-    val viewModel: BookmarkedViewModel = viewModel()
     val uiState by viewModel.uiState.collectAsState()
+    val event by viewModel.events.collectAsState()
 
+    val context = LocalContext.current
+    val fusedLocationClient = remember { LocationServices.getFusedLocationProviderClient(context) }
+
+    LaunchedEffect(event) {
+        event?.let { navigationEvent ->
+            if (navigationEvent is BookmarkScreenEvent.Navigation) {
+                onNavigate(navigationEvent)
+                viewModel.clearEvent()
+            }
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        if (ActivityCompat.checkSelfPermission(
+                context,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+                location?.let {
+                    viewModel.updateCurrentLocation(it.latitude, it.longitude)
+                }
+            }
+        }
+    }
 
     SohaengsungTheme {
         Scaffold(
@@ -43,7 +76,6 @@ fun BookmarkedScreen(
                     .padding(innerPadding)
                     .verticalScroll(rememberScrollState())
             ) {
-
                 Column(
                     modifier = Modifier
                         .padding(horizontal = 20.dp)
@@ -53,15 +85,13 @@ fun BookmarkedScreen(
                 ) {
                     Text(
                         "나의 취향 모음집",
-                        modifier = Modifier
-                            .padding(32.dp),
+                        modifier = Modifier.padding(32.dp),
                         style = MaterialTheme.typography.bodyLarge,
                     )
-
                     CustomDivider(MaterialTheme.colorScheme.secondary)
                 }
 
-                // 드롭다운
+                // 드롭다운 (정렬 로직 연결됨)
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -73,22 +103,17 @@ fun BookmarkedScreen(
                         items = listOf("거리순", "별점높은순", "리뷰많은순"),
                         containerColor = MaterialTheme.colorScheme.primary,
                         contentColor = MaterialTheme.colorScheme.onPrimary,
-                        onItemSelected = {
-                            selectedCriteria ->
-                                viewModel.onEvent(
-                                    BookmarkScreenEvent.onDropDownClick(
-                                        selectedCriteria
-                                    )
-                                )
+                        onItemSelected = { selectedCriteria ->
+                            viewModel.onEvent(BookmarkScreenEvent.onDropDownClick(selectedCriteria))
                         }
                     )
                 }
 
+                // 북마크 리스트 렌더링
                 uiState.bookmarkedPlaces.forEach { placeWithDistance ->
-                    val place = placeWithDistance.place
-
                     BookmarkedItem(
-                        place = place,
+                        place = placeWithDistance.place,
+                        // distance = placeWithDistance.distance // 필요시 거리 표시 전달 가능
                         onDeleteClick = {
                             viewModel.onEvent(BookmarkScreenEvent.onDeleteClick(placeWithDistance))
                         }

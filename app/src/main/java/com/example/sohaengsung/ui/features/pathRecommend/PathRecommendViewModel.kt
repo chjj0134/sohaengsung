@@ -72,9 +72,6 @@ class PathRecommendViewModel(
         _uiState.value.currentLocation?.let { calculateDistance(it) }
     }
 
-    /**
-     * 현재 위치 정보를 받아 거리 계산 후 UI State 업데이트
-     */
     fun calculateDistance(currentLocation: Pair<Double, Double>) {
         val (currentLat, currentLng) = currentLocation
 
@@ -86,7 +83,14 @@ class PathRecommendViewModel(
             item.copy(distance = dist)
         }
 
-        _uiState.update { it.copy(place = updatedList, currentLocation = currentLocation) }
+        val sortedList = updatedList.sortedBy { it.distance }
+
+        _uiState.update {
+            it.copy(
+                place = sortedList,
+                currentLocation = currentLocation
+            )
+        }
     }
 
     private fun computeHaversineDistance(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {

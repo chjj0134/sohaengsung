@@ -17,6 +17,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlin.math.PI
+import kotlin.math.atan2
+import kotlin.math.cos
+import kotlin.math.pow
+import kotlin.math.sin
+import kotlin.math.sqrt
 
 class PlaceRecommendViewModel(
     private val placeRepository: PlaceRepository = PlaceRepository(),
@@ -52,41 +58,52 @@ class PlaceRecommendViewModel(
         observeBookmarks()
     }
 
+    private fun calculateDistance(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
+        val r = 6371e3 // 지구 반지름 (m)
+        val phi1 = Math.toRadians(lat1)
+        val phi2 = Math.toRadians(lat2)
+        val deltaPhi = Math.toRadians(lat2 - lat1)
+        val deltaLambda = Math.toRadians(lon2 - lon1)
+
+        val a = Math.sin(deltaPhi / 2).pow(2.0) +
+                Math.cos(phi1) * Math.cos(phi2) *
+                Math.sin(deltaLambda / 2).pow(2.0)
+        val c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+
+        return r * c // 결과값: 미터(m) 단위
+    }
+
     private fun loadPlaceData(lat: Double? = null, lng: Double? = null) {
         viewModelScope.launch {
-            if (isPlaceDataLoaded && lat == null) {
-                return@launch
-            }
+            if (isPlaceDataLoaded && lat == null) return@launch
 
             _uiState.value = _uiState.value.copy(isLoading = true)
 
             try {
-                // loadPlaceData()가 불필요하게 호출되어 초기값으로 덮어쓰지 않도록 로직을 수정
-                val currentLat = lat ?: _uiState.value.currentLat
-                val currentLng = lng ?: _uiState.value.currentLng
+                val userLat = 37.5459 // 고정된 기준 위치
+                val userLng = 126.9649
 
-                /*val finalLat = currentLat.takeIf { it != 0.0 } ?: 37.5459
-                val finalLng = currentLng.takeIf { it != 0.0 } ?: 126.9649*/
-                val finalLat = 37.5459
-                val finalLng = 126.9649
                 val places = placeRepository.getAllPlaces()
 
-                _originalPlaces.value = places
+                // 1. 가져온 데이터를 즉시 거리순으로 정렬
+                val sortedPlaces = places.sortedBy { place ->
+                    calculateDistance(userLat, userLng, place.latitude, place.longitude)
+                }
+
+                // 2. 원본 데이터와 UI State 모두 정렬된 상태로 저장
+                _originalPlaces.value = sortedPlaces
 
                 _uiState.value = _uiState.value.copy(
-                    place = places,
-                    currentLat = finalLat,
-                    currentLng = finalLng,
+                    place = sortedPlaces,
+                    currentLat = userLat,
+                    currentLng = userLng,
                     isLoading = false
                 )
 
                 isPlaceDataLoaded = true
 
             } catch (e: Exception) {
-                _uiState.value = _uiState.value.copy(
-                    errorMessage = e.message,
-                    isLoading = false
-                )
+                _uiState.value = _uiState.value.copy(errorMessage = e.message, isLoading = false)
             }
         }
     }
@@ -180,10 +197,14 @@ class PlaceRecommendViewModel(
                 is PlaceRecommendScreenEvent.onDropDownClick -> {
                     val criteria = event.sortCriteria
                     val currentPlaces = _uiState.value.place.toMutableList()
+                    val userLat = _uiState.value.currentLat
+                    val userLng = _uiState.value.currentLng
 
                     val sortedPlaces = when (criteria) {
                         "거리순" -> {
-                            currentPlaces.sortedBy { it.placeId }
+                            currentPlaces.sortedBy { place ->
+                                calculateDistance(userLat, userLng, place.latitude, place.longitude)
+                            }
                         }
                         "별점높은순" -> {
                             currentPlaces.sortedByDescending { it.rating }
@@ -261,16 +282,6 @@ class PlaceRecommendViewModel(
     fun clearEvent() {
         _events.value = null
     }
-
-    /*GPS Update 삭제
-    fun updateLocation(lat: Double, lng: Double) {
-        _uiState.value = _uiState.value.copy(
-            currentLat = lat,
-            currentLng = lng
-
-        )
-        loadPlaceData(lat, lng)
-    }*/
 
     fun setSelectedPlace(placeId: String) {
         _uiState.value = _uiState.value.copy(selectedPlaceId = placeId)

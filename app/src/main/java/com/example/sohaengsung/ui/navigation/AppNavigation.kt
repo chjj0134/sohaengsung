@@ -9,6 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.sohaengsung.ui.features.bookmarked.BookmarkScreenEvent
 import com.example.sohaengsung.ui.features.bookmarked.BookmarkedScreen
 import com.example.sohaengsung.ui.features.coupon.CouponScreen
 import com.example.sohaengsung.ui.features.coupon.CouponScreenEvent
@@ -124,8 +125,18 @@ fun AppNavigation(
             )
         }
 
-        // 삭제 로직 구현 필요
-        composable("bookmark") { BookmarkedScreen() }
+        composable("bookmark") {
+            BookmarkedScreen(
+                onNavigate = { navigationEvent ->
+                    when (navigationEvent) {
+                        // 향후 로직 추가 시 여기에 작성
+                        else -> {
+
+                        }
+                    }
+                }
+            )
+        }
 
         composable("setting") {
             SettingScreen(

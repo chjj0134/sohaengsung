@@ -10,7 +10,7 @@ data class PathRecommendScreenUiState(
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
     val selectedPlaceId: String? = null,
-    val currentLocation: Pair<Double, Double>? = Pair(37.5665, 126.9780)
+    val currentLocation: Pair<Double, Double>? = Pair(37.5459, 126.9649)
 )
 
 sealed class PathRecommendScreenEvent {
