@@ -7,18 +7,19 @@ data class ReviewScreenUiState(
     val selectedAtmosphereTag: String? = null, // 분위기 태그
     val selectedConvenienceTag: String? = null, // 편의사항 태그
     val isLoading: Boolean = false,
+    val showSuccessModal: Boolean = false,
     val errorMessage: String? = null
 )
 
 sealed class ReviewScreenEvent {
-    // 사용자 입력/액션 이벤트
-    object onRatingClick : ReviewScreenEvent()
-    object onReviewTextChange : ReviewScreenEvent()
-    object onTagSelect : ReviewScreenEvent()
-    object onSubmitReview : ReviewScreenEvent()
-    object onBackClick : ReviewScreenEvent()
+    data class OnRatingClick(val rating: Int) : ReviewScreenEvent()
+    data class OnReviewTextChange(val text: String) : ReviewScreenEvent()
+    data class OnTagSelect(val tagType: TagType, val tag: String) : ReviewScreenEvent()
+    object OnSubmitReview : ReviewScreenEvent()
+    object OnBackClick : ReviewScreenEvent()
 
-    // ViewModel이 UI에게 특정 동작을 요청하는 단일 이벤트
+    enum class TagType { THEME, ATMOSPHERE, CONVENIENCE }
+
     sealed class Navigation : ReviewScreenEvent() {
         object NavigateBack : Navigation()
     }

@@ -32,15 +32,12 @@ sealed class PlaceRecommendScreenEvent {
     // 북마크 로직 -> (완료)
     data class onBookmarkClick(val place: Place) : PlaceRecommendScreenEvent()
 
-    // 쿠폰 페이지로 이동 -> (완료)
-    object onCouponClick : PlaceRecommendScreenEvent()
-
     // 리뷰 작성 페이지로 이동 -> (완료)
-    object onReviewClick : PlaceRecommendScreenEvent()
+    data class onReviewClick(val placeId: String) : PlaceRecommendScreenEvent()
 
     // ViewModel이 UI에게 특정 동작을 요청하는 단일 이벤트
     sealed class Navigation : PlaceRecommendScreenEvent() {
-        object NavigateToCoupon : Navigation()
-        object NavigateToReview : Navigation()
+
+        data class NavigateToReview(val placeId: String) : Navigation()
     }
 }

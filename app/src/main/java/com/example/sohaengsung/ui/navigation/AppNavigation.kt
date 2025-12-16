@@ -4,9 +4,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.input.key.Key.Companion.Home
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.sohaengsung.ui.features.bookmarked.BookmarkedScreen
 import com.example.sohaengsung.ui.features.coupon.CouponScreen
 import com.example.sohaengsung.ui.features.coupon.CouponScreenEvent
@@ -59,20 +61,25 @@ fun AppNavigation(
             )
         }
 
-        composable ("home") {
+        composable("home") {
             HomeScreen(
                 onNavigate = { navigationEvent ->
                     val route = when (navigationEvent) {
                         HomeScreenEvent.Navigation.NavigateToPlaceRecommend
                             -> ScreenRoute.PLACE_RECOMMEND
+
                         HomeScreenEvent.Navigation.NavigateToPathRecommend
                             -> ScreenRoute.PATH_RECOMMEND
+
                         HomeScreenEvent.Navigation.NavigateToBookmark
                             -> ScreenRoute.BOOKMARK
+
                         HomeScreenEvent.Navigation.NavigateToCoupon
                             -> ScreenRoute.COUPON
+
                         HomeScreenEvent.Navigation.NavigateToEvent
                             -> ScreenRoute.EVENT
+
                         HomeScreenEvent.Navigation.NavigateToSetting
                             -> ScreenRoute.SETTING
                     }
@@ -86,13 +93,15 @@ fun AppNavigation(
             PlaceRecommendScreen(
                 viewModel = placeRecommendViewModel,
                 onNavigate = { navigationEvent ->
-                    val route = when (navigationEvent) {
-                        PlaceRecommendScreenEvent.Navigation.NavigateToReview
-                            -> ScreenRoute.REVIEW
-                        PlaceRecommendScreenEvent.Navigation.NavigateToCoupon
-                            -> ScreenRoute.COUPON
+                    when (navigationEvent) {
+                        is PlaceRecommendScreenEvent.Navigation.NavigateToReview -> {
+                            navController.navigate("${ScreenRoute.REVIEW}/${navigationEvent.placeId}")
+                        }
+
+                        else -> {
+
+                        }
                     }
-                    navController.navigate(route)
                 }
             )
         }
@@ -116,34 +125,40 @@ fun AppNavigation(
         }
 
         // 삭제 로직 구현 필요
-        composable( "bookmark") { BookmarkedScreen() }
+        composable("bookmark") { BookmarkedScreen() }
 
-        composable("setting") { SettingScreen(
-            onNavigate = { navigationEvent ->
-                val route = when (navigationEvent) {
-                    SettingScreenEvent.Navigation.NavigateToLevel
-                        -> ScreenRoute.LEVEL
-                    SettingScreenEvent.Navigation.NavigateToAccountManagement
-                        -> ScreenRoute.ACCOUNT_MANAGEMENT
-                    SettingScreenEvent.Navigation.NavigateToThemeChange
-                        -> ScreenRoute.THEME_CHANGE
-                    SettingScreenEvent.Navigation.NavigateToTerms
-                        -> ScreenRoute.TERMS
-                    SettingScreenEvent.Navigation.NavigateToNotice
-                        -> ScreenRoute.NOTICE
+        composable("setting") {
+            SettingScreen(
+                onNavigate = { navigationEvent ->
+                    val route = when (navigationEvent) {
+                        SettingScreenEvent.Navigation.NavigateToLevel
+                            -> ScreenRoute.LEVEL
+
+                        SettingScreenEvent.Navigation.NavigateToAccountManagement
+                            -> ScreenRoute.ACCOUNT_MANAGEMENT
+
+                        SettingScreenEvent.Navigation.NavigateToThemeChange
+                            -> ScreenRoute.THEME_CHANGE
+
+                        SettingScreenEvent.Navigation.NavigateToTerms
+                            -> ScreenRoute.TERMS
+
+                        SettingScreenEvent.Navigation.NavigateToNotice
+                            -> ScreenRoute.NOTICE
                     }
                     navController.navigate(route)
                 }
             )
         }
 
-        composable ("level") { LevelScreen(
-            onNavigate = { navigationEvent ->
-                val route = when (navigationEvent) {
-                    LevelScreenEvent.Navigation.NavigateToLevelInfo
-                        -> ScreenRoute.LEVEL_INFO
-                }
-                navController.navigate(route)
+        composable("level") {
+            LevelScreen(
+                onNavigate = { navigationEvent ->
+                    val route = when (navigationEvent) {
+                        LevelScreenEvent.Navigation.NavigateToLevelInfo
+                            -> ScreenRoute.LEVEL_INFO
+                    }
+                    navController.navigate(route)
                 }
             )
         }
@@ -160,7 +175,7 @@ fun AppNavigation(
             )
         }
 
-        composable ("event") { EventScreen() }
+        composable("event") { EventScreen() }
 
         composable("map") { MapScreen() }
 
@@ -174,7 +189,13 @@ fun AppNavigation(
             MapPathRecommendScreen(placeIds = placeIds)
         }
 
-        composable(ScreenRoute.REVIEW) {
+        composable(
+            route = "${ScreenRoute.REVIEW}/{placeId}", // "review/{placeId}" 형태가 됩니다.
+            arguments = listOf(
+                navArgument("placeId") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            // 2. ReviewScreen 호출
             ReviewScreen(
                 onNavigate = { navigationEvent ->
                     when (navigationEvent) {

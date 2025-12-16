@@ -247,12 +247,8 @@ class PlaceRecommendViewModel(
                     )
                 }
 
-                PlaceRecommendScreenEvent.onCouponClick -> {
-                    _events.value = PlaceRecommendScreenEvent.Navigation.NavigateToCoupon
-                }
-
-                PlaceRecommendScreenEvent.onReviewClick -> {
-                    _events.value = PlaceRecommendScreenEvent.Navigation.NavigateToReview
+                is PlaceRecommendScreenEvent.onReviewClick -> {
+                    _events.value = PlaceRecommendScreenEvent.Navigation.NavigateToReview(event.placeId)
                 }
 
                 is PlaceRecommendScreenEvent.Navigation -> {
