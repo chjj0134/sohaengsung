@@ -23,6 +23,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.MotionDurationScale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -36,6 +37,10 @@ import com.example.sohaengsung.ui.features.setting.SettingScreenEvent
 import com.example.sohaengsung.ui.theme.SohaengsungTheme
 import com.google.common.math.LinearTransformation.horizontal
 
+
+private object ForceMotionScale : MotionDurationScale {
+    override val scaleFactor: Float = 1f
+}
 @Composable
 fun LevelScreen(
     onNavigate: (route: LevelScreenEvent.Navigation) -> Unit,
