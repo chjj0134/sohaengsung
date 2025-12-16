@@ -53,8 +53,11 @@ fun PlaceDetailContainer(
             color = MaterialTheme.colorScheme.primary
         )
 
+        val formattedRating = String.format("%.1f", place.rating)
+
+        // 별점, 리뷰 개수
         Text(
-            text = "⭐️ ${place.rating} (리뷰 ${place.reviewCount}개)",
+            text = "⭐ $formattedRating (리뷰 ${place.reviewCount}개)",
             style = MaterialTheme.typography.bodyMedium // 원본에서 labelSmall과 bodyMedium이 혼재되어 bodyMedium으로 통일
         )
 
